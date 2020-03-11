@@ -6,8 +6,8 @@ An influence marketing application to connect influencers and sponsors
 What things you need to install the software and how to install them
 
 ```
-node
-npm
+node - (https://nodejs.org/en/download/)
+npm - (https://www.npmjs.com/get-npm)
 ```
 
 ## Installing
