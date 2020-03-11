@@ -16,7 +16,7 @@ A step by step series of examples that tell you how to get a development env run
 
 Download the project locally
 
-###Run the following commands in outermost directory
+### Run the following commands in outermost directory
 
 For running server:
 ```
@@ -53,7 +53,7 @@ npm run dev
 * **Sheena Gupta** - (https://github.com/guptasheena)
 * **Vandana Shenoy** - (https://github.com/vandana414)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/divjyot3112/InfluenceMarketingApp/contributors) who participated in this project.
 
 ## License
 
