@@ -48,7 +48,7 @@ npm run dev
 
 ## Authors
 
-* **Armaan Pathan** - (https://github.com/)
+* **Armaan Pathan** - (https://github.com/arman-pathan)
 * **Divjyot Singh Khanuja** - (https://github.com/divjyot3112)
 * **Sheena Gupta** - (https://github.com/guptasheena)
 * **Vandana Shenoy** - (https://github.com/vandana414)
