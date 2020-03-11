@@ -1,5 +1,5 @@
 # InfluenceMarketingApp
-An influence marketing application to connect influencers and sponsors
+A web application to connect influencers and sponsors.
 
 ## Prerequisites
 
