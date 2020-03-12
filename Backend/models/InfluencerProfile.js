@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const TaskSchema = require("../models/Task").schema
+const RatingSchema = require("../models/Rating").schema
+const CategorySchema = require("../models/Category").schema
+const ConversationSchema = require("../models/Conversation").schema
+const NameSchema = require("../models/Name").schema
+const AddressSchema = require("../models/Address").schema
 
 var InfluencerProfileSchema = new Schema({
     email: { type: String, unique: true },

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const UserSchema = require("../models/User").schema
+const MessageSchema = require("../models/Message").schema
 
 var AutoIncrement = require('mongoose-sequence')(mongoose);
 

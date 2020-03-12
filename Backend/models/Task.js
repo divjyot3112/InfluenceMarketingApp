@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const CategorySchema = require("../models/Category").schema
 
 var AutoIncrement = require('mongoose-sequence')(mongoose);
 
