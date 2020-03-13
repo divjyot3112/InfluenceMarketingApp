@@ -13,7 +13,7 @@ var TaskSchema = new Schema({
     images: [String],
     status: String,
     salary: Number,
-    category: [CategorySchema],
+    categories: [CategorySchema],
     appliedCandidates: [String], //Adding only email id as it gives error if interdependent schemas
     selectedCandidates: [String], //Adding only email id as it gives error if interdependent schemas
     vacancyCount: Number,
