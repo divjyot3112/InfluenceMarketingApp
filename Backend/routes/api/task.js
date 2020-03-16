@@ -52,7 +52,7 @@ router.post('/create', (req, res) => {
 router.get('/', (req, res) => {
     console.log('Inside Task Get Request');
     Task.find().sort({postedBy:-1}).then((tasks) => {
-        res.status(400).json({ success: true, message:tasks })
+        res.status(200).json({ success: true, message:tasks })
     })
     .catch((err) => {
         console.log(err);
@@ -67,7 +67,7 @@ router.get('/:taskId/applicants', (req, res) => {
     console.log('Inside Task Get applicants  Request');
     Task.findOne({ _id: ObjectID(req.query.taskId) }).then((task) => {
         if (task) {
-            res.status(400).json({ success: true, message: task.appliedCandidates })
+            res.status(200).json({ success: true, message: task.appliedCandidates })
         } else {
             res.status(400).json({ success: false, message: "Task Not Found!" })
         }
