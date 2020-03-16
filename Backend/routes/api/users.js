@@ -59,9 +59,9 @@ router.put('/profile', (req, res) => {
                                 aboutMe: req.body.aboutMe
                             }
                         },
-                        { returnOriginal: false })
-                        .then(res => res.status(200).json({ success: true, message: "Sponsor Profile updated successfully!" }))
-                        .catch(err => res.status(400).json({ success: false, message: err }))
+                        { returnOriginal: false, useFindAndModify: false })
+                        .then(result => res.status(200).json({ success: true, message: "Sponsor Profile updated successfully!" }))
+                        .catch(err => { console.log(err); res.status(400).json({ success: false, message: err }) })
                 }
                 else {
                     InfluencerProfile.findOneAndUpdate({ email: req.query.email },
@@ -80,7 +80,7 @@ router.put('/profile', (req, res) => {
                         .catch(err => { console.log(err); res.status(400).json({ success: false, message: err }) })
                 }
             }
-            else { console.log(err);res.status(400).json({ success: false, message: "User not found" }); }
+            else { res.status(400).json({ success: false, message: "User not found" }); }
         })
         .catch(err => {
             console.log(err);
