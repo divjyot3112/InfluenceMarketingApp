@@ -14,7 +14,7 @@ const config = require('./config/main');
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 const users = require('./routes/api/users');
-const task = require('./routes/api/task');
+const tasks = require('./routes/api/tasks');
 const images = require('./routes/api/users');
  
 // To get POST requests for API use
@@ -59,7 +59,7 @@ mongoose
 
 //Use Routes
 app.use('/api/users', users);
-app.use('/api/task', task);
+app.use('/api/tasks', tasks);
 
 // Serve static assets if in production
 if(process.env.NODE_ENV === 'production') {
