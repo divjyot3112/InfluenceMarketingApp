@@ -5,10 +5,12 @@ var config = require('./main');
 
 module.exports = function(passport) {
     var opts = {};
-    opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt');
+    opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
     opts.secretOrKey = config.secret;
+    console.log("Inside Passport")
     passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-        User.findOne({id: jwt_payload.id}, function(err, user) {
+        console.log(jwt_payload.user.email)
+        User.findOne({email: jwt_payload.user.email}, function(err, user) {
             if(err) {
                 return done(err, false);
             }

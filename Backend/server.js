@@ -4,18 +4,18 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
-var session = require('express-session');
+// var session = require('express-session');
 var cookieParser = require('cookie-parser');
 const morgan = require('morgan');
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const config = require('./config/main');
+// const config = require('./config/main');
+
+const users = require('./routes/api/users');
+// const tasks = require('./routes/api/tasks');
 
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
-const users = require('./routes/api/users');
-const images = require('./routes/api/users');
- 
 // To get POST requests for API use
 app.use(bodyParser.urlencoded({ extended:false }));
 app.use(bodyParser.json());
@@ -36,28 +36,18 @@ app.use(function(req, res, next) {
 });
 
 // DB Config
-
-// const MongoClient = require('mongodb').MongoClient;
-// const uri = "mongodb+srv://root:root123@cluster0-bcaiq.mongodb.net/test?retryWrites=true&w=majority";
-// const client = new MongoClient(uri, { useNewUrlParser: true }, { useUnifiedTopology: true );
-// client.connect(err => {
-//   const collection = client.db("test").collection("devices");
-//   console.log(err);
-//   // perform actions on the collection object
-//   client.close();
-// });
-
 const db = require('./config/keys').mongoURI;
 const dbconfig = require('./config/keys').mongoCFG;
 
-// // Connect to Mongo
+// Connect to Mongo
 mongoose
     .connect(db, dbconfig)
     .then(() => console.log('MongoDB Connected...'))
     .catch(err => console.log(JSON.stringify(err)));
 
-//Use Routes
+// Use Routes
 app.use('/api/users', users);
+// app.use('/api/tasks', tasks);
 
 // Serve static assets if in production
 if(process.env.NODE_ENV === 'production') {
