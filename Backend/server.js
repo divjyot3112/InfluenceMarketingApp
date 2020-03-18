@@ -11,11 +11,15 @@ const morgan = require('morgan');
 const passport = require('passport');
 // const config = require('./config/main');
 
-const users = require('./routes/api/users');
+// const users = require('./routes/api/users');
 // const tasks = require('./routes/api/tasks');
 
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
+const users = require('./routes/api/users');
+const tasks = require('./routes/api/tasks');
+const images = require('./routes/api/users');
+ 
 // To get POST requests for API use
 app.use(bodyParser.urlencoded({ extended:false }));
 app.use(bodyParser.json());
@@ -47,7 +51,7 @@ mongoose
 
 // Use Routes
 app.use('/api/users', users);
-// app.use('/api/tasks', tasks);
+app.use('/api/tasks', tasks);
 
 // Serve static assets if in production
 if(process.env.NODE_ENV === 'production') {
