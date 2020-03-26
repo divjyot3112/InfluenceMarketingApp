@@ -1,22 +1,22 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const TaskSchema = require("../models/Task").schema
-const RatingSchema = require("../models/Rating").schema
-const ConversationSchema = require("../models/Conversation").schema
-const NameSchema = require("../models/Name").schema
-const AddressSchema = require("../models/Address").schema
+// const TaskSchema = require("../models/Task").schema
+// const RatingSchema = require("../models/Rating").schema
+// const ConversationSchema = require("../models/Conversation").schema
+// const NameSchema = require("../models/Name").schema
+// const AddressSchema = require("../models/Address").schema
 
 var SponsorProfileSchema = new Schema({
     email: { type: String, unique: true },
     company: String,
-    tasksPosted: [TaskSchema],
-    rating: [RatingSchema],
-    conversations: [ConversationSchema],
-    name: NameSchema,
+    tasksPosted: [String], // task id array
+    rating: [String], // rating id array
+    conversations: [String], // conversation id array
+    name: String, // name id
     profilePic: String,
     phone: String,
-    tasksCancelled: [TaskSchema],
-    address: AddressSchema,
+    tasksCancelled: [String], // task id array
+    address: String, // address id
     aboutMe: String
 });
 

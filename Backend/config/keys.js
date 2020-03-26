@@ -1,5 +1,5 @@
 module.exports = {
-    mongoURI: 'mongodb+srv://root:root123@cluster0-bcaiq.mongodb.net/test?retryWrites=true&w=majority',
+    mongoURI: 'mongodb+srv://admin:admin@cluster0-xnxsx.mongodb.net/test?retryWrites=true&w=majority',
     mongoCFG: {
         useNewUrlParser: true,
         ssl: true,

@@ -65,7 +65,7 @@ router.get('/', (req, res) => {
 // @access  Public
 router.get('/:taskId/applicants', (req, res) => {
     console.log('Inside Task Get applicants  Request');
-    Task.findOne({ _id: ObjectID(req.query.taskId) }).then((task) => {
+    Task.findOne({ _id: ObjectID(req.query.taskId) /* Should be req.params.taskId */ }).then((task) => { 
         if (task) {
             res.status(200).json({ success: true, message: task.appliedCandidates })
         } else {
@@ -78,5 +78,102 @@ router.get('/:taskId/applicants', (req, res) => {
     })
 });
 
+// @route   PUT api/task/edit/:taskId
+// @desc    Edit a task for given task id
+// @access  Public
+router.put("/edit/:taskId", (req, res) => {
+    console.log("Inside Edit Task request for Task ID:", req.params.taskId);
+    Task.findOneAndUpdate(
+        { _id: ObjectID(req.params.taskId) },
+        {
+            $set: {
+                title: String,
+                postedBy: req.body.postedBy, 
+                postedOn: req.body.postedOn,
+                description: req.body.description,
+                images: req.body.images,
+                status: req.body.status,
+                salary: req.body.salary,
+                category: req.body.category,
+                appliedCandidates: req.body.appliedCandidates, 
+                selectedCandidates: req.body.selectedCandidates,
+                vacancyCount: req.body.vacancyCount,
+                startDate: req.body.startDate,
+                endDate: req.body.endDate
+            }
+        },
+        { returnOriginal: false, useFindAndModify: false }
+    )
+        .then(task => {
+            console.log("Task modified successfully")
+            res.status(200).json({ message: "Task modified successfully" })
+        })
+        .catch(err => {
+            console.log("Task could not be modified")
+            res.status(400).json({ message: "Task could not be modified" })
+        })
+})
+
+// @route   GET api/tasks?email&&status
+// @desc    Fetch all tasks by current sponsor by email and filter using task status
+// @access  Public
+router.get("/?email&&status", (req, res) => {
+    console.log("Inside Get job by current sponsor with filter by status")
+    Task.find({ postedBy: req.query.email, status: req.query.status})
+        .then(tasks => {
+            if(tasks) {
+                reqTasks = []
+                tasks.map(task => {
+                        Id = task._id
+                        Title = task.title
+                        Images = task.images
+                    reqTasks.push({
+                        Id,
+                        Title,
+                        Images
+                    })
+                })
+                res.status(200).json({ message: reqTasks })
+            } else {
+                res.status(400).json({ message: "No Tasks Found" })
+            }
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(400).json({ message: "Tasks could not be fetched" })
+        })
+})
+
+// @route   PUT api/tasks/:taskId/select 
+// @desc    Select a candidate for a task by sponsor
+// @access  Public
+router.put("/:taskId/select", (req, res) => {
+    Task.findOneAndUpdate(
+        {_id: ObjectID(req.params.taskId)},
+        {
+            $set: {
+                selectedCandidates: req.body.selectedCandidates
+            }
+        },
+        {returnOriginal: false, useFindAndModify: false}
+    )
+        .then(task => {
+            if(task.selectedCandidates.length==task.vacancyCount) {
+                Task.findOneAndUpdate(
+                    {_id: ObjectID(req.params.taskId)},
+                    {
+                        $set: {
+                            status: "in progress"
+                        }
+                    },
+                    {returnOriginal: false, useFindAndModify: false}
+                )
+                .catch(err => {
+                    console.log(err)
+                    res.status(400)
+                })
+            }
+        })
+})
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const CategorySchema = require("../models/Category").schema
+// const CategorySchema = require("../models/Category").schema
 
 var TaskSchema = new Schema({
     title: String,
@@ -10,9 +10,9 @@ var TaskSchema = new Schema({
     images: [String],
     status: String,
     salary: Number,
-    category: CategorySchema,
-    appliedCandidates: [String], //Adding only email id as it gives error if interdependent schemas
-    selectedCandidates: [String], //Adding only email id as it gives error if interdependent schemas
+    category: String, // Category id
+    appliedCandidates: [String], // User email array
+    selectedCandidates: [String], // User email array
     vacancyCount: Number,
     startDate: Date,
     endDate: Date
