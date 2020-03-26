@@ -35,19 +35,19 @@ router.post('/login', (req, res) => {
                             expiresIn: 10080 // In seconds
                         });
                         res.status(200).json({
-                            msg: "Login Successful", 
+                            message: "Login Successful", 
                             token: "Bearer " + token
                         }); 
                     } else {
-                        res.status(401).send('Incorrect Password');
+                        res.status(401).json({ message: 'Incorrect Password' });
                     }
                 });
             }
-            else { res.status(404).send('User not found'); }
+            else { res.status(404).json({ message: 'User not found' }) }
         })
         .catch(err => { 
             console.log(err); 
-            res.status(404).send('Something went wrong');
+            res.status(404).json({ message: 'Something went wrong' });
         })
 });
 
@@ -144,26 +144,26 @@ router.get('/profile', requireAuth, (req, res) => {
                 console.log("Getting influencer profile")
                 InfluencerProfile.findOne({email:req.query.email}) 
                 .then(infProfile => {
-                    res.status(200).json(infProfile)
+                    res.status(200).json({ message: infProfile })
                 })
                 .catch(err => {
                     console.log(err);
-                    res.status(400).send("Could not fetch profile");
+                    res.status(400).json({ message: "Could not fetch profile" });
                 })
             } else {
                 SponsorProfile.findOne({email:req.query.email}) 
                 .then(sponProfile => {
-                    res.status(200).json(sponProfile)
+                    res.status(200).json({ message: sponProfile })
                 })
                 .catch(err => {
                     console.log(err);
-                    res.status(400).send("Could not fetch profile");
+                    res.status(400).json({ message: "Could not fetch profile" });
                 })
             }
         })
         .catch(err => {
             console.log(err);
-            res.status(400).send("Something went wrong!");
+            res.status(400).json({ message: "Something went wrong!" });
         })
 })
 // @route   PUT api/users/profile?email
