@@ -69,11 +69,10 @@ router.get('/', (req, res) => {
 // @access  Public
 router.get('/:taskId/applicants', (req, res) => {
     console.log('Inside Task Get applicants  Request');
-    Task.findOne({ _id: ObjectID(req.params.taskId) }).then((task) => {
+    Task.findOne({ _id: ObjectID(req.params.taskId)}).then((task) => {
         if (task) {
             if (task.appliedCandidates.length > 0) {
-                var ids = task.appliedCandidates.map(function (obj) { return ObjectId(obj._id) });
-                InfluencerProfile.find({ _id: { $in: ids } }).then((candidates) => {
+                InfluencerProfile.find({ _id: { $in: task.appliedCandidates } }).then((candidates) => {
                     res.status(200).json({ success: true, message: candidates })
                 }).catch(err => {
                     console.log(err);
