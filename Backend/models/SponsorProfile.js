@@ -10,7 +10,7 @@ var SponsorProfileSchema = new Schema({
     email: { type: String, unique: true },
     company: String,
     tasksPosted: [String], // task id array
-    rating: [String], // rating id array
+    ratings: [String], // rating id array
     conversations: [String], // conversation id array
     name: String, // name id
     profilePic: String,

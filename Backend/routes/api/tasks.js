@@ -8,42 +8,42 @@ require('../../config/passport')(passport)
 // Task Model
 const Task = require('../../models/Task');
 const SponsorProfile = require('../../models/SponsorProfile');
+const InfluencerProfile = require('../../models/InfluencerProfile');
 
 // @route   POST api/task/create
 // @desc    Create a task
 // @access  Public
 router.post('/create', (req, res) => {
     console.log('Inside Task Post Request');
-    var taskCategory = {}
-    if (req.body && req.body.taskCategory && req.body.taskCategory._id && req.body.taskCategory.description) {
-        taskCategory = {_id: ObjectID(req.body.taskCategory._id),description: req.body.taskCategory.description}
-    }
     Task.create({
         title: req.body.title,
         postedBy: req.body.postedBy,
         description: req.body.description,
         images: req.body.images,
         salary: req.body.salary,
-        category: taskCategory,
+        category: req.body.taskCategory,
         vacancyCount: req.body.vacancyCount,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         status: "Created"
-    }, (err1, result) => {
+    }, (err1, result1) => {
         if (err1) {
             console.log(err1);
-            res.status(400).json({ success: true, message: "Task could not be added" });
+            res.status(400).json({ success: false, message: "Task could not be added" });
         }
         SponsorProfile.findOneAndUpdate({
             email: req.body.postedBy
         }, {
             $push: {
-                tasksPosted: result
+                tasksPosted: result1._id
             }
-        }, { returnOriginal: false, useFindAndModify: false }).then(result => { res.status(200).json({ success: true, message: "Task linked to sponsor successfully!" })})
-            .catch((err) => { console.log(err); res.status(400).json({ success: false, message: err }) })
-        res.status(400).json({ success: false, message: "Task added successfully" });
-    })
+        }, { returnOriginal: false, useFindAndModify: false }).then(result => { res.status(200).json({ success: false, message: "Task added successfully" }); })
+            .catch((err) => {
+                //TODO: delete the task
+                Task.findOneAndDelete({ _id: ObjectID(result1._id) });
+                console.log(err); res.status(400).json({ success: false, message: err })
+            });
+    });
 });
 
 // @route   GET api/task
@@ -65,9 +65,18 @@ router.get('/', (req, res) => {
 // @access  Public
 router.get('/:taskId/applicants', (req, res) => {
     console.log('Inside Task Get applicants  Request');
-    Task.findOne({ _id: ObjectID(req.query.taskId) /* Should be req.params.taskId */ }).then((task) => { 
+    Task.findOne({ _id: ObjectID(req.params.taskId)}).then((task) => {
         if (task) {
-            res.status(200).json({ success: true, message: task.appliedCandidates })
+            if (task.appliedCandidates.length > 0) {
+                InfluencerProfile.find({ _id: { $in: task.appliedCandidates } }).then((candidates) => {
+                    res.status(200).json({ success: true, message: candidates })
+                }).catch(err => {
+                    console.log(err);
+                    res.status(400).json({ success: false, message: "Unable to fetch candidates!" })
+                })
+            } else {
+                res.status(400).json({ success: false, message: "No applied Candidates!" })
+            }
         } else {
             res.status(400).json({ success: false, message: "Task Not Found!" })
         }
