@@ -217,4 +217,46 @@ router.put('/profile', (req, res) => {
         })
 });
 
+// @route   PATCH api/users/profile/deactivate?email
+// @desc    Deactivate User
+// @access  Private
+router.patch('/profile/deactivate', (req, res) => {
+    console.log('Inside User Deactivate Patch Request');
+    console.log(req.query.email, req.body.password);
+
+    User.findOne({email: req.query.email})
+        .then(user => {
+            if (user) {
+                user.comparePassword(req.body.password, function (err, isMatch) {
+                    if (isMatch && !err) {
+                        // updating isActive to false
+                        User.update(
+                            { email: req.query.email },
+                            {
+                                $set: {
+                                    isActive: false
+                                }
+                            },
+                            function(err, result) {
+                                if (err) {
+                                    res.status(401).json({message: 'Something went wrong'});
+                                } else {
+                                    res.status(200).json({message: "Deactivate Success"});
+                                }
+                            }
+                        );
+                    } else {
+                        res.status(401).json({message: 'Incorrect Password'});
+                    }
+                });
+            } else {
+                res.status(404).json({message: 'User not found'})
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(404).json({message: 'Something went wrong'});
+        })
+});
+
 module.exports = router;
