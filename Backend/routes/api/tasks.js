@@ -185,4 +185,29 @@ router.put("/:taskId/select", (req, res) => {
         })
 })
 
+// @route   PUT api/tasks/complete/:taskId
+// @desc    Mark a task as complete
+// @access  Public
+router.put("/complete/:taskId", (req, res) => {
+    console.log("Inside Mark a task as complete for Task ID:", req.params.taskId);
+
+    Task.findOneAndUpdate(
+        { _id: ObjectID(req.params.taskId) },
+        {
+            $set: {
+                status: "completed"
+            }
+        },
+        { returnOriginal: false, useFindAndModify: false }
+    )
+        .then(task => {
+            console.log("Task marked as completed successfully");
+            res.status(200).json({ message: "Task marked as completed successfully" });
+        })
+        .catch(err => {
+            console.log("Task could not be modified");
+            res.status(400).json({ message: "Task could not be modified" });
+        })
+});
+
 module.exports = router;
