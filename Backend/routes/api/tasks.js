@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-var  ObjectID = require('mongodb').ObjectID
+var ObjectID = require('mongodb').ObjectID
 // Bring in passport strategy
 require('../../config/passport')(passport)
 
@@ -29,7 +29,7 @@ router.post('/create', (req, res) => {
     }, (err1, result1) => {
         if (err1) {
             console.log(err1);
-            res.status(400).json({ success: false, message: "Task could not be added" });
+            res.status(400).json({success: false, message: "Task could not be added"});
         }
         SponsorProfile.findOneAndUpdate({
             email: req.body.postedBy
@@ -37,11 +37,14 @@ router.post('/create', (req, res) => {
             $push: {
                 tasksPosted: result1._id
             }
-        }, { returnOriginal: false, useFindAndModify: false }).then(result => { res.status(200).json({ success: false, message: "Task added successfully" }); })
+        }, {returnOriginal: false, useFindAndModify: false}).then(result => {
+            res.status(200).json({success: false, message: "Task added successfully"});
+        })
             .catch((err) => {
                 //TODO: delete the task
-                Task.findOneAndDelete({ _id: ObjectID(result1._id) });
-                console.log(err); res.status(400).json({ success: false, message: err })
+                Task.findOneAndDelete({_id: ObjectID(result1._id)});
+                console.log(err);
+                res.status(400).json({success: false, message: err})
             });
     });
 });
@@ -51,13 +54,13 @@ router.post('/create', (req, res) => {
 // @access  Public
 router.get('/', (req, res) => {
     console.log('Inside Task Get Request');
-    Task.find().sort({postedBy:-1}).then((tasks) => {
-        res.status(200).json({ success: true, message:tasks })
+    Task.find().sort({postedBy: -1}).then((tasks) => {
+        res.status(200).json({success: true, message: tasks})
     })
-    .catch((err) => {
-        console.log(err);
-        res.status(400).json({ success: false, message: "Tasks could not be fetched!" })
-    })
+        .catch((err) => {
+            console.log(err);
+            res.status(400).json({success: false, message: "Tasks could not be fetched!"})
+        })
 });
 
 // @route   GET api/task/:taskId/applicants
@@ -65,26 +68,26 @@ router.get('/', (req, res) => {
 // @access  Public
 router.get('/:taskId/applicants', (req, res) => {
     console.log('Inside Task Get applicants  Request');
-    Task.findOne({ _id: ObjectID(req.params.taskId)}).then((task) => {
+    Task.findOne({_id: ObjectID(req.params.taskId)}).then((task) => {
         if (task) {
             if (task.appliedCandidates.length > 0) {
-                InfluencerProfile.find({ _id: { $in: task.appliedCandidates } }).then((candidates) => {
-                    res.status(200).json({ success: true, message: candidates })
+                InfluencerProfile.find({_id: {$in: task.appliedCandidates}}).then((candidates) => {
+                    res.status(200).json({success: true, message: candidates})
                 }).catch(err => {
                     console.log(err);
-                    res.status(400).json({ success: false, message: "Unable to fetch candidates!" })
+                    res.status(400).json({success: false, message: "Unable to fetch candidates!"})
                 })
             } else {
-                res.status(400).json({ success: false, message: "No applied Candidates!" })
+                res.status(400).json({success: false, message: "No applied Candidates!"})
             }
         } else {
-            res.status(400).json({ success: false, message: "Task Not Found!" })
+            res.status(400).json({success: false, message: "Task Not Found!"})
         }
     })
-    .catch((err) => {
-        console.log(err);
-        res.status(400).json({ success: false, message: "Applied Candidates could not be fetched " })
-    })
+        .catch((err) => {
+            console.log(err);
+            res.status(400).json({success: false, message: "Applied Candidates could not be fetched "})
+        })
 });
 
 // @route   PUT api/task/edit/:taskId
@@ -93,33 +96,33 @@ router.get('/:taskId/applicants', (req, res) => {
 router.put("/edit/:taskId", (req, res) => {
     console.log("Inside Edit Task request for Task ID:", req.params.taskId);
     Task.findOneAndUpdate(
-        { _id: ObjectID(req.params.taskId) },
+        {_id: ObjectID(req.params.taskId)},
         {
             $set: {
                 title: String,
-                postedBy: req.body.postedBy, 
+                postedBy: req.body.postedBy,
                 postedOn: req.body.postedOn,
                 description: req.body.description,
                 images: req.body.images,
                 status: req.body.status,
                 salary: req.body.salary,
                 category: req.body.category,
-                appliedCandidates: req.body.appliedCandidates, 
+                appliedCandidates: req.body.appliedCandidates,
                 selectedCandidates: req.body.selectedCandidates,
                 vacancyCount: req.body.vacancyCount,
                 startDate: req.body.startDate,
                 endDate: req.body.endDate
             }
         },
-        { returnOriginal: false, useFindAndModify: false }
+        {returnOriginal: false, useFindAndModify: false}
     )
         .then(task => {
             console.log("Task modified successfully")
-            res.status(200).json({ message: "Task modified successfully" })
+            res.status(200).json({message: "Task modified successfully"})
         })
         .catch(err => {
             console.log("Task could not be modified")
-            res.status(400).json({ message: "Task could not be modified" })
+            res.status(400).json({message: "Task could not be modified"})
         })
 })
 
@@ -128,28 +131,28 @@ router.put("/edit/:taskId", (req, res) => {
 // @access  Public
 router.get("/?email&&status", (req, res) => {
     console.log("Inside Get job by current sponsor with filter by status")
-    Task.find({ postedBy: req.query.email, status: req.query.status})
+    Task.find({postedBy: req.query.email, status: req.query.status})
         .then(tasks => {
-            if(tasks) {
+            if (tasks) {
                 reqTasks = []
                 tasks.map(task => {
-                        Id = task._id
-                        Title = task.title
-                        Images = task.images
+                    Id = task._id
+                    Title = task.title
+                    Images = task.images
                     reqTasks.push({
                         Id,
                         Title,
                         Images
                     })
                 })
-                res.status(200).json({ message: reqTasks })
+                res.status(200).json({message: reqTasks})
             } else {
-                res.status(400).json({ message: "No Tasks Found" })
+                res.status(400).json({message: "No Tasks Found"})
             }
         })
         .catch(err => {
             console.log(err)
-            res.status(400).json({ message: "Tasks could not be fetched" })
+            res.status(400).json({message: "Tasks could not be fetched"})
         })
 })
 
@@ -167,7 +170,7 @@ router.put("/:taskId/select", (req, res) => {
         {returnOriginal: false, useFindAndModify: false}
     )
         .then(task => {
-            if(task.selectedCandidates.length==task.vacancyCount) {
+            if (task.selectedCandidates.length == task.vacancyCount) {
                 Task.findOneAndUpdate(
                     {_id: ObjectID(req.params.taskId)},
                     {
@@ -177,10 +180,10 @@ router.put("/:taskId/select", (req, res) => {
                     },
                     {returnOriginal: false, useFindAndModify: false}
                 )
-                .catch(err => {
-                    console.log(err)
-                    res.status(400)
-                })
+                    .catch(err => {
+                        console.log(err)
+                        res.status(400)
+                    })
             }
         })
 })
@@ -192,21 +195,43 @@ router.put("/complete/:taskId", (req, res) => {
     console.log("Inside Mark a task as complete for Task ID:", req.params.taskId);
 
     Task.findOneAndUpdate(
-        { _id: ObjectID(req.params.taskId) },
+        {_id: ObjectID(req.params.taskId)},
         {
             $set: {
                 status: "completed"
             }
         },
-        { returnOriginal: false, useFindAndModify: false }
+        {returnOriginal: false, useFindAndModify: false}
     )
         .then(task => {
             console.log("Task marked as completed successfully");
-            res.status(200).json({ message: "Task marked as completed successfully" });
+            res.status(200).json({message: "Task marked as completed successfully"});
         })
         .catch(err => {
             console.log("Task could not be modified");
-            res.status(400).json({ message: "Task could not be modified" });
+            res.status(400).json({message: "Task could not be modified"});
+        })
+});
+
+// @route   GET api/tasks/search?title
+// @desc    Fetch all tasks by title
+// @access  Public
+router.get("/search", (req, res) => {
+    console.log("Inside GET request to fetch all tasks by title: " + req.query.title);
+
+    Task.find({title: {$regex: new RegExp(req.query.title, "i")}})
+        .then(tasks => {
+            if (tasks.length != 0) {
+                console.log("tasks fetched successfully for title: " + req.query.title);
+                res.status(200).json({message: tasks});
+            } else {
+                console.log("No tasks found");
+                res.status(404).json({message: "No tasks found"});
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400).json({message: "Tasks could not be fetched"});
         })
 });
 
