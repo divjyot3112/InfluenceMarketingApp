@@ -198,7 +198,7 @@ router.put("/complete/:taskId", (req, res) => {
         {_id: ObjectID(req.params.taskId)},
         {
             $set: {
-                status: "completed"
+                status: "Completed"
             }
         },
         {returnOriginal: false, useFindAndModify: false}
