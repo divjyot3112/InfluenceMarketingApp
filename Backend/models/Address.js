@@ -9,4 +9,4 @@ var AddressSchema = new Schema({
     zipcode: String
 });
 
-module.exports = Address = mongoose.model('Address', AddressSchema); 
+module.exports = Address = mongoose.model('Address', AddressSchema, "address");
