@@ -12,7 +12,10 @@ var SponsorProfileSchema = new Schema({
     tasksPosted: [String], // task id array
     ratings: [String], // rating id array
     conversations: [String], // conversation id array
-    name: String, // name id
+    name: {
+        firstName: String,
+        lastName: String
+    },
     profilePic: String,
     phone: String,
     tasksCancelled: [String], // task id array
