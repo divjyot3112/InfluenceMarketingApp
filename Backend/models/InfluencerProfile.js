@@ -18,7 +18,10 @@ var InfluencerProfileSchema = new Schema({
     ratings: [String], // Rating id array
     taskCategories: [String], // Category id array
     conversations: [String], // Conversation id array
-    name: String, // Name id
+    name: {
+        firstName: String,
+        lastName: String
+    },
     tasksCompleted: [String], // Task id Array
     profileViewCount: Number,
     dateOfBirth: { type: Date, default: Date.now },
