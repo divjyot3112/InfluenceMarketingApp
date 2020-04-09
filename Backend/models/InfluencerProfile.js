@@ -22,7 +22,13 @@ var InfluencerProfileSchema = new Schema({
     tasksCompleted: [String], // Task id Array
     profileViewCount: Number,
     dateOfBirth: { type: Date, default: Date.now },
-    address: String // Address id
+    address: {
+        streetAddress: String,
+        city: String,
+        state: String,
+        country: String,
+        zipcode: String
+    }
 });
 
 module.exports = InfluencerProfile = mongoose.model('InfluencerProfile', InfluencerProfileSchema); 

@@ -16,7 +16,13 @@ var SponsorProfileSchema = new Schema({
     profilePic: String,
     phone: String,
     tasksCancelled: [String], // task id array
-    address: String, // address id
+    address: {
+        streetAddress: String,
+        city: String,
+        state: String,
+        country: String,
+        zipcode: String
+    },
     aboutMe: String
 });
 
