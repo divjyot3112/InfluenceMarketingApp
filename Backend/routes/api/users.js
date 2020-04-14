@@ -5,7 +5,7 @@ var config = require('../../config/main');
 const passport = require('passport');
 const path = require('path');
 const jwt = require('jsonwebtoken');
-const UserRoles = require('../../utils/Constants').UserRoles;
+const userRoles = require('../../utils/Constants').UserRoles;
 // Set up passport middleware
 var requireAuth = passport.authenticate('jwt', {session: false});
 
@@ -140,7 +140,7 @@ router.get('/profile', requireAuth, (req, res) => {
     User.findOne({ email: req.query.email })
         .then(user => {
             console.log(user.role)
-            if(user.role == UserRoles.INFLUENCER) {
+            if(user.role == userRoles.INFLUENCER) {
                 console.log("Getting influencer profile")
                 InfluencerProfile.findOne({email:req.query.email}) 
                 .then(infProfile => {
@@ -176,7 +176,7 @@ router.put('/profile', (req, res) => {
         .then(user => {
             console.log("User: ", user);
             if (user) {
-                if (user.role == UserRoles.SPONSOR) {
+                if (user.role == userRoles.SPONSOR) {
                     SponsorProfile.findOneAndUpdate({ email: req.query.email },
                         {
                             $set: {

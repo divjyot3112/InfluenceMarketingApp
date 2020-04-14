@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 var ObjectID = require('mongodb').ObjectID
-const TaskStatus = require('../../utils/Constants').TaskStatus;
+const taskStatus = require('../../utils/Constants').TaskStatus;
 
 // Bring in passport strategy
 require('../../config/passport')(passport)
@@ -27,7 +27,7 @@ router.post('/create', (req, res) => {
         vacancyCount: req.body.vacancyCount,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
-        status: TaskStatus.CREATED
+        status: taskStatus.CREATED
     }, (err1, result1) => {
         if (err1) {
             console.log(err1);
@@ -57,7 +57,7 @@ router.post('/create', (req, res) => {
 // @access  Public
 router.get('/', (req, res) => {
     console.log('Inside Task Get Request');
-    Task.find({ status: TaskStatus.CREATED }).sort({ postedOn: -1 }).then((tasks) => {
+    Task.find({ status: taskStatus.CREATED }).sort({ postedOn: -1 }).then((tasks) => {
         res.status(200).json({ success: true, message: tasks })
     })
         .catch((err) => {
@@ -178,7 +178,7 @@ router.put("/:taskId/select", (req, res) => {
                     { _id: ObjectID(req.params.taskId) },
                     {
                         $set: {
-                            status: TaskStatus.INPROGRESS
+                            status: taskStatus.INPROGRESS
                         }
                     },
                     { returnOriginal: false, useFindAndModify: false }

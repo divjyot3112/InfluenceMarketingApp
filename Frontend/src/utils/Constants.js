@@ -4,6 +4,7 @@ const UserRoles = {
 }
 
 const TaskStatus = {
+    CREATED: 'Created',
     INPROGRESS: 'In Progress',
     PENDING: 'Pending',
     COMPLETED: 'Completed',
