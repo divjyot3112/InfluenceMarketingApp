@@ -19,7 +19,7 @@ router.put('/rate', (req, res) => {
     }, (err1, rating) => {
         if (err1) {
             console.log(err1);
-            res.status(400).json({success: false, message: "Rating  could not be added"});
+            res.status(400).json({ success: false, message: "Rating  could not be added" });
         }
         console.log(req.query.email)
         InfluencerProfile.findOneAndUpdate({
@@ -28,7 +28,7 @@ router.put('/rate', (req, res) => {
             $push: {
                 ratings: rating._id
             }
-        }, {returnOriginal: false, useFindAndModify: false}).then(influencer => {
+        }, { returnOriginal: false, useFindAndModify: false }).then(influencer => {
             console.log("Updated Influencer: ", influencer)
             if (influencer) {
                 SponsorProfile.findOneAndUpdate({
@@ -37,25 +37,25 @@ router.put('/rate', (req, res) => {
                     $push: {
                         ratings: rating._id
                     }
-                }, {returnOriginal: false, useFindAndModify: false}).then(result2 => {
-                    res.status(200).json({success: true, message: "Rating added successfully!"})
+                }, { returnOriginal: false, useFindAndModify: false }).then(result2 => {
+                    res.status(200).json({ success: true, message: "Rating added successfully!" })
                 }).catch((err2) => {
                     //delete the rating
-                    Rating.findOneAndDelete({_id: ObjectID(rating._id)});
-                    InfluencerProfile.findOneAndDelete({_id: ObjectID(influencer._id)})
+                    Rating.findOneAndDelete({ _id: ObjectID(rating._id) });
+                    InfluencerProfile.findOneAndDelete({ _id: ObjectID(influencer._id) })
                     console.log(err2);
-                    res.status(400).json({success: false, message: err2})
+                    res.status(400).json({ success: false, message: err2 })
                 })
             } else {
                 //delete the rating
-                Rating.findOneAndDelete({_id: ObjectID(rating._id)});
-                res.status(400).json({success: false, message: "Influencer not found!"})
+                Rating.findOneAndDelete({ _id: ObjectID(rating._id) });
+                res.status(400).json({ success: false, message: "Influencer not found!" })
             }
         }).catch((err3) => {
             //delete the rating and influencer
-            Rating.findOneAndDelete({_id: ObjectID(rating._id)});
+            Rating.findOneAndDelete({ _id: ObjectID(rating._id) });
             console.log(err3);
-            res.status(400).json({success: false, message: err3})
+            res.status(400).json({ success: false, message: err3 })
         })
     })
 
@@ -69,21 +69,21 @@ router.get("/profile", (req, res) => {
         " city: " + req.query.city);
 
     InfluencerProfile.find({
-        "address.city": {$regex: new RegExp(req.query.city, "i")}
+        "address.city": { $regex: new RegExp(req.query.city, "i") }
     })
         .then(profile => {
             if (profile.length != 0) {
                 console.log("Influencer Profiles fetched successfully for " +
                     "city: " + req.query.city);
-                res.status(200).json({message: profile});
+                res.status(200).json({ message: profile });
             } else {
                 console.log("No Influencer Profiles found");
-                res.status(404).json({message: "No Influencer Profiles found"});
+                res.status(404).json({ message: "No Influencer Profiles found" });
             }
         })
         .catch(err => {
             console.log(err);
-            res.status(400).json({message: "Influencer Profiles could not be fetched"});
+            res.status(400).json({ message: "Influencer Profiles could not be fetched" });
         })
 });
 
