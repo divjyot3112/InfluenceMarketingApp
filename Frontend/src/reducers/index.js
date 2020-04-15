@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import userReducer from './userReducer';
-import dashboardReducer from './dashboardReducer';
+import {dashboardTasksReducer, dashboardNumPageReducer, dashboardCurrentPageTasksReducer} from './dashboardReducer';
 
 export default combineReducers({
     user: userReducer,
-    dashboardTasks: dashboardReducer
+    dashboardTasks: dashboardTasksReducer,
+    dashboardNumPages: dashboardNumPageReducer,
+    dashboardCurrentPageTasks: dashboardCurrentPageTasksReducer
 });
