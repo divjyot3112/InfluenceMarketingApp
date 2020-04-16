@@ -1,4 +1,4 @@
-import React,{Component} from 'react';
+import React, { Component } from 'react';
 import { connect } from "react-redux";
 import _ from "lodash";
 import { fetchDashboardTasks, getCurrentPageTasks } from "../../actions/dashboardActions";
@@ -21,19 +21,19 @@ import AddRatingModal from './AddRatingModal'
 
 const useStyles = (theme) => ({
     cardGrid: {
-      paddingTop: theme.spacing(8),
-      paddingBottom: theme.spacing(8),
+        paddingTop: theme.spacing(8),
+        paddingBottom: theme.spacing(8),
     },
     card: {
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
     },
     cardMedia: {
-      paddingTop: '56.25%', // 16:9
+        paddingTop: '56.25%', // 16:9
     },
     cardContent: {
-      flexGrow: 1,
+        flexGrow: 1,
     },
     root: {
         '& > *': {
@@ -42,7 +42,7 @@ const useStyles = (theme) => ({
     }
 });
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+/*const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 const tasks = [{
     title: "Task1",
     description: "This is task1",
@@ -53,10 +53,9 @@ const tasks = [{
     description: "This is task2",
     postedOn: "12/3/2020"
 }
-]
+]*/
 
 class SponsorDashboard extends Component {
-
 
     constructor(props) {
         super(props);
@@ -65,7 +64,7 @@ class SponsorDashboard extends Component {
             numPages: 0
         }
     }
-    
+
     //get the courses data from backend  
     componentDidMount() {
         //TODO: get all tasks instead
@@ -77,13 +76,12 @@ class SponsorDashboard extends Component {
             currentPageTasks: this.props.getCurrentPageTasks(value, this.props.dashboardTasks)
         })
     }
-    
-      
+
     renderTasks() {
         const { classes } = this.props;
-        return _.map(this.props.currentPageTasks,(task) => (
+        return _.map(this.props.currentPageTasks, (task) => (
             <Grid item key={task} xs={10} sm={6} md={3}> {/*md was 4*/}
-                <Card onClick={() =>alert("Hey")} className={classes.card}>
+                <Card onClick={() => alert("Hey")} className={classes.card}>
                     <CardMedia
                         className={classes.cardMedia}
                         image="https://source.unsplash.com/random"
@@ -115,7 +113,6 @@ class SponsorDashboard extends Component {
         ))
     }
 
-
     render() {
         const { classes } = this.props;
         return (
@@ -128,7 +125,7 @@ class SponsorDashboard extends Component {
                         {this.renderTasks()}
                     </Grid>
                     <div className={classes.root}>
-                        <Pagination count={this.props.numPages} variant="outlined" color="primary" onChange={this.handlePaginationClick} />    
+                        <Pagination count={this.props.numPages} variant="outlined" color="primary" onChange={this.handlePaginationClick} />
                     </div>
                 </Container>
             </React.Fragment>
@@ -147,7 +144,6 @@ function mapStateToProps(state) {
         numPages: state.dashboardNumPages,
         currentPageTasks: state.dashboardCurrentPageTasks
     };
-  }
-  
-  export default connect(mapStateToProps, { fetchDashboardTasks, getCurrentPageTasks })(withStyles(useStyles)(SponsorDashboard));
-  
+}
+
+export default connect(mapStateToProps, { fetchDashboardTasks, getCurrentPageTasks })(withStyles(useStyles)(SponsorDashboard));

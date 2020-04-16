@@ -16,7 +16,7 @@ export function dashboardTasksReducer(state = initialState, action) {
     }
 }
 
-export function dashboardNumPageReducer(state = 0, action){
+export function dashboardNumPageReducer(state = 0, action) {
     switch (action.type) {
         case DASHBOARD_TASKS:
             if (action.payload === undefined)
@@ -27,7 +27,7 @@ export function dashboardNumPageReducer(state = 0, action){
     }
 }
 
-export function dashboardCurrentPageTasksReducer(state = initialState, action){
+export function dashboardCurrentPageTasksReducer(state = initialState, action) {
     switch (action.type) {
         case DASHBOARD_TASKS:
             if (action.payload === undefined)
