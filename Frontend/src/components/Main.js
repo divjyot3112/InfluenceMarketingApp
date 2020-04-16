@@ -6,7 +6,7 @@ class Main extends Component {
     render(){
         return(
             <div>
-                <Route path="/sponsor/dashboard" component={SponsorDashboard} />
+                <Route path="/dashboard/sponsor" component={SponsorDashboard} />
             </div>
         )
     }
