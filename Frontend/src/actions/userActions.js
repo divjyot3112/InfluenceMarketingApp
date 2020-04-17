@@ -10,7 +10,6 @@ export const loginUser = data => dispatch => {
         .then(res => {
             if(res.status === 200){
                 localStorage.setItem('email', res.data.email);
-                localStorage.setItem('flag', res.data.flag);
                 console.log(res.status);
                 dispatch({
                     type: LOGIN_USER,
