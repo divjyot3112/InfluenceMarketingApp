@@ -9,7 +9,11 @@ var ConversationSchema = new Schema({
     // conversation_id: { type: Number, unique: true },
     firstUser: String, // User 1 email
     secondUser: String, // User 2 email
-    conversation: [String] // Message ids array
+    conversation: [{
+        author: String,
+        message: String,
+        timestamp: Date
+    }]
 });
 
 // ConversationSchema.plugin(AutoIncrement, { id: "conversation_seq", inc_field: "conversation_id" });
