@@ -138,31 +138,28 @@ router.post("/login", (req, res) => {
 // @access  Public
 router.get("/profile", (req, res) => {
     console.log("Inside Get Profile Request", req.query.email);
-    User.findOne({email: req.query.email})
-        .then((user) => {
-            if (user.role == userRoles.INFLUENCER) {
-                console.log("Getting influencer profile");
-                InfluencerProfile.findOne({email: req.query.email})
-                    .then((infProfile) => {
-                        res
-                            .status(200)
-                            .json({message: infProfile, role: userRoles.INFLUENCER});
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        res.status(400).json({message: "Could not fetch profile"});
-                    });
+    User.findOne({ email: req.query.email })
+        .then(user => {
+            console.log(user.role)
+            if(user.role == userRoles.INFLUENCER) {
+                console.log("Getting influencer profile")
+                InfluencerProfile.findOne({email:req.query.email}) 
+                .then(infProfile => {
+                    res.status(200).json({ message: infProfile, role: userRoles.INFLUENCER })
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.status(400).json({ message: "Could not fetch profile" });
+                })
             } else {
-                SponsorProfile.findOne({email: req.query.email})
-                    .then((sponProfile) => {
-                        res
-                            .status(200)
-                            .json({message: sponProfile, role: userRoles.SPONSOR});
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        res.status(400).json({message: "Could not fetch profile"});
-                    });
+                SponsorProfile.findOne({email:req.query.email}) 
+                .then(sponProfile => {
+                    res.status(200).json({ message: sponProfile, role: userRoles.SPONSOR })
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.status(400).json({ message: "Could not fetch profile" });
+                })
             }
         })
         .catch((err) => {

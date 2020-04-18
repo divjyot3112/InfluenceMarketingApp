@@ -102,7 +102,7 @@ router.put("/edit/:taskId", (req, res) => {
         { _id: ObjectID(req.params.taskId) },
         {
             $set: {
-                title: String,
+                title: req.body.title,
                 postedBy: req.body.postedBy,
                 postedOn: req.body.postedOn,
                 description: req.body.description,
