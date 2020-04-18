@@ -27,12 +27,10 @@ class FormEventHandlers extends Component {
     };
 
     validateProperty = (input) => {
-        if (input.name !== "gender") {
-            const obj = {[input.name]: input.value};
-            const subSchema = {[input.name]: this.schema[input.name]};
-            const {error} = Joi.validate(obj, subSchema); //should abort early
-            return error ? error.details[0].message : null;
-        }
+        const obj = {[input.name]: input.value};
+        const subSchema = {[input.name]: this.schema[input.name]};
+        const {error} = Joi.validate(obj, subSchema); //should abort early
+        return error ? error.details[0].message : null;
     };
 
     handleFirstName = (e) => {
@@ -150,9 +148,19 @@ class FormEventHandlers extends Component {
     };
 
     handleDateOfBirth = (e) => {
-        this.setState({
-            dateOfBirth: e,
-        });
+        const errors = {...this.state.errors};
+
+        var date = new Date();
+        date.setDate( date.getDate() + 1 );
+        date.setFullYear( date.getFullYear() - 18 );
+
+        if (e > date)
+            errors["dateOfBirth"] = "You should be at least 18 years old";
+        else delete errors["dateOfBirth"];
+
+        let data = this.state.dateOfBirth;
+        data = e;
+        this.setState({dateOfBirth: data, errors});
     };
 
     handleTaskCategories = (e) => {
