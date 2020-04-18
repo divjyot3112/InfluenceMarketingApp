@@ -26,7 +26,9 @@ var SponsorProfileSchema = new Schema({
         country: String,
         zipcode: String
     },
-    aboutMe: String
+    aboutMe: String,
+    gender: String,
+    dateOfBirth: { type: Date, default: Date.now }
 });
 
 module.exports = SponsorProfile = mongoose.model('SponsorProfile', SponsorProfileSchema); 
