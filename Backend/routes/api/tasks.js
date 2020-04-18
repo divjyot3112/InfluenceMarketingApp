@@ -132,24 +132,13 @@ router.put("/edit/:taskId", (req, res) => {
 // @route   GET api/tasks?email&&status
 // @desc    Fetch all tasks by current sponsor by email and filter using task status
 // @access  Public
-router.get("/?email&&status", (req, res) => {
-    console.log("Inside Get job by current sponsor with filter by status")
-    if(req.params.status=="All"){
+router.get("/filter", (req, res) => {
+    console.log("Inside Get tasks by current sponsor with filter by status")
+    if(req.query.status=="All") {
         Task.find({ postedBy: req.query.email })
             .then(tasks => {
                 if (tasks) {
-                    reqTasks = []
-                    tasks.map(task => {
-                        Id = task._id
-                        Title = task.title
-                        Images = task.images
-                        reqTasks.push({
-                            Id,
-                            Title,
-                            Images
-                        })
-                    })
-                    res.status(200).json({ message: reqTasks })
+                    res.status(200).json({ message: tasks })
                 } else {
                     res.status(400).json({ message: "No Tasks Found" })
                 }
@@ -162,18 +151,7 @@ router.get("/?email&&status", (req, res) => {
         Task.find({ postedBy: req.query.email, status: req.query.status })
             .then(tasks => {
                 if (tasks) {
-                    reqTasks = []
-                    tasks.map(task => {
-                        Id = task._id
-                        Title = task.title
-                        Images = task.images
-                        reqTasks.push({
-                            Id,
-                            Title,
-                            Images
-                        })
-                    })
-                    res.status(200).json({ message: reqTasks })
+                    res.status(200).json({ message: tasks })
                 } else {
                     res.status(400).json({ message: "No Tasks Found" })
                 }
