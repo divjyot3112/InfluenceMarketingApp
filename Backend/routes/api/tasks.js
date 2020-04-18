@@ -134,29 +134,55 @@ router.put("/edit/:taskId", (req, res) => {
 // @access  Public
 router.get("/?email&&status", (req, res) => {
     console.log("Inside Get job by current sponsor with filter by status")
-    Task.find({ postedBy: req.query.email, status: req.query.status })
-        .then(tasks => {
-            if (tasks) {
-                reqTasks = []
-                tasks.map(task => {
-                    Id = task._id
-                    Title = task.title
-                    Images = task.images
-                    reqTasks.push({
-                        Id,
-                        Title,
-                        Images
+    if(req.params.status=="All"){
+        Task.find({ postedBy: req.query.email })
+            .then(tasks => {
+                if (tasks) {
+                    reqTasks = []
+                    tasks.map(task => {
+                        Id = task._id
+                        Title = task.title
+                        Images = task.images
+                        reqTasks.push({
+                            Id,
+                            Title,
+                            Images
+                        })
                     })
-                })
-                res.status(200).json({ message: reqTasks })
-            } else {
-                res.status(400).json({ message: "No Tasks Found" })
-            }
-        })
-        .catch(err => {
-            console.log(err)
-            res.status(400).json({ message: "Tasks could not be fetched" })
-        })
+                    res.status(200).json({ message: reqTasks })
+                } else {
+                    res.status(400).json({ message: "No Tasks Found" })
+                }
+            })
+            .catch(err => {
+                console.log(err)
+                res.status(400).json({ message: "Tasks could not be fetched" })
+            })
+    } else {
+        Task.find({ postedBy: req.query.email, status: req.query.status })
+            .then(tasks => {
+                if (tasks) {
+                    reqTasks = []
+                    tasks.map(task => {
+                        Id = task._id
+                        Title = task.title
+                        Images = task.images
+                        reqTasks.push({
+                            Id,
+                            Title,
+                            Images
+                        })
+                    })
+                    res.status(200).json({ message: reqTasks })
+                } else {
+                    res.status(400).json({ message: "No Tasks Found" })
+                }
+            })
+            .catch(err => {
+                console.log(err)
+                res.status(400).json({ message: "Tasks could not be fetched" })
+            })
+    }
 })
 
 // @route   PUT api/tasks/:taskId/select 
