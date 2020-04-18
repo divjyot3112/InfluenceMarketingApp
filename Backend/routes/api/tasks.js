@@ -167,32 +167,53 @@ router.get("/filter", (req, res) => {
 // @desc    Select a candidate for a task by sponsor
 // @access  Public
 router.put("/:taskId/select", (req, res) => {
-    Task.findOneAndUpdate(
-        { _id: ObjectID(req.params.taskId) },
-        {
-            $set: {
-                selectedCandidates: req.body.selectedCandidates
-            }
-        },
-        { returnOriginal: false, useFindAndModify: false }
-    )
+    console.log("Inside select candidate request")
+    Task.findOne({_id: ObjectID(req.params.taskId)})
         .then(task => {
-            if (task.selectedCandidates.length == task.vacancyCount) {
+            if(task.status == taskStatus.CREATED) {
                 Task.findOneAndUpdate(
                     { _id: ObjectID(req.params.taskId) },
                     {
-                        $set: {
-                            status: taskStatus.INPROGRESS
+                        $push: {
+                            selectedCandidates: req.body.selectedCandidates
                         }
                     },
                     { returnOriginal: false, useFindAndModify: false }
                 )
+                    .then(task => {
+                        console.log("Checking if vacancy count is full"+task.vacancyCount)
+                        console.log(task.selectedCandidates.length)
+                        if (task.selectedCandidates.length == task.vacancyCount) {
+                            Task.findOneAndUpdate(
+                                { _id: ObjectID(req.params.taskId) },
+                                {
+                                    $set: {
+                                        status: taskStatus.INPROGRESS
+                                    }
+                                },
+                                { returnOriginal: false, useFindAndModify: false }
+                            )
+                                .then(task => {
+                                    console.log("Status set successfully")
+                                    res.status(200).json({message: "Candidates selected successfully and status of task changed"})
+                                })
+                                .catch(err => {
+                                    console.log(err)
+                                    res.status(400)
+                                })
+                        } else {
+                            res.status(200).json({message: "Candidate selected successfully"})
+                        }
+                    })
                     .catch(err => {
                         console.log(err)
                         res.status(400)
                     })
+            } else {
+                res.status(400).json({message: "Candidate(s) cannot be selected at this time"})
             }
         })
+        
 })
 
 // @route   PUT api/tasks/complete/:taskId
