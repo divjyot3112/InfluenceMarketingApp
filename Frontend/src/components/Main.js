@@ -9,6 +9,7 @@ class Main extends Component {
         return (
             <div>
                 <Route path="/dashboard/sponsor" component={SponsorDashboard} />
+                <Route path="/profile" exact component={UserProfile}/>
                 <Route path="/inbox" component={Messenger} />
             </div>
         );
