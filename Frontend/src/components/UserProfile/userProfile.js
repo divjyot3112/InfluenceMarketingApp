@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React from "react";
 import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
@@ -396,7 +396,11 @@ class UserProfile extends FormEventHandlers {
                                         id="dateOfBirth"
                                         time={false}
                                         placeholder="Date of Birth"
+                                        error={this.state.errors.dateOfBirth}
                                     />
+                                    {this.state.errors.dateOfBirth && (
+                                        <div className="error">{this.state.errors.dateOfBirth} </div>
+                                    )}
                                     <br/>
 
                                     <If condition={this.state.role === userRoles.SPONSOR}>
@@ -638,7 +642,6 @@ class UserProfile extends FormEventHandlers {
 }
 
 UserProfile.propTypes = {
-    profile: PropTypes.object.isRequired,
     getProfile: PropTypes.func.isRequired,
     saveProfile: PropTypes.func.isRequired,
     updated: PropTypes.object.isRequired,
