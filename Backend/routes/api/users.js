@@ -25,30 +25,31 @@ const Address = require('../../models/Address')
 router.post('/login', (req, res) => {
     console.log('Inside Login Post Request');
     console.log(req.body.email, req.body.password);
-    
-    User.findOne({ email: req.body.email })
+
+    User.findOne({email: req.body.email})
         .then(user => {
-            if(user) {                 
-                user.comparePassword(req.body.password, function(err, isMatch) {
-                    if(isMatch && !err) {
+            if (user) {
+                user.comparePassword(req.body.password, function (err, isMatch) {
+                    if (isMatch && !err) {
                         // Creating token if password is a match and no errors
                         var token = jwt.sign({user}, config.secret, {
                             expiresIn: 10080 // In seconds
                         });
                         res.status(200).json({
-                            message: "Login Successful", 
+                            message: "Login Successful",
                             token: "Bearer " + token
-                        }); 
+                        });
                     } else {
-                        res.status(401).json({ message: 'Incorrect Password' });
+                        res.status(401).json({message: 'Incorrect Password'});
                     }
                 });
+            } else {
+                res.status(404).json({message: 'User not found'})
             }
-            else { res.status(404).json({ message: 'User not found' }) }
         })
-        .catch(err => { 
-            console.log(err); 
-            res.status(404).json({ message: 'Something went wrong' });
+        .catch(err => {
+            console.log(err);
+            res.status(404).json({message: 'Something went wrong'});
         })
 });
 
@@ -137,33 +138,32 @@ router.post('/login', (req, res) => {
 // @access  Public
 router.get('/profile', requireAuth, (req, res) => {
     console.log("Inside Get Profile Request", req.query.email);
-    User.findOne({ email: req.query.email })
+    User.findOne({email: req.query.email})
         .then(user => {
-            console.log(user.role)
-            if(user.role == userRoles.INFLUENCER) {
+            if (user.role == userRoles.INFLUENCER) {
                 console.log("Getting influencer profile")
-                InfluencerProfile.findOne({email:req.query.email}) 
-                .then(infProfile => {
-                    res.status(200).json({ message: infProfile })
-                })
-                .catch(err => {
-                    console.log(err);
-                    res.status(400).json({ message: "Could not fetch profile" });
-                })
+                InfluencerProfile.findOne({email: req.query.email})
+                    .then(infProfile => {
+                        res.status(200).json({message: infProfile, role: userRoles.INFLUENCER})
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(400).json({message: "Could not fetch profile"});
+                    })
             } else {
-                SponsorProfile.findOne({email:req.query.email}) 
-                .then(sponProfile => {
-                    res.status(200).json({ message: sponProfile })
-                })
-                .catch(err => {
-                    console.log(err);
-                    res.status(400).json({ message: "Could not fetch profile" });
-                })
+                SponsorProfile.findOne({email: req.query.email})
+                    .then(sponProfile => {
+                        res.status(200).json({message: sponProfile, role: userRoles.SPONSOR})
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(400).json({message: "Could not fetch profile"});
+                    })
             }
         })
         .catch(err => {
             console.log(err);
-            res.status(400).json({ message: "Something went wrong!" });
+            res.status(400).json({message: "Something went wrong!"});
         })
 })
 // @route   PUT api/users/profile?email
@@ -172,12 +172,35 @@ router.get('/profile', requireAuth, (req, res) => {
 router.put('/profile', (req, res) => {
     console.log('Inside Update Profile put request');
     console.log("Profile to be updated: ", req.query.email);
-    User.findOne({ email: req.query.email })
+    User.findOne({email: req.query.email})
         .then(user => {
             console.log("User: ", user);
             if (user) {
                 if (user.role == userRoles.SPONSOR) {
-                    SponsorProfile.findOneAndUpdate({ email: req.query.email },
+                    SponsorProfile.findOneAndUpdate({email: req.query.email},
+                        {
+                            $set: {
+                                name: req.body.name,
+                                company: req.body.company,
+                                profilePic: req.body.profilePic,
+                                phone: req.body.phone,
+                                address: req.body.address,
+                                aboutMe: req.body.aboutMe,
+                                gender: req.body.gender,
+                                dateOfBirth: req.body.dateOfBirth
+                            }
+                        },
+                        {returnOriginal: false, useFindAndModify: false})
+                        .then(result => res.status(200).json({
+                            success: true,
+                            message: "Sponsor Profile updated successfully!"
+                        }))
+                        .catch(err => {
+                            console.log(err);
+                            res.status(400).json({success: false, message: err})
+                        })
+                } else {
+                    InfluencerProfile.findOneAndUpdate({email: req.query.email},
                         {
                             $set: {
                                 name: req.body.name,
@@ -185,35 +208,28 @@ router.put('/profile', (req, res) => {
                                 profilePic: req.body.profilePic,
                                 phone: req.body.phone,
                                 address: req.body.address,
-                                aboutMe: req.body.aboutMe
+                                aboutMe: req.body.aboutMe,
+                                gender: req.body.gender,
+                                dateOfBirth: req.body.dateOfBirth
                             }
                         },
-                        { returnOriginal: false, useFindAndModify: false })
-                        .then(result => res.status(200).json({ success: true, message: "Sponsor Profile updated successfully!" }))
-                        .catch(err => { console.log(err); res.status(400).json({ success: false, message: err }) })
+                        {returnOriginal: false, useFindAndModify: false})
+                        .then(result => res.status(200).json({
+                            success: true,
+                            message: "Influencer Profile updated successfully!"
+                        }))
+                        .catch(err => {
+                            console.log(err);
+                            res.status(400).json({success: false, message: err})
+                        })
                 }
-                else {
-                    InfluencerProfile.findOneAndUpdate({ email: req.query.email },
-                        {
-                            $set: {
-                                name: req.body.name,
-                                taskCategories: req.body.taskCategories,
-                                profilePic: req.body.profilePic,
-                                phone: req.body.phone,
-                                address: req.body.address,
-                                aboutMe: req.body.aboutMe
-                            }
-                        },
-                        { returnOriginal: false ,useFindAndModify: false})
-                        .then(result => res.status(200).json({ success: true, message: "Influencer Profile updated successfully!" }))
-                        .catch(err => { console.log(err); res.status(400).json({ success: false, message: err }) })
-                }
+            } else {
+                res.status(400).json({success: false, message: "User not found"});
             }
-            else { res.status(400).json({ success: false, message: "User not found" }); }
         })
         .catch(err => {
             console.log(err);
-            res.status(400).json({ success: false, message: err });
+            res.status(400).json({success: false, message: err});
         })
 });
 
@@ -231,13 +247,13 @@ router.patch('/profile/deactivate', (req, res) => {
                     if (isMatch && !err) {
                         // updating isActive to false
                         User.update(
-                            { email: req.query.email },
+                            {email: req.query.email},
                             {
                                 $set: {
                                     isActive: false
                                 }
                             },
-                            function(err, result) {
+                            function (err, result) {
                                 if (err) {
                                     res.status(401).json({message: 'Something went wrong'});
                                 } else {
