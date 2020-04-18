@@ -13,12 +13,14 @@ const passport = require('passport');
 
 // const users = require('./routes/api/users');
 // const tasks = require('./routes/api/tasks');
+const WebSocket = require('ws');
 
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 const users = require('./routes/api/users');
 const tasks = require('./routes/api/tasks');
 const influencers = require('./routes/api/influencers');
+const inbox = require('./routes/api/inbox');
 const images = require('./routes/api/users');
  
 // To get POST requests for API use
@@ -54,6 +56,7 @@ mongoose
 app.use('/api/users', users);
 app.use('/api/tasks', tasks);
 app.use('/api/influencers', influencers);
+app.use('/api/inbox', inbox);
 
 // Serve static assets if in production
 if(process.env.NODE_ENV === 'production') {
@@ -65,6 +68,19 @@ if(process.env.NODE_ENV === 'production') {
     });
 }
 
-const port = process.env.PORT || 5000;
 
+
+const wss = new WebSocket.Server({ port: 3030 });
+wss.on('connection', function connection(ws) {
+    ws.on('message', function incoming(data) {
+      wss.clients.forEach(function each(client) {
+        if (client !== ws && client.readyState === WebSocket.OPEN) {
+          client.send(data);
+        }
+      });
+    });
+});
+
+const port = process.env.PORT || 5000;
+  
 app.listen(port, () => console.log(`Server started on ${port}`));
