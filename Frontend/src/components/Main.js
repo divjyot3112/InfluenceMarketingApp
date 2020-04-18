@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Route} from 'react-router-dom';
-import SponsorDashboard from './Dashboard/SponsorDashboard';
+import React, {Component} from "react";
+import {Route} from "react-router-dom";
+import SponsorDashboard from "./Dashboard/SponsorDashboard";
 import UserProfile from "./UserProfile/userProfile";
 
 class Main extends Component {
@@ -10,7 +10,7 @@ class Main extends Component {
                 <Route path="/dashboard/sponsor" exact component={SponsorDashboard}/>
                 <Route path="/profile" exact component={UserProfile}/>
             </div>
-        )
+        );
     }
 }
 

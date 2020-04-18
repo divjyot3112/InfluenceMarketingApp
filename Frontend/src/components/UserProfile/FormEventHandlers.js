@@ -3,10 +3,10 @@ import Joi from "joi-browser";
 
 class FormEventHandlers extends Component {
     state = {
-        errors: {}
+        errors: {},
     };
 
-    handleSubmit = e => {
+    handleSubmit = (e) => {
         e.preventDefault(); //to avoid full page loading
 
         const errors = this.validate();
@@ -26,7 +26,7 @@ class FormEventHandlers extends Component {
         return errors;
     };
 
-    validateProperty = input => {
+    validateProperty = (input) => {
         if (input.name !== "gender") {
             const obj = {[input.name]: input.value};
             const subSchema = {[input.name]: this.schema[input.name]};
@@ -35,7 +35,7 @@ class FormEventHandlers extends Component {
         }
     };
 
-    handleFirstName = e => {
+    handleFirstName = (e) => {
         const errors = {...this.state.errors};
         const errorMessage = this.validateProperty(e.currentTarget);
         if (errorMessage) {
@@ -47,7 +47,7 @@ class FormEventHandlers extends Component {
         this.setState({firstName: data, errors});
     };
 
-    handleLastName = e => {
+    handleLastName = (e) => {
         const errors = {...this.state.errors};
         const errorMessage = this.validateProperty(e.currentTarget);
         if (errorMessage) {
@@ -59,7 +59,7 @@ class FormEventHandlers extends Component {
         this.setState({lastName: data, errors});
     };
 
-    handleAboutMe = e => {
+    handleAboutMe = (e) => {
         const errors = {...this.state.errors};
         const errorMessage = this.validateProperty(e.currentTarget);
         if (errorMessage) {
@@ -71,7 +71,7 @@ class FormEventHandlers extends Component {
         this.setState({aboutMe: data, errors});
     };
 
-    handleCity = e => {
+    handleCity = (e) => {
         const errors = {...this.state.errors};
         const errorMessage = this.validateProperty(e.currentTarget);
         if (errorMessage) {
@@ -83,7 +83,7 @@ class FormEventHandlers extends Component {
         this.setState({city: data, errors});
     };
 
-    handleStreetAddress = e => {
+    handleStreetAddress = (e) => {
         const errors = {...this.state.errors};
         const errorMessage = this.validateProperty(e.currentTarget);
         if (errorMessage) {
@@ -95,7 +95,7 @@ class FormEventHandlers extends Component {
         this.setState({streetAddress: data, errors});
     };
 
-    handleState = e => {
+    handleState = (e) => {
         const errors = {...this.state.errors};
         const errorMessage = this.validateProperty(e.currentTarget);
         if (errorMessage) {
@@ -107,7 +107,7 @@ class FormEventHandlers extends Component {
         this.setState({state: data, errors});
     };
 
-    handleCountry = e => {
+    handleCountry = (e) => {
         const errors = {...this.state.errors};
         const errorMessage = this.validateProperty(e.currentTarget);
         if (errorMessage) {
@@ -119,7 +119,7 @@ class FormEventHandlers extends Component {
         this.setState({country: data, errors});
     };
 
-    handleZipcode = e => {
+    handleZipcode = (e) => {
         const errors = {...this.state.errors};
         const errorMessage = this.validateProperty(e.currentTarget);
         if (errorMessage) {
@@ -131,7 +131,7 @@ class FormEventHandlers extends Component {
         this.setState({zipcode: data, errors});
     };
 
-    handlePhone = e => {
+    handlePhone = (e) => {
         const errors = {...this.state.errors};
         const errorMessage = this.validateProperty(e.currentTarget);
         if (errorMessage) {
@@ -143,34 +143,33 @@ class FormEventHandlers extends Component {
         this.setState({phone: data, errors});
     };
 
-    handleGender = e => {
+    handleGender = (e) => {
         this.setState({
-            gender: e.target.value
+            gender: e.target.value,
         });
     };
 
-    handleDateOfBirth = e => {
+    handleDateOfBirth = (e) => {
         this.setState({
-            dateOfBirth: e
+            dateOfBirth: e,
         });
     };
 
-
-    handleTaskCategories = e => {
-        var joined = []
+    handleTaskCategories = (e) => {
+        var joined = [];
         if (e.target.checked)
             joined = this.state.taskCategories.concat(e.target.value);
         else
             joined = this.state.taskCategories.filter(function (category) {
-                return category !== e.target.value
-            })
+                return category !== e.target.value;
+            });
 
         this.setState({
-            taskCategories: joined
+            taskCategories: joined,
         });
     };
 
-    handleCompany = e => {
+    handleCompany = (e) => {
         const errors = {...this.state.errors};
         const errorMessage = this.validateProperty(e.currentTarget);
         if (errorMessage) {

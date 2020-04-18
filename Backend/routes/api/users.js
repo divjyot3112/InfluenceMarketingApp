@@ -1,56 +1,56 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const multer = require('multer');
-var config = require('../../config/main');
-const passport = require('passport');
-const path = require('path');
-const jwt = require('jsonwebtoken');
-const userRoles = require('../../utils/Constants').UserRoles;
+const multer = require("multer");
+var config = require("../../config/main");
+const passport = require("passport");
+const path = require("path");
+const jwt = require("jsonwebtoken");
+const userRoles = require("../../utils/Constants").UserRoles;
 // Set up passport middleware
-var requireAuth = passport.authenticate('jwt', {session: false});
+var requireAuth = passport.authenticate("jwt", {session: false});
 
 // Bring in passport strategy
-require('../../config/passport')(passport)
+require("../../config/passport")(passport);
 
 // Import models
-const User = require('../../models/User');
-const InfluencerProfile = require('../../models/InfluencerProfile')
-const SponsorProfile = require('../../models/SponsorProfile')
-const Name = require('../../models/Name')
-const Address = require('../../models/Address')
+const User = require("../../models/User");
+const InfluencerProfile = require("../../models/InfluencerProfile");
+const SponsorProfile = require("../../models/SponsorProfile");
+const Name = require("../../models/Name");
+const Address = require("../../models/Address");
 
 // @route   POST api/users/login
 // @desc    Login User
 // @access  Public
-router.post('/login', (req, res) => {
-    console.log('Inside Login Post Request');
+router.post("/login", (req, res) => {
+    console.log("Inside Login Post Request");
     console.log(req.body.email, req.body.password);
 
     User.findOne({email: req.body.email})
-        .then(user => {
+        .then((user) => {
             if (user) {
                 user.comparePassword(req.body.password, function (err, isMatch) {
                     if (isMatch && !err) {
                         // Creating token if password is a match and no errors
                         var token = jwt.sign({user}, config.secret, {
-                            expiresIn: 10080 // In seconds
+                            expiresIn: 10080, // In seconds
                         });
                         res.status(200).json({
                             message: "Login Successful",
-                            token: "Bearer " + token
+                            token: "Bearer " + token,
                         });
                     } else {
-                        res.status(401).json({message: 'Incorrect Password'});
+                        res.status(401).json({message: "Incorrect Password"});
                     }
                 });
             } else {
-                res.status(404).json({message: 'User not found'})
+                res.status(404).json({message: "User not found"});
             }
         })
-        .catch(err => {
+        .catch((err) => {
             console.log(err);
-            res.status(404).json({message: 'Something went wrong'});
-        })
+            res.status(404).json({message: "Something went wrong"});
+        });
 });
 
 // @route   POST api/users/signup
@@ -90,12 +90,12 @@ router.post('/login', (req, res) => {
 //                     //     lastName: ""
 //                     // });
 //                     // newName.save()
-//                     //     .then(name => { 
+//                     //     .then(name => {
 //                     //         console.log("Created name")
-//                     //         res.write("New name created successfully") 
+//                     //         res.write("New name created successfully")
 //                     //     })
-//                     //     .catch(err => { 
-//                     //         console.log(err); 
+//                     //     .catch(err => {
+//                     //         console.log(err);
 //                     //         res.write("Something went wrong while creating new name") .sendStatus(400)
 //                     //     })
 //                     const newInfluencerProfile = new InfluencerProfile({
@@ -136,48 +136,53 @@ router.post('/login', (req, res) => {
 // @route   GET api/users/profile?email
 // @desc    Get Profile
 // @access  Public
-router.get('/profile', requireAuth, (req, res) => {
+router.get("/profile", (req, res) => {
     console.log("Inside Get Profile Request", req.query.email);
     User.findOne({email: req.query.email})
-        .then(user => {
+        .then((user) => {
             if (user.role == userRoles.INFLUENCER) {
-                console.log("Getting influencer profile")
+                console.log("Getting influencer profile");
                 InfluencerProfile.findOne({email: req.query.email})
-                    .then(infProfile => {
-                        res.status(200).json({message: infProfile, role: userRoles.INFLUENCER})
+                    .then((infProfile) => {
+                        res
+                            .status(200)
+                            .json({message: infProfile, role: userRoles.INFLUENCER});
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.log(err);
                         res.status(400).json({message: "Could not fetch profile"});
-                    })
+                    });
             } else {
                 SponsorProfile.findOne({email: req.query.email})
-                    .then(sponProfile => {
-                        res.status(200).json({message: sponProfile, role: userRoles.SPONSOR})
+                    .then((sponProfile) => {
+                        res
+                            .status(200)
+                            .json({message: sponProfile, role: userRoles.SPONSOR});
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.log(err);
                         res.status(400).json({message: "Could not fetch profile"});
-                    })
+                    });
             }
         })
-        .catch(err => {
+        .catch((err) => {
             console.log(err);
             res.status(400).json({message: "Something went wrong!"});
-        })
-})
+        });
+});
 // @route   PUT api/users/profile?email
 // @desc    User profile update
 // @access  Public
-router.put('/profile', (req, res) => {
-    console.log('Inside Update Profile put request');
+router.put("/profile", (req, res) => {
+    console.log("Inside Update Profile put request");
     console.log("Profile to be updated: ", req.query.email);
     User.findOne({email: req.query.email})
-        .then(user => {
+        .then((user) => {
             console.log("User: ", user);
             if (user) {
                 if (user.role == userRoles.SPONSOR) {
-                    SponsorProfile.findOneAndUpdate({email: req.query.email},
+                    SponsorProfile.findOneAndUpdate(
+                        {email: req.query.email},
                         {
                             $set: {
                                 name: req.body.name,
@@ -187,20 +192,24 @@ router.put('/profile', (req, res) => {
                                 address: req.body.address,
                                 aboutMe: req.body.aboutMe,
                                 gender: req.body.gender,
-                                dateOfBirth: req.body.dateOfBirth
-                            }
+                                dateOfBirth: req.body.dateOfBirth,
+                            },
                         },
-                        {returnOriginal: false, useFindAndModify: false})
-                        .then(result => res.status(200).json({
-                            success: true,
-                            message: "Sponsor Profile updated successfully!"
-                        }))
-                        .catch(err => {
+                        {returnOriginal: false, useFindAndModify: false}
+                    )
+                        .then((result) =>
+                            res.status(200).json({
+                                success: true,
+                                message: "Sponsor Profile updated successfully!",
+                            })
+                        )
+                        .catch((err) => {
                             console.log(err);
-                            res.status(400).json({success: false, message: err})
-                        })
+                            res.status(400).json({success: false, message: err});
+                        });
                 } else {
-                    InfluencerProfile.findOneAndUpdate({email: req.query.email},
+                    InfluencerProfile.findOneAndUpdate(
+                        {email: req.query.email},
                         {
                             $set: {
                                 name: req.body.name,
@@ -210,38 +219,41 @@ router.put('/profile', (req, res) => {
                                 address: req.body.address,
                                 aboutMe: req.body.aboutMe,
                                 gender: req.body.gender,
-                                dateOfBirth: req.body.dateOfBirth
-                            }
+                                dateOfBirth: req.body.dateOfBirth,
+                            },
                         },
-                        {returnOriginal: false, useFindAndModify: false})
-                        .then(result => res.status(200).json({
-                            success: true,
-                            message: "Influencer Profile updated successfully!"
-                        }))
-                        .catch(err => {
+                        {returnOriginal: false, useFindAndModify: false}
+                    )
+                        .then((result) =>
+                            res.status(200).json({
+                                success: true,
+                                message: "Influencer Profile updated successfully!",
+                            })
+                        )
+                        .catch((err) => {
                             console.log(err);
-                            res.status(400).json({success: false, message: err})
-                        })
+                            res.status(400).json({success: false, message: err});
+                        });
                 }
             } else {
                 res.status(400).json({success: false, message: "User not found"});
             }
         })
-        .catch(err => {
+        .catch((err) => {
             console.log(err);
             res.status(400).json({success: false, message: err});
-        })
+        });
 });
 
 // @route   PATCH api/users/profile/deactivate?email
 // @desc    Deactivate User
 // @access  Private
-router.patch('/profile/deactivate', (req, res) => {
-    console.log('Inside User Deactivate Patch Request');
+router.patch("/profile/deactivate", (req, res) => {
+    console.log("Inside User Deactivate Patch Request");
     console.log(req.query.email, req.body.password);
 
     User.findOne({email: req.query.email})
-        .then(user => {
+        .then((user) => {
             if (user) {
                 user.comparePassword(req.body.password, function (err, isMatch) {
                     if (isMatch && !err) {
@@ -250,29 +262,29 @@ router.patch('/profile/deactivate', (req, res) => {
                             {email: req.query.email},
                             {
                                 $set: {
-                                    isActive: false
-                                }
+                                    isActive: false,
+                                },
                             },
                             function (err, result) {
                                 if (err) {
-                                    res.status(401).json({message: 'Something went wrong'});
+                                    res.status(401).json({message: "Something went wrong"});
                                 } else {
                                     res.status(200).json({message: "Deactivate Success"});
                                 }
                             }
                         );
                     } else {
-                        res.status(401).json({message: 'Incorrect Password'});
+                        res.status(401).json({message: "Incorrect Password"});
                     }
                 });
             } else {
-                res.status(404).json({message: 'User not found'})
+                res.status(404).json({message: "User not found"});
             }
         })
-        .catch(err => {
+        .catch((err) => {
             console.log(err);
-            res.status(404).json({message: 'Something went wrong'});
-        })
+            res.status(404).json({message: "Something went wrong"});
+        });
 });
 
 module.exports = router;
