@@ -12,7 +12,8 @@ var ConversationSchema = new Schema({
     conversation: [{
         author: String,
         message: String,
-        timestamp: Date
+        timestamp: Date,
+        read:Boolean
     }]
 });
 
