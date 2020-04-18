@@ -144,7 +144,7 @@ router.get('/profile', requireAuth, (req, res) => {
                 console.log("Getting influencer profile")
                 InfluencerProfile.findOne({email:req.query.email}) 
                 .then(infProfile => {
-                    res.status(200).json({ message: infProfile })
+                    res.status(200).json({ message: infProfile, role: userRoles.INFLUENCER })
                 })
                 .catch(err => {
                     console.log(err);
@@ -153,7 +153,7 @@ router.get('/profile', requireAuth, (req, res) => {
             } else {
                 SponsorProfile.findOne({email:req.query.email}) 
                 .then(sponProfile => {
-                    res.status(200).json({ message: sponProfile })
+                    res.status(200).json({ message: sponProfile, role: userRoles.SPONSOR })
                 })
                 .catch(err => {
                     console.log(err);
