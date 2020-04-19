@@ -11,6 +11,8 @@ import "../../css/postTask.css";
 import PostTaskFormEventHandlers from "./PostTaskFormEventHandlers";
 import {saveTask} from "../../actions/taskActions";
 
+const TaskCategories = require("../../utils/Constants").TaskCategories;
+
 momentLocaliser(moment);
 
 class PostTask extends PostTaskFormEventHandlers {
@@ -228,18 +230,9 @@ class PostTask extends PostTaskFormEventHandlers {
                                             error={this.state.errors.category}
                                         >
                                             <option value="" selected disabled>Select Category</option>
-                                            <option value="Movies & TV"> Movies & TV</option>
-                                            <option value="Food">Food</option>
-                                            <option value="Travel">Travel</option>
-                                            <option value="Sports & Outdoors">Sports & Outdoors</option>
-                                            <option value="Fitness & Gym">Fitness & Gym</option>
-                                            <option value="Automobile">Automobile</option>
-                                            <option value="Beauty and Personal Care">Beauty and Personal Care</option>
-                                            <option value="Video Games">Video Games</option>
-                                            <option value="Electronics">Electronics</option>
-                                            <option value="Health">Health</option>
-                                            <option value="Education">Education</option>
-                                            <option value="Photography">Photography</option>
+                                            {TaskCategories.map(value => (
+                                                <option value={value}>{value}</option>
+                                            ))}
                                         </select>
                                         {this.state.errors.category && (
                                             <div className="error">{this.state.errors.category} </div>
