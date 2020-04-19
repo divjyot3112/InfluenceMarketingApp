@@ -13,6 +13,8 @@ import {getProfile, saveProfile} from "../../actions/userProfileActions";
 import "../../css/userProfile.css";
 
 const userRoles = require("../../utils/Constants").UserRoles;
+const TaskCategories = require("../../utils/Constants").TaskCategories;
+const Gender = require("../../utils/Constants").Gender;
 
 momentLocaliser(moment);
 
@@ -95,7 +97,7 @@ class UserProfile extends UserProfileFormEventHandlers {
 
     componentDidMount() {
         // TODO: Get username from local storage
-        const username = "sheena@gmail.com";
+        const username = "divjyot@gmail.com";
 
         this.props.getProfile(username, (response) => {
             if (response.status === 200) {
@@ -144,7 +146,7 @@ class UserProfile extends UserProfileFormEventHandlers {
     handleProfile = (e) => {
         e.preventDefault();
         // TODO: Get username from local storage
-        const email = "sheena@gmail.com";
+        const email = "divjyot@gmail.com";
 
         const data = {
             name: {
@@ -345,9 +347,9 @@ class UserProfile extends UserProfileFormEventHandlers {
                                         error={this.state.errors.gender}
                                     >
                                         <option value="" selected disabled>Select Gender</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Other">Other</option>
+                                        {Gender.map(value => (
+                                            <option value={value}>{value}</option>
+                                        ))}
                                     </select>
                                     {this.state.errors.gender && (
                                         <div className="error">{this.state.errors.gender} </div>
@@ -434,193 +436,23 @@ class UserProfile extends UserProfileFormEventHandlers {
                                                 </label>
                                             </b>
                                             <div className="form-check">
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    id="movies"
-                                                    value="Movies & TV"
-                                                    onChange={this.handleTaskCategories}
-                                                    checked={this.state.taskCategories.includes(
-                                                        "Movies & TV"
-                                                    )}
-                                                />
-                                                <label className="form-check-label" htmlFor="movies">
-                                                    Movies & TV
-                                                </label>
-                                                <br/>
-
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    id="food"
-                                                    value="Food"
-                                                    onChange={this.handleTaskCategories}
-                                                    checked={this.state.taskCategories.includes("Food")}
-                                                />
-                                                <label className="form-check-label" htmlFor="food">
-                                                    Food
-                                                </label>
-                                                <br/>
-
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    id="travel"
-                                                    value="Travel"
-                                                    onChange={this.handleTaskCategories}
-                                                    checked={this.state.taskCategories.includes("Travel")}
-                                                />
-                                                <label className="form-check-label" htmlFor="travel">
-                                                    Travel
-                                                </label>
-                                                <br/>
-
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    id="sports"
-                                                    value="Sports & Outdoors"
-                                                    onChange={this.handleTaskCategories}
-                                                    checked={this.state.taskCategories.includes(
-                                                        "Sports & Outdoors"
-                                                    )}
-                                                />
-                                                <label className="form-check-label" htmlFor="sports">
-                                                    Sports & Outdoors
-                                                </label>
-                                                <br/>
-
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    id="fitness"
-                                                    value="Fitness & Gym"
-                                                    onChange={this.handleTaskCategories}
-                                                    checked={this.state.taskCategories.includes(
-                                                        "Fitness & Gym"
-                                                    )}
-                                                />
-                                                <label className="form-check-label" htmlFor="fitness">
-                                                    Fitness & Gym
-                                                </label>
-                                                <br/>
-
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    id="automobile"
-                                                    value="Automobile"
-                                                    onChange={this.handleTaskCategories}
-                                                    checked={this.state.taskCategories.includes(
-                                                        "Automobile"
-                                                    )}
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="automobile"
-                                                >
-                                                    Automobile
-                                                </label>
-                                                <br/>
-
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    id="personalCare"
-                                                    value="Beauty and Personal Care"
-                                                    onChange={this.handleTaskCategories}
-                                                    checked={this.state.taskCategories.includes(
-                                                        "Beauty and Personal Care"
-                                                    )}
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="personalCare"
-                                                >
-                                                    Beauty and Personal Care
-                                                </label>
-                                                <br/>
-
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    id="videoGames"
-                                                    value="Video Games"
-                                                    onChange={this.handleTaskCategories}
-                                                    checked={this.state.taskCategories.includes(
-                                                        "Video Games"
-                                                    )}
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="videoGames"
-                                                >
-                                                    Video Games
-                                                </label>
-                                                <br/>
-
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    id="electronics"
-                                                    value="Electronics"
-                                                    onChange={this.handleTaskCategories}
-                                                    checked={this.state.taskCategories.includes(
-                                                        "Electronics"
-                                                    )}
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="electronics"
-                                                >
-                                                    Electronics
-                                                </label>
-                                                <br/>
-
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    id="health"
-                                                    value="Health"
-                                                    onChange={this.handleTaskCategories}
-                                                    checked={this.state.taskCategories.includes("Health")}
-                                                />
-                                                <label className="form-check-label" htmlFor="health">
-                                                    Health
-                                                </label>
-                                                <br/>
-
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    id="education"
-                                                    value="Education"
-                                                    onChange={this.handleTaskCategories}
-                                                    checked={this.state.taskCategories.includes(
-                                                        "Education"
-                                                    )}
-                                                />
-                                                <label className="form-check-label" htmlFor="education">
-                                                    Education
-                                                </label>
-                                                <br/>
-
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    id="photography"
-                                                    value="Photography"
-                                                    onChange={this.handleTaskCategories}
-                                                    checked={this.state.taskCategories.includes(
-                                                        "Photography"
-                                                    )}
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="photography"
-                                                >
-                                                    Photography
-                                                </label>
+                                                {TaskCategories.map(value => (
+                                                    <div>
+                                                        <input
+                                                            className="form-check-input"
+                                                            type="checkbox"
+                                                            value={value}
+                                                            id={value}
+                                                            onChange={this.handleTaskCategories}
+                                                            checked={this.state.taskCategories.includes(
+                                                                value)}
+                                                        />
+                                                        <label className="form-check-label" htmlFor={value}>
+                                                            {value}
+                                                        </label>
+                                                        <br/>
+                                                    </div>
+                                                ))}
                                             </div>
                                         </div>
                                     </If>
