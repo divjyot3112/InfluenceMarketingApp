@@ -23,12 +23,13 @@ router.post('/create', (req, res) => {
         description: req.body.description,
         images: req.body.images,
         salary: req.body.salary,
-        category: req.body.taskCategory,
+        category: req.body.category,
         vacancyCount: req.body.vacancyCount,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         status: taskStatus.CREATED
     }, (err1, result1) => {
+            console.log(result1)
         if (err1) {
             console.log(err1);
             res.status(400).json({ success: false, message: "Task could not be added" });
