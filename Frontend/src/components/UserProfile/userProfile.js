@@ -341,12 +341,17 @@ class UserProfile extends UserProfileFormEventHandlers {
                                         placeholder="Gender"
                                         value={this.state.gender}
                                         onChange={this.handleGender}
+                                        onMouseOver={this.handleGender}
+                                        error={this.state.errors.gender}
                                     >
                                         <option value="" selected disabled>Select Gender</option>
                                         <option value="Female">Female</option>
                                         <option value="Male">Male</option>
                                         <option value="Other">Other</option>
                                     </select>
+                                    {this.state.errors.gender && (
+                                        <div className="error">{this.state.errors.gender} </div>
+                                    )}
                                     <br/>
 
                                     <div className="form-group">

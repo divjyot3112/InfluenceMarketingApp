@@ -70,9 +70,15 @@ class PostTaskFormEventHandlers extends Component {
     };
 
     handleCategory = (e) => {
-        this.setState({
-            category: e.target.value,
-        });
+        const errors = {...this.state.errors};
+
+        if (e.target.value ==  "") {
+            errors[e.currentTarget.name] = "Please select a task category";
+        } else delete errors[e.currentTarget.name];
+
+        let data = this.state.category;
+        data = e.target.value;
+        this.setState({category: data, errors});
     };
 
     handleVacancyCount = (e) => {

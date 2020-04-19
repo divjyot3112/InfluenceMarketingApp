@@ -223,7 +223,9 @@ class PostTask extends PostTaskFormEventHandlers {
                                             name="category"
                                             id="category"
                                             placeholder="Category"
+                                            onMouseOver={this.handleCategory}
                                             onChange={this.handleCategory}
+                                            error={this.state.errors.category}
                                         >
                                             <option value="" selected disabled>Select Category</option>
                                             <option value="Movies & TV"> Movies & TV</option>
@@ -239,6 +241,9 @@ class PostTask extends PostTaskFormEventHandlers {
                                             <option value="Education">Education</option>
                                             <option value="Photography">Photography</option>
                                         </select>
+                                        {this.state.errors.category && (
+                                            <div className="error">{this.state.errors.category} </div>
+                                        )}
                                     </div>
                                     <br/>
 
