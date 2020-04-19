@@ -1,7 +1,7 @@
 import {Component} from "react";
 import Joi from "joi-browser";
 
-class FormEventHandlers extends Component {
+class UserProfileFormEventHandlers extends Component {
     state = {
         errors: {},
     };
@@ -142,9 +142,15 @@ class FormEventHandlers extends Component {
     };
 
     handleGender = (e) => {
-        this.setState({
-            gender: e.target.value,
-        });
+        const errors = {...this.state.errors};
+
+        if (e.target.value ==  "") {
+            errors[e.currentTarget.name] = "Please select your gender";
+        } else delete errors[e.currentTarget.name];
+
+        let data = this.state.gender;
+        data = e.target.value;
+        this.setState({gender: data, errors});
     };
 
     handleDateOfBirth = (e) => {
@@ -190,4 +196,4 @@ class FormEventHandlers extends Component {
     };
 }
 
-export default FormEventHandlers;
+export default UserProfileFormEventHandlers;

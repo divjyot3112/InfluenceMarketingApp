@@ -3,8 +3,8 @@ import {reducer as formReducer} from "redux-form";
 import userReducer from './userReducer';
 import {dashboardTasksReducer, dashboardNumPageReducer, dashboardCurrentPageTasksReducer} from './dashboardReducer';
 import userProfileReducer from "./userProfileReducer";
+import taskReducer from "./taskReducer";
 import { fetchConversationsReducer } from './inboxReducer';
-
 
 export default combineReducers({
     user: userReducer,
@@ -13,5 +13,6 @@ export default combineReducers({
     dashboardCurrentPageTasks: dashboardCurrentPageTasksReducer,
     conversations: fetchConversationsReducer,
     userProfile: userProfileReducer,
+    task: taskReducer,
     form: formReducer
 });

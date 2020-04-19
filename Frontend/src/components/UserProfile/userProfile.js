@@ -8,7 +8,7 @@ import "react-widgets/dist/css/react-widgets.css";
 import {If} from "react-if";
 import moment from "moment";
 import momentLocaliser from "react-widgets-moment";
-import FormEventHandlers from "./FormEventHandlers";
+import UserProfileFormEventHandlers from "./UserProfileFormEventHandlers";
 import {getProfile, saveProfile} from "../../actions/userProfileActions";
 import "../../css/userProfile.css";
 
@@ -16,7 +16,7 @@ const userRoles = require("../../utils/Constants").UserRoles;
 
 momentLocaliser(moment);
 
-class UserProfile extends FormEventHandlers {
+class UserProfile extends UserProfileFormEventHandlers {
     constructor(props) {
         super(props);
 
@@ -341,14 +341,17 @@ class UserProfile extends FormEventHandlers {
                                         placeholder="Gender"
                                         value={this.state.gender}
                                         onChange={this.handleGender}
+                                        onMouseOver={this.handleGender}
+                                        error={this.state.errors.gender}
                                     >
-                                        <option value="Gender" disabled={true} selected={true}>
-                                            Select Gender
-                                        </option>
+                                        <option value="" selected disabled>Select Gender</option>
                                         <option value="Female">Female</option>
                                         <option value="Male">Male</option>
                                         <option value="Other">Other</option>
                                     </select>
+                                    {this.state.errors.gender && (
+                                        <div className="error">{this.state.errors.gender} </div>
+                                    )}
                                     <br/>
 
                                     <div className="form-group">
@@ -626,7 +629,7 @@ class UserProfile extends FormEventHandlers {
                             <div className="submit_button">
                                 <button
                                     type="submit"
-                                    className="btn btn-primary"
+                                    className="btn btn-success"
                                     onClick={this.handleProfile}
                                     disabled={Object.keys(this.state.errors).length !== 0}
                                 >
