@@ -170,11 +170,12 @@ class MessageList extends Component {
         <Toolbar
           //title="Conversation Title"
           title={this.props.conversationId}
-        rightItems={[
+       /* rightItems={[
+          
           <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
           <ToolbarButton key="video" icon="ion-ios-videocam" />,
           <ToolbarButton key="phone" icon="ion-ios-call" />
-        ]}
+        ]}*/
         />
 
         <div className="message-list-container">{this.renderMessages()}</div>

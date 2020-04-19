@@ -4,7 +4,7 @@ import userReducer from './userReducer';
 import {dashboardTasksReducer, dashboardNumPageReducer, dashboardCurrentPageTasksReducer} from './dashboardReducer';
 import userProfileReducer from "./userProfileReducer";
 import taskReducer from "./taskReducer";
-import { fetchConversationsReducer } from './inboxReducer';
+import { fetchConversationsReducer, fetchAllUsersForInboxReducer } from './inboxReducer';
 
 export default combineReducers({
     user: userReducer,
@@ -14,5 +14,6 @@ export default combineReducers({
     conversations: fetchConversationsReducer,
     userProfile: userProfileReducer,
     task: taskReducer,
+    inboxUsers: fetchAllUsersForInboxReducer,
     form: formReducer
 });

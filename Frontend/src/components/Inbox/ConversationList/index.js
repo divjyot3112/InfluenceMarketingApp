@@ -6,6 +6,7 @@ import ToolbarButton from '../ToolbarButton';
 import { fetchConversations, markRead } from "../../../actions/inboxActions";
 import { connect } from "react-redux";
 import './ConversationList.css';
+import SearchUsers from '../SearchUsers/SearchUsers';
 
 const MY_USER_ID = 'user2'; //TODO: add current user email
 class ConversationList extends Component {
@@ -77,7 +78,7 @@ class ConversationList extends Component {
       })
     } else {
       let filteredConversations = this.state.allConversations.filter(conversation => {
-        if (conversation.name.startsWith(str)) return true;
+        if (conversation.name.toLowerCase().startsWith(str.toLowerCase())) return true;
         else return false;
       })
 
@@ -106,11 +107,8 @@ class ConversationList extends Component {
       <div className="conversation-list">
         <Toolbar
           title="Messenger"
-           leftItems={[
-            <ToolbarButton key="cog" icon="ion-ios-cog" />
-          ]}
           rightItems={[
-            <ToolbarButton key="add" icon="ion-ios-add-circle-outline"/>
+            <SearchUsers key="add" icon="ion-ios-add-circle-outline"/>
           ]}
         />
         <ConversationSearch onSearch={this.searchConversation}/>
