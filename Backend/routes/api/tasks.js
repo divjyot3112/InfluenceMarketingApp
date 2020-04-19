@@ -23,7 +23,7 @@ router.post('/create', (req, res) => {
         description: req.body.description,
         images: req.body.images,
         salary: req.body.salary,
-        category: req.body.taskCategory,
+        category: req.body.category,
         vacancyCount: req.body.vacancyCount,
         startDate: req.body.startDate,
         endDate: req.body.endDate,

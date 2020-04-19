@@ -3,6 +3,7 @@ import {reducer as formReducer} from "redux-form";
 import userReducer from './userReducer';
 import {dashboardTasksReducer, dashboardNumPageReducer, dashboardCurrentPageTasksReducer} from './dashboardReducer';
 import userProfileReducer from "./userProfileReducer";
+import taskReducer from "./taskReducer";
 
 
 export default combineReducers({
@@ -11,5 +12,6 @@ export default combineReducers({
     dashboardNumPages: dashboardNumPageReducer,
     dashboardCurrentPageTasks: dashboardCurrentPageTasksReducer,
     userProfile: userProfileReducer,
+    task: taskReducer,
     form: formReducer
 });

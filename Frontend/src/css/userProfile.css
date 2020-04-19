@@ -49,14 +49,14 @@
 .submit_button {
     width: 100%;
     height: 100%;
-    margin-top: 1%;
+    margin-top: 3%;
 }
 
 .submit_button button {
-    border-radius: 200px;
     position: relative;
     left: 47%;
     top: 50%;
+    width:6%;
 }
 
 .error {

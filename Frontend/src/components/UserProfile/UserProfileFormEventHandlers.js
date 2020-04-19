@@ -1,7 +1,7 @@
 import {Component} from "react";
 import Joi from "joi-browser";
 
-class FormEventHandlers extends Component {
+class UserProfileFormEventHandlers extends Component {
     state = {
         errors: {},
     };
@@ -190,4 +190,4 @@ class FormEventHandlers extends Component {
     };
 }
 
-export default FormEventHandlers;
+export default UserProfileFormEventHandlers;
