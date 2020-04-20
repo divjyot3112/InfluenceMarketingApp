@@ -3,7 +3,7 @@ import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import Joi from "joi-browser";
-import DateTimePicker from "react-widgets/lib/DateTimePicker";
+import {DatePicker} from "@material-ui/pickers";
 import "react-widgets/dist/css/react-widgets.css";
 import {If} from "react-if";
 import moment from "moment";
@@ -11,11 +11,47 @@ import momentLocaliser from "react-widgets-moment";
 import UserProfileFormEventHandlers from "./UserProfileFormEventHandlers";
 import {getProfile, saveProfile} from "../../actions/userProfileActions";
 import "../../css/userProfile.css";
+import {makeStyles, withStyles} from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import PersonIcon from '@material-ui/icons/Person';
+import HomeIcon from '@material-ui/icons/Home';
+import LocationCityIcon from '@material-ui/icons/LocationCity';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import PublicIcon from '@material-ui/icons/Public';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import ExploreIcon from '@material-ui/icons/Explore';
+import ContactPhoneIcon from '@material-ui/icons/ContactPhone';
+import BusinessIcon from '@material-ui/icons/Business';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Grid from '@material-ui/core/Grid';
+import DateFnsUtils from '@date-io/date-fns';
+import 'date-fns';
+import {
+    MuiPickersUtilsProvider
+} from '@material-ui/pickers';
+import SaveIcon from '@material-ui/icons/Save';
+import Button from '@material-ui/core/Button';
 
 const userRoles = require("../../utils/Constants").UserRoles;
 const TaskCategories = require("../../utils/Constants").TaskCategories;
 const Gender = require("../../utils/Constants").Gender;
 
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        '& > *': {
+            margin: theme.spacing(1),
+            width: '25ch',
+        },
+    },
+    button: {
+        margin: theme.spacing(1),
+    },
+}));
 momentLocaliser(moment);
 
 class UserProfile extends UserProfileFormEventHandlers {
@@ -184,6 +220,8 @@ class UserProfile extends UserProfileFormEventHandlers {
     render() {
         // TODO: if user is not logged in, redirect to home
 
+        const {classes} = this.props;
+
         if (!this.state.exists) {
             return (
                 <React.Fragment>
@@ -194,6 +232,7 @@ class UserProfile extends UserProfileFormEventHandlers {
             return (
                 <React.Fragment>
                     <div className="main">
+
                         <div className="display_photo">
                             <img
                                 // TODO: add image
@@ -215,244 +254,267 @@ class UserProfile extends UserProfileFormEventHandlers {
                             {this.state.firstName} {this.state.lastName}
                         </div>
 
-                        <form>
+                        <form className={classes.root}>
                             <div className="profile_body">
                                 <div className="profile_information_left">
-                                    <div className="form-group">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="firstName"
-                                            placeholder="First Name"
-                                            onChange={this.handleFirstName}
-                                            name="firstName"
-                                            value={this.state.firstName}
-                                            autoFocus={true}
-                                            error={this.state.errors.firstName}
-                                            disabled={this.state.isCurrentUser === false}
-                                        />
-                                        {this.state.errors.firstName && (
-                                            <div className="error">
-                                                {this.state.errors.firstName}{" "}
-                                            </div>
-                                        )}
-                                    </div>
-                                    <br/>
-
-                                    <div className="form-group ">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="lastName"
-                                            placeholder="Last Name"
-                                            onChange={this.handleLastName}
-                                            name="lastName"
-                                            value={this.state.lastName}
-                                            error={this.state.errors.lastName}
-                                            disabled={this.state.isCurrentUser === false}
-                                        />
-                                        {this.state.errors.lastName && (
-                                            <div className="error">{this.state.errors.lastName} </div>
-                                        )}
-                                    </div>
-                                    <br/>
-
-                                    <div className="form-group ">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="streetAddress"
-                                            placeholder="Street Address"
-                                            onChange={this.handleStreetAddress}
-                                            name="streetAddress"
-                                            value={this.state.streetAddress}
-                                            error={this.state.errors.streetAddress}
-                                            disabled={this.state.isCurrentUser === false}
-                                        />
-                                        {this.state.errors.streetAddress && (
-                                            <div className="error">
-                                                {this.state.errors.streetAddress}{" "}
-                                            </div>
-                                        )}
-                                    </div>
-                                    <br/>
-
-                                    <div className="form-group">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="city"
-                                            placeholder="City"
-                                            name="city"
-                                            onChange={this.handleCity}
-                                            value={this.state.city}
-                                            error={this.state.errors.city}
-                                            disabled={this.state.isCurrentUser === false}
-                                        />
-                                        {this.state.errors.city && (
-                                            <div className="error">{this.state.errors.city} </div>
-                                        )}
-                                    </div>
-                                    <br/>
-
-                                    <div className="form-group">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="state"
-                                            placeholder="State"
-                                            name="state"
-                                            onChange={this.handleState}
-                                            value={this.state.state}
-                                            error={this.state.errors.state}
-                                            disabled={this.state.isCurrentUser === false}
-                                        />
-                                        {this.state.errors.state && (
-                                            <div className="error">{this.state.errors.state} </div>
-                                        )}
-                                    </div>
-                                    <br/>
-
-                                    <div className="form-group">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="country"
-                                            placeholder="Country"
-                                            name="country"
-                                            onChange={this.handleCountry}
-                                            value={this.state.country}
-                                            error={this.state.errors.country}
-                                            disabled={this.state.isCurrentUser === false}
-                                        />
-                                        {this.state.errors.country && (
-                                            <div className="error">{this.state.errors.country} </div>
-                                        )}
-                                    </div>
-                                    <br/>
-
-                                    <div className="form-group">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="zipcode"
-                                            placeholder="Zipcode"
-                                            name="zipcode"
-                                            onChange={this.handleZipcode}
-                                            value={this.state.zipcode}
-                                            error={this.state.errors.zipcode}
-                                            disabled={this.state.isCurrentUser === false}
-                                        />
-                                        {this.state.errors.zipcode && (
-                                            <div className="error">{this.state.errors.zipcode} </div>
-                                        )}
-                                    </div>
-                                    <br/>
-
-                                    <select
-                                        className="form-control"
-                                        name="gender"
-                                        id="gender"
-                                        placeholder="Gender"
-                                        value={this.state.gender}
-                                        onChange={this.handleGender}
-                                        onMouseOver={this.handleGender}
-                                        error={this.state.errors.gender}
+                                    <TextField
+                                        error
+                                        className="input-field"
+                                        onChange={this.handleFirstName}
+                                        name="firstName"
+                                        value={this.state.firstName}
+                                        autoFocus={true}
+                                        required
+                                        error={this.state.errors.firstName}
                                         disabled={this.state.isCurrentUser === false}
-                                    >
-                                        <option value="" selected disabled>Select Gender</option>
-                                        {Gender.map(value => (
-                                            <option value={value} >{value}</option>
-                                        ))}
-                                    </select>
-                                    {this.state.errors.gender && (
-                                        <div className="error">{this.state.errors.gender} </div>
-                                    )}
+                                        helperText={this.state.errors.firstName}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <PersonIcon/>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        label="First Name"/>
+                                    <br/>
                                     <br/>
 
-                                    <div className="form-group">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="phone"
-                                            placeholder="Contact Number"
-                                            name="phone"
-                                            onChange={this.handlePhone}
-                                            value={this.state.phone}
-                                            error={this.state.errors.phone}
+                                    <TextField
+                                        error
+                                        className="input-field"
+                                        onChange={this.handleLastName}
+                                        name="lastName"
+                                        value={this.state.lastName}
+                                        required
+                                        error={this.state.errors.lastName}
+                                        disabled={this.state.isCurrentUser === false}
+                                        helperText={this.state.errors.lastName}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <PersonIcon/>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        label="Last Name"/>
+                                    <br/>
+                                    <br/>
+
+                                    <TextField
+                                        error
+                                        className="input-field"
+                                        onChange={this.handleStreetAddress}
+                                        name="streetAddress"
+                                        value={this.state.streetAddress}
+                                        required
+                                        error={this.state.errors.streetAddress}
+                                        disabled={this.state.isCurrentUser === false}
+                                        helperText={this.state.errors.streetAddress}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <HomeIcon/>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        label="Street Address"/>
+                                    <br/>
+                                    <br/>
+
+                                    <TextField
+                                        error
+                                        className="input-field"
+                                        onChange={this.handleCity}
+                                        name="city"
+                                        value={this.state.city}
+                                        required
+                                        error={this.state.errors.city}
+                                        disabled={this.state.isCurrentUser === false}
+                                        helperText={this.state.errors.city}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <LocationCityIcon/>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        label="City"/>
+                                    <br/>
+                                    <br/>
+
+                                    <TextField
+                                        error
+                                        className="input-field"
+                                        onChange={this.handleState}
+                                        name="state"
+                                        value={this.state.state}
+                                        required
+                                        error={this.state.errors.state}
+                                        disabled={this.state.isCurrentUser === false}
+                                        helperText={this.state.errors.state}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <LocationOnIcon/>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        label="State"/>
+                                    <br/>
+                                    <br/>
+
+                                    <TextField
+                                        error
+                                        className="input-field"
+                                        onChange={this.handleCountry}
+                                        name="country"
+                                        value={this.state.country}
+                                        required
+                                        error={this.state.errors.country}
+                                        disabled={this.state.isCurrentUser === false}
+                                        helperText={this.state.errors.country}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <PublicIcon/>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        label="Country"/>
+                                    <br/>
+                                    <br/>
+
+                                    <TextField
+                                        error
+                                        className="input-field"
+                                        onChange={this.handleZipcode}
+                                        name="zipcode"
+                                        value={this.state.zipcode}
+                                        required
+                                        error={this.state.errors.zipcode}
+                                        disabled={this.state.isCurrentUser === false}
+                                        helperText={this.state.errors.zipcode}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <ExploreIcon/>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        label="Zipcode"/>
+                                    <br/>
+                                    <br/>
+
+                                    <FormControl className="classes.formControl input-field" required>
+                                        <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={this.state.gender}
+                                            onChange={this.handleGender}
+                                            onClick={this.handleGender}
+                                            name="gender"
+                                            error={this.state.errors.gender}
                                             disabled={this.state.isCurrentUser === false}
-                                        />
-                                        {this.state.errors.phone && (
-                                            <div className="error">{this.state.errors.phone} </div>
-                                        )}
-                                    </div>
+                                            required
+                                        >
+
+                                            {Gender.map(value => (
+                                                <MenuItem value={value}>{value}</MenuItem>
+                                            ))}
+                                        </Select>
+                                        <FormHelperText><span
+                                            className="error"> {this.state.errors.gender}</span></FormHelperText>
+                                    </FormControl>
+                                    <br/>
+                                    <br/>
+
+                                    <TextField
+                                        error
+                                        className="input-field"
+                                        onChange={this.handlePhone}
+                                        name="phone"
+                                        value={this.state.phone}
+                                        required
+                                        error={this.state.errors.phone}
+                                        disabled={this.state.isCurrentUser === false}
+                                        helperText={this.state.errors.phone}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <ContactPhoneIcon/>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        label="Contact Number"/>
+                                    <br/>
+                                    <br/>
                                 </div>
 
                                 <div className="profile_information_right">
-                                    <div className="form-group">
-                    <textarea
-                        className="form-control"
-                        name="aboutMe"
-                        id="aboutMe"
-                        rows={8}
-                        onChange={this.handleAboutMe}
-                        placeholder="About me"
-                        error={this.state.errors.aboutMe}
-                        value={this.state.aboutMe}
-                        disabled={this.state.isCurrentUser === false}
-                    />
-                                        {this.state.errors.aboutMe && (
-                                            <div className="error">{this.state.errors.aboutMe} </div>
-                                        )}
-                                    </div>
+                                    <TextField
+                                        error
+                                        className="input-field"
+                                        onChange={this.handleAboutMe}
+                                        name="aboutMe"
+                                        value={this.state.aboutMe}
+                                        required
+                                        error={this.state.errors.aboutMe}
+                                        disabled={this.state.isCurrentUser === false}
+                                        helperText={this.state.errors.aboutMe}
+                                        multiline
+                                        rows={8}
+                                        variant="outlined"
+                                        label="About Me"/>
+                                    <br/>
                                     <br/>
 
-                                    <b>
-                                        <label>Date of Birth: &nbsp; </label>
-                                    </b>
-                                    <DateTimePicker
-                                        onChange={this.handleDateOfBirth}
-                                        value={new Date(this.state.dateOfBirth)}
-                                        name="dateOfBirth"
-                                        id="dateOfBirth"
-                                        time={false}
-                                        placeholder="Date of Birth"
-                                        error={this.state.errors.dateOfBirth}
-                                        disabled={this.state.isCurrentUser === false}
-                                    />
-                                    {this.state.errors.dateOfBirth && (
-                                        <div className="error">{this.state.errors.dateOfBirth} </div>
-                                    )}
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <Grid container justify="space-around">
+                                            <DatePicker
+                                                variant="inline"
+                                                className="input-date"
+                                                label="Date of Birth"
+                                                format="dd MMMM yyyy"
+                                                value={new Date(this.state.dateOfBirth)}
+                                                onChange={this.handleDateOfBirth}
+                                                name="dateOfBirth"
+                                                error={this.state.errors.dateOfBirth}
+                                                disabled={this.state.isCurrentUser === false}
+                                                helperText={this.state.errors.dateOfBirth}
+                                            />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
                                     <br/>
 
                                     <If condition={this.state.role === userRoles.SPONSOR}>
-                                        <div className="form-group">
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="company"
-                                                placeholder="Company"
-                                                onChange={this.handleCompany}
-                                                name="company"
-                                                value={this.state.company}
-                                                error={this.state.errors.company}
-                                                disabled={this.state.isCurrentUser === false}
-                                            />
-                                            {this.state.errors.company && (
-                                                <div className="error">
-                                                    {this.state.errors.company}{" "}
-                                                </div>
-                                            )}
-                                        </div>
+                                        <TextField
+                                            error
+                                            className="input-field"
+                                            onChange={this.handleCompany}
+                                            name="company"
+                                            value={this.state.company}
+                                            required
+                                            error={this.state.errors.company}
+                                            disabled={this.state.isCurrentUser === false}
+                                            helperText={this.state.errors.company}
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <BusinessIcon/>
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                            label="Company"/>
                                     </If>
 
                                     <If condition={this.state.role === userRoles.INFLUENCER}>
                                         <div className="form-group">
-                                            <b>
-                                                <label className="task-categories">
-                                                    Task Categories: &nbsp;{" "}
-                                                </label>
-                                            </b>
+
+                                            <label className="task-categories">
+                                                <small>Task Categories*</small>
+                                            </label>
+
                                             <div className="form-check">
                                                 {TaskCategories.map(value => (
                                                     <div>
@@ -477,42 +539,58 @@ class UserProfile extends UserProfileFormEventHandlers {
                                     </If>
                                 </div>
                             </div>
+
                             <If condition={this.state.isCurrentUser}>
-                            <div className="submit_button">
-                                <button
-                                    type="submit"
-                                    className="btn btn-success"
-                                    onClick={this.handleProfile}
-                                    disabled={Object.keys(this.state.errors).length !== 0}
-                                >
-                                    Save
-                                </button>
-                            </div>
+                                <div className="submit_button">
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        size="large"
+                                        className={classes.button}
+                                        disabled={Object.keys(this.state.errors).length !== 0}
+                                        onClick={this.handleProfile}
+                                        startIcon={<SaveIcon/>}
+                                    >
+                                        Save
+                                    </Button>
+                                </div>
                             </If>
                         </form>
                     </div>
                 </React.Fragment>
+
             );
         }
     }
 }
 
+
 UserProfile.propTypes = {
     getProfile: PropTypes.func.isRequired,
     saveProfile: PropTypes.func.isRequired,
     updated: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
 };
+
+function mapStateToProps(state) {
+    return {
+        profile: state.userProfile.profile,
+        updated: state.userProfile.updated,
+    };
+}
 
 UserProfile = reduxForm({
     form: "userProfileForm",
 })(UserProfile);
 
 UserProfile = connect(
-    (state) => ({
-        profile: state.userProfile.profile,
-        updated: state.userProfile.updated,
-    }),
+    mapStateToProps,
     {getProfile, saveProfile}
 )(UserProfile);
 
+
+UserProfile = (withStyles(useStyles)(UserProfile))
+
 export default UserProfile;
+
+
