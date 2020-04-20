@@ -11,19 +11,12 @@
 }
 
 .sorting-options {
-    border:1px solid blue;
-    margin: 3% 3% 0% 80%;
+    margin: 3% 0% 0% 65%;
     height: 100%;
 }
 
-.sorting-options b {
-    border:1px solid orangered;
-    width: 20%;
-}
-
 .sorting-options select {
-    border:1px solid orangered;
-    width: 60%;
+    width: 35%;
 }
 
 .ratings-cards-main {

@@ -56,21 +56,17 @@ class SponsorRating extends Component {
                     <div className="main">
 
                         <div className="sorting-options">
-                            <div className="form-group">
-                                <b>
-                                    Sort By:
-                                </b>
                                 <select
                                     className="form-control"
                                     name="sorting"
                                     id="sorting"
                                     // onChange={this.handleCategory}
                                 >
-                                    <option value="recent" selected>Most Recent</option>
+                                    <option value="recent" selected disabled>Sort by</option>
+                                    <option value="recent">Most Recent</option>
                                     <option value="lowToHigh">Rating: Low to High</option>
                                     <option value="highToLow">Rating: High to Low</option>
                                 </select>
-                            </div>
                         </div>
 
                         <div className="ratings-cards-main">
