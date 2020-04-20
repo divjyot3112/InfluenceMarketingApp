@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // Importing Sidebar
-import Sidebar from './Sidebar'
+// import Sidebar from './Sidebar'
 // UI component imports
 import {
     Collapse,
@@ -16,12 +16,12 @@ import {
     // DropdownItem,
     NavbarText,
     Input,
-    Button,
+    // Button,
     InputGroupAddon,
     InputGroup,
     // InputGroupText,
 } from 'reactstrap';
-import { Image, } from 'react-bootstrap'
+import { Image, Button } from 'react-bootstrap'
 import { FaUserAlt, FaSignOutAlt } from 'react-icons/fa' 
 // Redux imports
 import { connect } from "react-redux";
@@ -46,9 +46,6 @@ export class Appbar extends Component {
                     })
                 }
             })
-            // this.setState({
-            //     profile: this.props.profile
-            // })
         } else {
             this.setState({
                 userExists: false
@@ -87,7 +84,7 @@ export class Appbar extends Component {
                                         // height={}
                                     />
                                     <InputGroupAddon addonType="append">
-                                        <Button color="secondary">
+                                        <Button variant="outline-success">
                                             Go
                                         </Button>
                                     </InputGroupAddon>
@@ -107,7 +104,7 @@ export class Appbar extends Component {
                         </Nav>
                     </Collapse>
                 </Navbar>
-                <Sidebar />
+                {/* <Sidebar /> */}
             </div>
         )
     }

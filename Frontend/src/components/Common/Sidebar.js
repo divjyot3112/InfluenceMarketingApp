@@ -24,9 +24,6 @@ export class Sidebar extends Component {
                     })
                 }
             })
-            // this.setState({
-            //     profile: this.props.profile
-            // })
         } else {
             this.setState({
                 userExists: false
