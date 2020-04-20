@@ -7,8 +7,8 @@ import moment from 'moment';
 import { sendMessage , fetchConversations} from "../../../actions/inboxActions";
 import { connect } from "react-redux";
 import './MessageList.css';
-
-const MY_USER_ID = 'user2'; //TODO: add current user email
+import {MY_USER_ID} from '../../../utils/Constants'
+//const MY_USER_ID = 'user2'; //TODO: add current user email
 
 const URL = 'ws://localhost:3030'
 
@@ -47,12 +47,16 @@ class MessageList extends Component {
     this.ws.onmessage = evt => {
       // on receiving a message, add it to the list of messages
       const message = JSON.parse(evt.data)
-      this.setState({ messages: [...this.state.messages, message] })
+      //If you are not the receiver dont process
+      if (message.receiver !== MY_USER_ID) return
+      
+      this.setState({ messages: [...this.state.messages, message.message] })
       
       
-      if (message.author === this.props.conversationId) {
+      //currently the conversation with the author is open so need to mark it read
+      if (message.message.author === this.props.conversationId) {
         //verify
-        this.props.markRead({ current: MY_USER_ID, other: message.author }, () => {
+        this.props.markRead({ current: MY_USER_ID, other: message.message.author }, () => {
           this.props.fetchConversations(MY_USER_ID, () => {
             console.log(this.props.conversations)
           })
@@ -77,32 +81,41 @@ class MessageList extends Component {
 
   handleSendMessage = (msg) => {
     let message = {
-        author: "user2",
+        author: MY_USER_ID,
         message: msg,
         timestamp: new Date().getTime(),
         read: false
     }
-    this.props.sendMessage({
+    let data = {
       sender:MY_USER_ID,//localStorage.getItem("email"),
       receiver: this.props.conversationId,//this.props.conversationId,
       message: message
+    }
+    this.props.sendMessage(data, () => {
+      this.props.fetchConversations(MY_USER_ID, () => {
+        console.log(this.props.conversations)
+      })
     })
-    this.ws.send(JSON.stringify(message))
+    this.ws.send(JSON.stringify(data))
     this.setState({ messages: [...this.state.messages, message] })
-    this.props.fetchConversations(MY_USER_ID, () => {
-      console.log(this.props.conversations)
-    })
   }
 
 
   getMessages = (c_id) => {
-    this.props.conversations.map((c) => {
-      if (c.firstUser === c_id || c.secondUser === c_id) {
-        this.setState({
-          messages: c.conversation
-        })
-      }
-    })
+    if (this.props.conversations.filter(c => c.firstUser === c_id || c.secondUser === c_id).length <= 0) {
+      this.setState({
+        messages: []
+      })
+    }
+    else {
+      this.props.conversations.map((c) => {
+        if (c.firstUser === c_id || c.secondUser === c_id) {
+          this.setState({
+            messages: c.conversation
+          })
+        }
+      })
+    }
   }
 
   renderMessages = () => {
