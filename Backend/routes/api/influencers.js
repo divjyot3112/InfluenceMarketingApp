@@ -14,8 +14,8 @@ router.put('/rate', (req, res) => {
     console.log('Inside Rating Post Request');
     Rating.create({
         rating: req.body.rating,
-        task: req.body.taskId, // task id
-        influencer: req.query.email ,// user email,
+        task: req.body.task, // task id
+        influencer: req.query.email, // user email
         comment: req.body.comment,
         sponsor: req.body.sponsor
     }, (err1, rating) => {
@@ -98,6 +98,7 @@ router.get("/ratings", (req, res) => {
     Rating.find({
         influencer: req.query.email
     })
+        .sort({ratedOn: -1})
         .then(rating => {
             if (rating.length != 0) {
                 console.log("Ratings fetched successfully for influencer: " + req.query.email);

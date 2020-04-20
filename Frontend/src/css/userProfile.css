@@ -10,8 +10,12 @@
     height: 100%;
 }
 
+.display_photo img {
+    margin-left: 42%;
+}
+
 .display_photo input {
-    margin-left: 25%;
+    margin-left: 1%;
 }
 
 .profileName {
@@ -27,7 +31,6 @@
     width: 100%;
     padding: 3% 0% 0% 10%;
     overflow: hidden;
-    /*border: 1px solid red;*/
 }
 
 .profile_information_left {
