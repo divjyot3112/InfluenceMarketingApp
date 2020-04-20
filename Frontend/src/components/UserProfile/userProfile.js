@@ -40,6 +40,7 @@ class UserProfile extends UserProfileFormEventHandlers {
             exists: true,
             role: "",
             company: "",
+            isCurrentUser: true //to different between current user and the visiting user
         };
 
         this.handleFirstName = this.handleFirstName.bind(this);
@@ -96,8 +97,11 @@ class UserProfile extends UserProfileFormEventHandlers {
     };
 
     componentDidMount() {
+        if (this.props.location.state)
+            this.setState({isCurrentUser: false})
+
         // TODO: Get username from local storage
-        const username = "divjyot@gmail.com";
+        const username = this.props.location.state ? this.props.location.state.email : "sheena@gmail.com";
 
         this.props.getProfile(username, (response) => {
             if (response.status === 200) {
@@ -146,7 +150,7 @@ class UserProfile extends UserProfileFormEventHandlers {
     handleProfile = (e) => {
         e.preventDefault();
         // TODO: Get username from local storage
-        const email = "divjyot@gmail.com";
+        const email = "sheena@gmail.com";
 
         const data = {
             name: {
@@ -191,11 +195,6 @@ class UserProfile extends UserProfileFormEventHandlers {
                 <React.Fragment>
                     <div className="main">
                         <div className="display_photo">
-                            <input
-                                type="file"
-                                name="files"
-                                // onChange={this.onPhotoChange}
-                            />
                             <img
                                 // TODO: add image
                                 src="https://source.unsplash.com/random"
@@ -203,6 +202,13 @@ class UserProfile extends UserProfileFormEventHandlers {
                                 height="200"
                                 alt="User has not uploaded anything yet"
                             />
+                            <If condition={this.state.isCurrentUser === true}>
+                                <input
+                                    type="file"
+                                    name="files"
+                                    // onChange={this.onPhotoChange}
+                                />
+                            </If>
                         </div>
 
                         <div className="profileName">
@@ -223,6 +229,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                             value={this.state.firstName}
                                             autoFocus={true}
                                             error={this.state.errors.firstName}
+                                            disabled={this.state.isCurrentUser === false}
                                         />
                                         {this.state.errors.firstName && (
                                             <div className="error">
@@ -242,6 +249,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                             name="lastName"
                                             value={this.state.lastName}
                                             error={this.state.errors.lastName}
+                                            disabled={this.state.isCurrentUser === false}
                                         />
                                         {this.state.errors.lastName && (
                                             <div className="error">{this.state.errors.lastName} </div>
@@ -259,6 +267,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                             name="streetAddress"
                                             value={this.state.streetAddress}
                                             error={this.state.errors.streetAddress}
+                                            disabled={this.state.isCurrentUser === false}
                                         />
                                         {this.state.errors.streetAddress && (
                                             <div className="error">
@@ -278,6 +287,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                             onChange={this.handleCity}
                                             value={this.state.city}
                                             error={this.state.errors.city}
+                                            disabled={this.state.isCurrentUser === false}
                                         />
                                         {this.state.errors.city && (
                                             <div className="error">{this.state.errors.city} </div>
@@ -295,6 +305,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                             onChange={this.handleState}
                                             value={this.state.state}
                                             error={this.state.errors.state}
+                                            disabled={this.state.isCurrentUser === false}
                                         />
                                         {this.state.errors.state && (
                                             <div className="error">{this.state.errors.state} </div>
@@ -312,6 +323,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                             onChange={this.handleCountry}
                                             value={this.state.country}
                                             error={this.state.errors.country}
+                                            disabled={this.state.isCurrentUser === false}
                                         />
                                         {this.state.errors.country && (
                                             <div className="error">{this.state.errors.country} </div>
@@ -329,6 +341,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                             onChange={this.handleZipcode}
                                             value={this.state.zipcode}
                                             error={this.state.errors.zipcode}
+                                            disabled={this.state.isCurrentUser === false}
                                         />
                                         {this.state.errors.zipcode && (
                                             <div className="error">{this.state.errors.zipcode} </div>
@@ -345,10 +358,11 @@ class UserProfile extends UserProfileFormEventHandlers {
                                         onChange={this.handleGender}
                                         onMouseOver={this.handleGender}
                                         error={this.state.errors.gender}
+                                        disabled={this.state.isCurrentUser === false}
                                     >
                                         <option value="" selected disabled>Select Gender</option>
                                         {Gender.map(value => (
-                                            <option value={value}>{value}</option>
+                                            <option value={value} >{value}</option>
                                         ))}
                                     </select>
                                     {this.state.errors.gender && (
@@ -366,6 +380,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                             onChange={this.handlePhone}
                                             value={this.state.phone}
                                             error={this.state.errors.phone}
+                                            disabled={this.state.isCurrentUser === false}
                                         />
                                         {this.state.errors.phone && (
                                             <div className="error">{this.state.errors.phone} </div>
@@ -384,6 +399,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                         placeholder="About me"
                         error={this.state.errors.aboutMe}
                         value={this.state.aboutMe}
+                        disabled={this.state.isCurrentUser === false}
                     />
                                         {this.state.errors.aboutMe && (
                                             <div className="error">{this.state.errors.aboutMe} </div>
@@ -402,6 +418,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                         time={false}
                                         placeholder="Date of Birth"
                                         error={this.state.errors.dateOfBirth}
+                                        disabled={this.state.isCurrentUser === false}
                                     />
                                     {this.state.errors.dateOfBirth && (
                                         <div className="error">{this.state.errors.dateOfBirth} </div>
@@ -419,6 +436,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                                 name="company"
                                                 value={this.state.company}
                                                 error={this.state.errors.company}
+                                                disabled={this.state.isCurrentUser === false}
                                             />
                                             {this.state.errors.company && (
                                                 <div className="error">
@@ -446,6 +464,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                                             onChange={this.handleTaskCategories}
                                                             checked={this.state.taskCategories.includes(
                                                                 value)}
+                                                            disabled={this.state.isCurrentUser === false}
                                                         />
                                                         <label className="form-check-label" htmlFor={value}>
                                                             {value}
@@ -458,6 +477,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                     </If>
                                 </div>
                             </div>
+                            <If condition={this.state.isCurrentUser}>
                             <div className="submit_button">
                                 <button
                                     type="submit"
@@ -468,6 +488,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                     Save
                                 </button>
                             </div>
+                            </If>
                         </form>
                     </div>
                 </React.Fragment>

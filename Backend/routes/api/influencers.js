@@ -14,7 +14,7 @@ router.put('/rate', (req, res) => {
     console.log('Inside Rating Post Request');
     Rating.create({
         rating: req.body.rating,
-        task: req.body.taskId, // task id
+        task: req.body.task, // task id
         influencer: req.query.email // user email
     }, (err1, rating) => {
         if (err1) {
