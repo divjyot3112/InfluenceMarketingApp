@@ -15,7 +15,9 @@ router.put('/rate', (req, res) => {
     Rating.create({
         rating: req.body.rating,
         task: req.body.taskId, // task id
-        influencer: req.query.email // user email
+        influencer: req.query.email ,// user email,
+        comment: req.body.comment,
+        sponsor: req.body.sponsor
     }, (err1, rating) => {
         if (err1) {
             console.log(err1);
