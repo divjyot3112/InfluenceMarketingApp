@@ -4,6 +4,8 @@ import {connect} from "react-redux";
 import {getSponsorRatings} from "../../actions/ratingActions";
 import "../../css/sponsorRating.css";
 import {Link} from "react-router-dom";
+import Pagination from "../Common/pagination";
+import { paginate } from "../Common/paginate";
 
 
 class SponsorRating extends Component {
@@ -23,12 +25,22 @@ class SponsorRating extends Component {
         this.props.getSponsorRatings(email)
     }
 
+    handlePageChange = page => {
+        this.setState({currentPage: page});
+    };
+
     render() {
 
         // TODO: if user is not logged in, redirect to home
 
         const {sponsorRatings} = this.props;
         const data = Object.keys(sponsorRatings)
+
+        const paginatedData = paginate(
+            data ? data : "",
+            this.state.currentPage,
+            this.state.pageSize
+        );
 
 
         if (Object.keys(sponsorRatings).length === 0) {
@@ -65,7 +77,7 @@ class SponsorRating extends Component {
 
                         <div className="ratings-cards-main">
                             <hr/>
-                            {data.map(key => (
+                            {paginatedData.map(key => (
                                 <div className="rating-card">
                                     <div className="rating-card-left">
                                         <h4 className="card-title">Rating: {sponsorRatings[data[key]].rating}</h4>
@@ -106,7 +118,14 @@ class SponsorRating extends Component {
                         </div>
                     </div>
 
-
+                    <div className="general-pagination">
+                        <Pagination
+                            itemsCount={data ? data.length : ""}
+                            pageSize={this.state.pageSize}
+                            onPageChange={this.handlePageChange}
+                            currentPage={this.state.currentPage}
+                        />
+                    </div>
                 </React.Fragment>
             );
         }
