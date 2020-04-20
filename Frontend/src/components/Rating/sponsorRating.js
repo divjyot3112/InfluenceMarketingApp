@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-import {getSponsorRatings} from "../../actions/ratingActions";
+import {getSponsorRatings, sortRatingsLowToHigh, sortRatingsHighToLow} from "../../actions/ratingActions";
 import "../../css/sponsorRating.css";
 import {Link} from "react-router-dom";
 import Pagination from "../Common/pagination";
@@ -9,14 +9,11 @@ import {paginate} from "../Common/paginate";
 
 
 class SponsorRating extends Component {
-    constructor(props) {
-        super(props);
+    state = {
+        currentPage: 1,
+        pageSize: 5,
+    };
 
-        this.state = {
-            currentPage: 1,
-            pageSize: 5,
-        };
-    }
 
     componentDidMount() {
         // TODO: Get sponsor email from local storage
@@ -27,6 +24,17 @@ class SponsorRating extends Component {
 
     handlePageChange = page => {
         this.setState({currentPage: page});
+    };
+
+    handleRatingSorting = (e) => {
+        if (e.target.value === "lowToHigh") {
+            this.props.sortRatingsLowToHigh(this.props.sponsorRatings);
+        } else if (e.target.value === "highToLow") {
+            this.props.sortRatingsHighToLow(this.props.sponsorRatings);
+        } else if (e.target.value === "mostRecent") {
+            window.location.reload();
+        }
+        this.forceUpdate();
     };
 
     render() {
@@ -56,17 +64,17 @@ class SponsorRating extends Component {
                     <div className="main">
 
                         <div className="sorting-options">
-                                <select
-                                    className="form-control"
-                                    name="sorting"
-                                    id="sorting"
-                                    // onChange={this.handleCategory}
-                                >
-                                    <option value="recent" selected disabled>Sort by</option>
-                                    <option value="recent">Most Recent</option>
-                                    <option value="lowToHigh">Rating: Low to High</option>
-                                    <option value="highToLow">Rating: High to Low</option>
-                                </select>
+                            <select
+                                className="form-control"
+                                name="sorting"
+                                id="sorting"
+                                onChange={this.handleRatingSorting}
+                            >
+                                <option value="" selected disabled>Sort by</option>
+                                <option value="mostRecent">Most Recent</option>
+                                <option value="lowToHigh">Rating: Low to High</option>
+                                <option value="highToLow">Rating: High to Low</option>
+                            </select>
                         </div>
 
                         <div className="ratings-cards-main">
@@ -133,17 +141,25 @@ class SponsorRating extends Component {
 }
 
 SponsorRating.propTypes = {
-    sponsorRatings: PropTypes.object.isRequired
+    sponsorRatings: PropTypes.object.isRequired,
+    getSponsorRatings: PropTypes.func.isRequired,
+    sortRatingsHighToLow: PropTypes.func.isRequired,
+    sortRatingsLowToHigh: PropTypes.func.isRequired
 };
 
-SponsorRating = connect(
-    (state) => ({
-        sponsorRatings: state.rating.sponsorRatings,
-    }),
-    {getSponsorRatings}
-)(SponsorRating);
+const mapStateToProps = state => ({
+    sponsorRatings: state.rating.sponsorRatings,
+});
 
-export default SponsorRating;
+export default (
+    connect(
+        mapStateToProps,
+        {
+            getSponsorRatings, sortRatingsHighToLow, sortRatingsLowToHigh
+        }
+    )(SponsorRating)
+);
+
 
 
 

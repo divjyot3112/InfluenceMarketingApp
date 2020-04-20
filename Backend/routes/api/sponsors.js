@@ -15,6 +15,7 @@ router.get("/ratings", (req, res) => {
     Rating.find({
         sponsor: req.query.email
     })
+        .sort({ratedOn: -1})
         .then(rating => {
             if (rating.length != 0) {
                 console.log("Ratings fetched successfully for sponsor: " + req.query.email);

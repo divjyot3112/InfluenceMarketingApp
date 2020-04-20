@@ -1,5 +1,11 @@
 import axios from "axios";
-import {GET_INFLUENCER_RATINGS, GET_SPONSOR_RATINGS, ROOT_URL} from "./types";
+import {
+    GET_INFLUENCER_RATINGS,
+    GET_SPONSOR_RATINGS,
+    ROOT_URL,
+    SORT_RATINGS_LOW_TO_HIGH,
+    SORT_RATINGS_HIGH_TO_LOW
+} from "./types";
 
 export const getInfluencerRatings = (email) => async (dispatch) => {
     try {
@@ -34,3 +40,17 @@ export const getSponsorRatings = (email) => async (dispatch) => {
         };
     }
 };
+
+export function sortRatingsLowToHigh(data) {
+    return {
+        type: SORT_RATINGS_LOW_TO_HIGH,
+        payload: data
+    };
+}
+
+export function sortRatingsHighToLow(data) {
+    return {
+        type: SORT_RATINGS_HIGH_TO_LOW,
+        payload: data
+    };
+}
