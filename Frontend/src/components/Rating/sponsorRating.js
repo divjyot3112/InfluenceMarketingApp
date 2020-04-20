@@ -43,8 +43,6 @@ class SponsorRating extends Component {
         const {sponsorRatings} = this.props;
         const data = Object.keys(sponsorRatings)
 
-        console.log(sponsorRatings)
-
         const paginatedData = paginate(
             data ? data : "",
             this.state.currentPage,
