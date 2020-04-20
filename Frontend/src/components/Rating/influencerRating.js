@@ -6,6 +6,7 @@ import "../../css/influencerRating.css";
 import {Link} from "react-router-dom";
 import Pagination from "../Common/pagination";
 import {paginate} from "../Common/paginate";
+import StarRatings from 'react-star-ratings';
 
 
 class InfluencerRating extends Component {
@@ -69,8 +70,7 @@ class InfluencerRating extends Component {
                                 id="sorting"
                                 onChange={this.handleRatingSorting}
                             >
-                                <option value="" selected disabled>Sort by</option>
-                                <option value="mostRecent">Most Recent</option>
+                                <option value="mostRecent">Sort by: Most Recent</option>
                                 <option value="lowToHigh">Rating: Low to High</option>
                                 <option value="highToLow">Rating: High to Low</option>
                             </select>
@@ -80,12 +80,27 @@ class InfluencerRating extends Component {
                             <hr/>
                             <div className="average-rating">
                                 <h1>Average Rating: {averageRating}</h1>
+                                <StarRatings
+                                    rating={Number(averageRating)}
+                                    starRatedColor="black"
+                                    numberOfStars={5}
+                                />
                             </div>
                             {paginatedData.map(key => (
 
                                 <div className="rating-card" key={key}>
                                     <div className="rating-card-left">
                                         <h4 className="card-title">Rating: {ratings[data[key]].rating}</h4>
+                                        <StarRatings
+                                            rating={Number(ratings[data[key]].rating)}
+                                            starRatedColor="black"
+                                            numberOfStars={5}
+                                            starDimension="30px"
+                                            starSpacing="0px"
+                                        />
+                                        <br/>
+                                        <br/>
+                                        <br/>
                                         <p className="card-subtitle mb-2 text-muted">
                                             <i>" {ratings[data[key]].comment} "</i></p>
                                     </div>
