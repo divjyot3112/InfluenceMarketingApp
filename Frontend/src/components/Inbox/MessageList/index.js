@@ -91,23 +91,31 @@ class MessageList extends Component {
       receiver: this.props.conversationId,//this.props.conversationId,
       message: message
     }
-    this.props.sendMessage(data)
+    this.props.sendMessage(data, () => {
+      this.props.fetchConversations(MY_USER_ID, () => {
+        console.log(this.props.conversations)
+      })
+    })
     this.ws.send(JSON.stringify(data))
     this.setState({ messages: [...this.state.messages, message] })
-    this.props.fetchConversations(MY_USER_ID, () => {
-      console.log(this.props.conversations)
-    })
   }
 
 
   getMessages = (c_id) => {
-    this.props.conversations.map((c) => {
-      if (c.firstUser === c_id || c.secondUser === c_id) {
-        this.setState({
-          messages: c.conversation
-        })
-      }
-    })
+    if (this.props.conversations.filter(c => c.firstUser === c_id || c.secondUser === c_id).length <= 0) {
+      this.setState({
+        messages: []
+      })
+    }
+    else {
+      this.props.conversations.map((c) => {
+        if (c.firstUser === c_id || c.secondUser === c_id) {
+          this.setState({
+            messages: c.conversation
+          })
+        }
+      })
+    }
   }
 
   renderMessages = () => {
