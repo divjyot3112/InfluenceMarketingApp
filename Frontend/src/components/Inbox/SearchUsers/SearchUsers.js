@@ -12,7 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import { fetchAllUsersForInbox } from "../../../actions/inboxActions";
 import { connect } from "react-redux";
 import ConversationListItem from '../ConversationListItem';
-
+import {MY_USER_ID} from '../../../utils/Constants'
+//const MY_USER_ID = 'user2'; //TODO: add current user email
 
 const styles = (theme) => ({
     root: {
@@ -69,8 +70,8 @@ class SearchUsers extends Component {
     setOpen = (val) => {
         this.setState({
             open: val,
-            allUsers: this.props.inboxUsers.filter(u => 'name' in u),
-            visibleUsers: this.props.inboxUsers.filter(u => 'name' in u)
+            allUsers: this.props.inboxUsers.filter(u => 'name' in u && u.email !== MY_USER_ID),
+            visibleUsers: this.props.inboxUsers.filter(u => 'name' in u && u.email !== MY_USER_ID)
         })
     }
 
@@ -97,9 +98,14 @@ class SearchUsers extends Component {
             return <ConversationListItem
                 key={user.name}
                 data={user}
-                onClick={() => alert(user.name)}
+                onClick={() => this.selectUser(user)}
             />
         })
+    }
+
+    selectUser = (userData) => {
+        this.props.onNewConversationSelected(userData)
+        this.setOpen(false);
     }
 
     render() {
@@ -127,7 +133,7 @@ class SearchUsers extends Component {
                                 onKeyUp={(event) => this.searchUsers(event.target.value)}
                             />
                         </div>
-                        <div className="conversation-list">
+                        <div className="user_search-list">
                             {this.renderAllUsers()}
                         
                         </div>
