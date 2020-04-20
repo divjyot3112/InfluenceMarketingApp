@@ -1,3 +1,4 @@
+const MY_USER_ID = 'divjyot@gmail.com'
 const UserRoles = {
     SPONSOR: "Sponsor",
     INFLUENCER: "Influencer"
@@ -32,4 +33,4 @@ const Gender = [
     "Other"
 ];
 
-export {UserRoles, TaskStatus, TaskCategories, Gender}
+export {UserRoles, TaskStatus, TaskCategories, Gender, MY_USER_ID}
