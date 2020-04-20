@@ -2,13 +2,15 @@ import axios from 'axios';
 import {
     FETCH_CONVERSATIONS,
     SEND_MESSAGE,
-    MARK_READ
+    MARK_READ,
+    FETCH_ALL_USERS_INBOX, 
+    ROOT_URL
 } from './types';
 
 export const fetchConversations = (email, nextFun) => dispatch => {
     console.log("Fetch Conversations action")
     axios.defaults.withCredentials = true;
-    axios.get(`http://localhost:5000/api/inbox`, { params: { email: email} })
+    axios.get(`${ROOT_URL}/inbox`, { params: { email: email} })
         .then((response) => { //Action dispatched
             console.log("Response", response);
             dispatch({
@@ -21,7 +23,7 @@ export const fetchConversations = (email, nextFun) => dispatch => {
 
 export const sendMessage = (data) => dispatch => {
     axios.defaults.withCredentials = true;
-    axios.post(`http://localhost:5000/api/inbox/send`,data)
+    axios.post(`${ROOT_URL}/inbox/send`,data)
         .then((response) => { //Action dispatched
             console.log("Response", response);
             dispatch({
@@ -34,7 +36,7 @@ export const sendMessage = (data) => dispatch => {
 
 export const markRead = (data, nextFun) => dispatch => {
     axios.defaults.withCredentials = true;
-    axios.post(`http://localhost:5000/api/inbox/markread`,data)
+    axios.post(`${ROOT_URL}//inbox/markread`,data)
         .then((response) => { //Action dispatched
             console.log("Response", response);
             dispatch({
@@ -44,4 +46,18 @@ export const markRead = (data, nextFun) => dispatch => {
             nextFun()
         })
         
+}
+
+export const fetchAllUsersForInbox = (nextFun) => dispatch => {
+    console.log("Fetch All Users for Inbox action")
+    axios.defaults.withCredentials = true;
+    axios.get(`${ROOT_URL}/inbox/fetchusers`)
+        .then((response) => { //Action dispatched
+            console.log("Response", response);
+            dispatch({
+                type: FETCH_ALL_USERS_INBOX,
+                payload: response
+            })
+            nextFun()
+        })
 }

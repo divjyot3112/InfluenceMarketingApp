@@ -1,7 +1,8 @@
 import {
     FETCH_CONVERSATIONS,
     SEND_MESSAGE,
-    MARK_READ
+    MARK_READ,
+    FETCH_ALL_USERS_INBOX
 } from '../actions/types';
 
 const initialState = []
@@ -36,5 +37,15 @@ export function markReadReducer(state = "", action) {
             return action.payload.data.message
         default:
             return state;
+    }
+}
+
+export function fetchAllUsersForInboxReducer(state = [], action) {
+    switch (action.type) {
+        case FETCH_ALL_USERS_INBOX:
+            if (action.payload === undefined)
+                return state
+            return action.payload.data.message
+        default: return state
     }
 }
