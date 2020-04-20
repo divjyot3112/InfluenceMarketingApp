@@ -34,24 +34,24 @@ router.get('/', (req, res) => {
     console.log('Inside Inbox Get Request');
     Conversation.find({
         $or: [{ firstUser: req.query.email}, { secondUser: req.query.email }]
-    }).then((Conversation) => {
-
-        /*
+    }).then(async (Conversation) => {
+        
         let docs =  await Promise.all(Conversation.map(async conversation => {
-           
-            let profileInfo = await fetchUserDetails(user.email).then((profile) => profile)
+            let with_email = (conversation.firstUser === req.query.email) ? conversation.secondUser : conversation.firstUser
+            let profileInfo = await fetchUserDetails(with_email).then((profile) => profile)
             if (await profileInfo != null) {
                 conversation = conversation.toJSON()
                 conversation.photo = await profileInfo.profilePic,
+                conversation.email = await profileInfo.email,
                 conversation.name= await profileInfo.name.firstName + " " + await profileInfo.name.lastName
                 return conversation
             } else {
                 console.log("Profile is null")
                 return conversation
             }
-        }))*/
+        }))
 
-        res.status(200).json({success:true,message:Conversation})
+        res.status(200).json({success:true,message:docs})
     }).catch((err1) => {
         if (err1) {
             console.log(err1);
@@ -81,7 +81,7 @@ router.post('/markread', (req, res) => {
 })
 
 router.get('/fetchusers', (req, res) => {
-    console.log('Inside Get fetch all users Request');
+    console.log('Inside Get fetch all users Request'+req.body);
     User.find().then(async (users) => {
         
         let docs =  await Promise.all(users.map(async user => {

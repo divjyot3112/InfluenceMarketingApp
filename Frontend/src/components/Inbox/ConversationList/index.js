@@ -2,13 +2,12 @@ import React, {Component} from 'react';
 import ConversationSearch from '../ConversationSearch';
 import ConversationListItem from '../ConversationListItem';
 import Toolbar from '../Toolbar';
-import ToolbarButton from '../ToolbarButton';
 import { fetchConversations, markRead } from "../../../actions/inboxActions";
 import { connect } from "react-redux";
 import './ConversationList.css';
 import SearchUsers from '../SearchUsers/SearchUsers';
-
-const MY_USER_ID = 'user2'; //TODO: add current user email
+import {MY_USER_ID} from '../../../utils/Constants'
+//const MY_USER_ID = 'user2'; //TODO: add current user email
 class ConversationList extends Component {
 
   constructor(props) {
@@ -16,7 +15,7 @@ class ConversationList extends Component {
     this.state = {
       allConversations: [],
       visibleConversations: [],
-      currentCoverstation: []
+      currentConverstation: []
     }
   }
 
@@ -35,11 +34,13 @@ class ConversationList extends Component {
     if(nextProps.conversations!==this.props.conversations){
       let newConversations = nextProps.conversations.map(c => {
         let conversationName = (c.firstUser === MY_USER_ID) ? c.secondUser : c.firstUser
-        let unreadCount = c.conversation.filter(f => f.read === false).length
+        let unreadCount = c.conversation.filter(f => f.author!== MY_USER_ID && f.read === false).length
         return {
           photo: window.location.origin + '/dummy.png', //TODO: add profile image
-          name: conversationName,
-          unreadCount: unreadCount
+          email: conversationName,
+          unreadCount: unreadCount,
+          name: c.name,
+
         };
       });
 
@@ -55,11 +56,11 @@ class ConversationList extends Component {
     this.props.fetchConversations(MY_USER_ID, () => {
       console.log(this.props.conversations)
       let newConversations = this.props.conversations.map(c => {
-        let conversationName = (c.firstUser === MY_USER_ID) ? c.secondUser : c.firstUser
-        let unreadCount = c.conversation.filter(f => f.read === false).length
+        let unreadCount = c.conversation.filter(f => f.author!== MY_USER_ID && f.read === false).length
         return {
           photo: window.location.origin + '/dummy.png', //TODO: add profile image
-          name: conversationName,
+          name: c.name,
+          email:c.email,
           unreadCount: unreadCount
         };
       });
@@ -90,16 +91,31 @@ class ConversationList extends Component {
 
   selectConversation = (key) => {
     this.setState({
-      currentCoverstation:key
+      currentConverstation:key
     })
     this.props.selectConversation(key)
-    if (this.state.allConversations.filter(c => c.name === key).unreadCount != 0) {
+    if (this.state.allConversations.filter(c => c.email === key).unreadCount != 0) {
       this.props.markRead({ current: MY_USER_ID, other: key }, () => { this.getConversations() })
     }
   }
 
-  addNewConversation = () => {
-    alert("New Conversation")
+  addNewConversation = (userData) => {
+    if (this.state.allConversations.filter(c => c.email === userData.email).length <= 0) {
+        let newConversation = {
+          photo: window.location.origin + '/dummy.png', //TODO: add profile image
+          name: userData.name,
+          unreadCount: 0,
+          email: userData.email
+        };
+      this.setState({
+        allConversations: [newConversation, ...this.state.allConversations],
+        visibleConversations: [newConversation, ...this.state.visibleConversations],
+        currentConverstation:userData.email
+      },this.props.selectConversation(userData.email))
+    }
+    else {
+      this.selectConversation(userData.email)
+    }
   }
 
   render() {
@@ -108,20 +124,20 @@ class ConversationList extends Component {
         <Toolbar
           title="Messenger"
           rightItems={[
-            <SearchUsers key="add" icon="ion-ios-add-circle-outline"/>
+            <SearchUsers key="add" icon="ion-ios-add-circle-outline" onNewConversationSelected={(userData)=>this.addNewConversation(userData)}/>
           ]}
         />
         <ConversationSearch onSearch={this.searchConversation}/>
         {
           this.state.visibleConversations.map(conversation => {
             let isActive = false;
-            if (this.state.currentCoverstation === conversation.name) {
+            if (this.state.currentConverstation === conversation.email) {
               isActive = true;
             }
             return <ConversationListItem
               key={conversation.name}
               data={conversation}
-              onClick={() => this.selectConversation(conversation.name)}
+              onClick={() => this.selectConversation(conversation.email)}
               isActive={isActive}
               unreadCount={conversation.unreadCount}
             />
