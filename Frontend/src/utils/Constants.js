@@ -1,3 +1,4 @@
+const MY_USER_ID = 'vandana@gmail.com'
 const UserRoles = {
     SPONSOR: "Sponsor",
     INFLUENCER: "Influencer"
