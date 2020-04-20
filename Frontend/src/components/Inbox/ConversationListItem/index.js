@@ -11,7 +11,7 @@ class ConversationListItem extends Component {
 
   render() {
     let { photo, name, text, unreadCount } = this.props.data;
-    if (photo === null) photo = window.location.origin + '/dummy.png';
+    if (photo === null || photo === undefined) photo = window.location.origin + '/dummy.png';
     let className = "conversation-list-item"
     if (this.props.isActive) {
       className+="-active"

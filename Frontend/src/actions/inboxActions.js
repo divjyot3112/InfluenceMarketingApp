@@ -21,7 +21,7 @@ export const fetchConversations = (email, nextFun) => dispatch => {
         })
 }
 
-export const sendMessage = (data) => dispatch => {
+export const sendMessage = (data, nextFun) => dispatch => {
     axios.defaults.withCredentials = true;
     axios.post(`${ROOT_URL}/inbox/send`,data)
         .then((response) => { //Action dispatched
@@ -30,13 +30,13 @@ export const sendMessage = (data) => dispatch => {
                 type: SEND_MESSAGE,
                 payload: response
             })
-            
+            nextFun();
         })
 }
 
 export const markRead = (data, nextFun) => dispatch => {
     axios.defaults.withCredentials = true;
-    axios.post(`${ROOT_URL}//inbox/markread`,data)
+    axios.post(`${ROOT_URL}/inbox/markread`,data)
         .then((response) => { //Action dispatched
             console.log("Response", response);
             dispatch({
