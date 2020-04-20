@@ -30,9 +30,9 @@ export class Appbar extends Component {
     state = {
         isOpen: false
     }
-    componentWillMount {
-        
-    }
+    // componentWillMount {
+
+    // }
     toggle = () => {
         this.setState({
             isOpen: !this.state.isOpen

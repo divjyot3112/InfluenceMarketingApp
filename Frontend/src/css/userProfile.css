@@ -1,0 +1,80 @@
+.not_found {
+    text-align: center;
+    color: red;
+    font-size: 300%;
+    margin: 30% 30% 30% 30%;
+}
+
+.main {
+    margin: 3% 3% 3% 3%;
+    height: 100%;
+}
+
+.display_photo img {
+    margin-left: 42%;
+}
+
+.display_photo input {
+    margin-left: 1%;
+}
+
+.profileName {
+    color: #323f4d;
+    font-weight: bolder;
+    text-align: center;
+    width: 100%;
+    margin-top: 1%;
+    font-size: 200%;
+}
+
+.profile_body {
+    width: 100%;
+    padding: 3% 0% 0% 10%;
+    overflow: hidden;
+}
+
+.profile_information_left {
+    border: 1px solid #d3d8de;
+    padding: 2% 2% 0.5% 2%;
+    width: 40%;
+    overflow-y: scroll;
+    float: left;
+
+}
+
+.profile_information_right {
+    border: 1px solid #d3d8de;
+    padding: 2% 2% 0.5% 2%;
+    width: 40%;
+    margin-left: 50%;
+}
+
+.submit_button {
+    width: 100%;
+    height: 100%;
+    margin-top: 3%;
+}
+
+.submit_button button {
+    position: relative;
+    left: 47%;
+    top: 50%;
+    width:6%;
+}
+
+.error {
+    color: red;
+}
+
+textarea{
+    resize: none;
+}
+
+.task-categories{
+    width: 25%;
+}
+
+.form-check{
+    width: 70%;
+
+}

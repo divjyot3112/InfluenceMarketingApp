@@ -20,6 +20,7 @@ app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 const users = require('./routes/api/users');
 const tasks = require('./routes/api/tasks');
 const influencers = require('./routes/api/influencers');
+const sponsors = require('./routes/api/sponsors');
 const inbox = require('./routes/api/inbox');
 const images = require('./routes/api/users');
  
@@ -56,6 +57,7 @@ mongoose
 app.use('/api/users', users);
 app.use('/api/tasks', tasks);
 app.use('/api/influencers', influencers);
+app.use('/api/sponsors', sponsors);
 app.use('/api/inbox', inbox);
 
 // Serve static assets if in production

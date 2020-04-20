@@ -9,6 +9,27 @@ const TaskStatus = {
     PENDING: 'Pending',
     COMPLETED: 'Completed',
     CANCELLED: 'Cancelled'
-} 
+}
 
-export {UserRoles, TaskStatus}
+const TaskCategories = [
+    "Movies & TV",
+    "Food",
+    "Travel",
+    "Sports & Outdoors",
+    "Fitness & Gym",
+    "Automobile",
+    "Beauty and Personal Care",
+    "Video Games",
+    "Electronics",
+    "Health",
+    "Education",
+    "Photography"
+];
+
+const Gender = [
+    "Female",
+    "Male",
+    "Other"
+];
+
+export {UserRoles, TaskStatus, TaskCategories, Gender}
