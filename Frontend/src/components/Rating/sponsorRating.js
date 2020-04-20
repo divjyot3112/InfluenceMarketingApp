@@ -5,7 +5,7 @@ import {getSponsorRatings} from "../../actions/ratingActions";
 import "../../css/sponsorRating.css";
 import {Link} from "react-router-dom";
 import Pagination from "../Common/pagination";
-import { paginate } from "../Common/paginate";
+import {paginate} from "../Common/paginate";
 
 
 class SponsorRating extends Component {
@@ -30,7 +30,6 @@ class SponsorRating extends Component {
     };
 
     render() {
-
         // TODO: if user is not logged in, redirect to home
 
         const {sponsorRatings} = this.props;
@@ -41,7 +40,6 @@ class SponsorRating extends Component {
             this.state.currentPage,
             this.state.pageSize
         );
-
 
         if (Object.keys(sponsorRatings).length === 0) {
             return (
@@ -78,6 +76,7 @@ class SponsorRating extends Component {
                         <div className="ratings-cards-main">
                             <hr/>
                             {paginatedData.map(key => (
+
                                 <div className="rating-card">
                                     <div className="rating-card-left">
                                         <h4 className="card-title">Rating: {sponsorRatings[data[key]].rating}</h4>
@@ -86,7 +85,12 @@ class SponsorRating extends Component {
                                     </div>
 
                                     <div className="rating-card-right">
-                                        <h6 className="card-title">Rated on: {sponsorRatings[data[key]].ratedOn}</h6>
+                                        <h6 className="card-title">Rated
+                                            on: {new Date(sponsorRatings[data[key]].ratedOn).toLocaleString('default', {
+                                                month: 'long',
+                                                day: "numeric",
+                                                year: "numeric"
+                                            })}</h6>
                                         {/*TODO: connect it with task description page */}
                                         <Link
                                             to={{
