@@ -6,6 +6,7 @@ import "../../css/sponsorRating.css";
 import {Link} from "react-router-dom";
 import Pagination from "../Common/pagination";
 import {paginate} from "../Common/paginate";
+import StarRatings from "react-star-ratings";
 
 
 class SponsorRating extends Component {
@@ -84,6 +85,16 @@ class SponsorRating extends Component {
                                 <div className="rating-card">
                                     <div className="rating-card-left">
                                         <h4 className="card-title">Rating: {ratings[data[key]].rating}</h4>
+                                        <StarRatings
+                                            rating={Number(ratings[data[key]].rating)}
+                                            starRatedColor="black"
+                                            numberOfStars={5}
+                                            starDimension="30px"
+                                            starSpacing="0px"
+                                        />
+                                        <br/>
+                                        <br/>
+                                        <br/>
                                         <p className="card-subtitle mb-2 text-muted">
                                             <i>" {ratings[data[key]].comment} "</i></p>
                                     </div>

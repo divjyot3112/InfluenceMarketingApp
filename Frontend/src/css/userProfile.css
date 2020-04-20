@@ -58,8 +58,8 @@
 .submit_button button {
     position: relative;
     left: 47%;
-    top: 50%;
     width:6%;
+
 }
 
 .error {
@@ -72,9 +72,22 @@ textarea{
 
 .task-categories{
     width: 25%;
+    color:gray;
 }
 
 .form-check{
     width: 70%;
 
+}
+
+.input-field{
+    width: 100%
+}
+
+.input-date{
+    width: 100%
+}
+
+.dob-label{
+    width: 20%
 }
