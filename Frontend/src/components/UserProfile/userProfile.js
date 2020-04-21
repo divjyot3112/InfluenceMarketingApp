@@ -214,6 +214,22 @@ class UserProfile extends UserProfileFormEventHandlers {
         });
     };
 
+    checkDisable() {
+        return this.state.firstName == "" ||
+            this.state.lastName == "" ||
+            this.state.streetAddress == "" ||
+            this.state.city == "" ||
+            this.state.state == "" ||
+            this.state.country == "" ||
+            this.state.zipcode == "" ||
+            this.state.gender === undefined ||
+            this.state.phone == "" ||
+            new Date(this.state.dateOfBirth).setHours(0, 0, 0, 0)
+            === new Date().setHours(0, 0, 0, 0) ||
+            this.state.aboutMe === undefined ||
+            (this.state.taskCategories == "" && this.state.company === undefined);
+    }
+
     render() {
         // TODO: if user is not logged in, redirect to home
 
@@ -512,7 +528,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                         <div className="form-group">
 
                                             <label className="task-categories">
-                                                <small>Task Categories*</small>
+                                                <small>Task Categories</small>
                                             </label>
 
                                             <div className="form-check">
@@ -548,7 +564,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                         color="primary"
                                         size="large"
                                         className={classes.button}
-                                        disabled={Object.keys(this.state.errors).length !== 0}
+                                        disabled={Object.keys(this.state.errors).length !== 0 || this.checkDisable()}
                                         onClick={this.handleProfile}
                                         startIcon={<SaveIcon/>}
                                     >

@@ -122,9 +122,18 @@ class PostTask extends PostTaskFormEventHandlers {
         });
     };
 
+    checkDisable() {
+        return this.state.title == "" ||
+            this.state.description == "" ||
+            this.state.salary == "" ||
+            this.state.category == "" ||
+            this.state.vacancyCount == "" ||
+            this.state.startDate == "" ||
+            this.state.endDate == "";
+    }
+
     render() {
         // TODO: if user is not logged in, redirect to home
-
         const {classes} = this.props;
 
         if (false) { // TODO: check if user is not sponsor (role comes from local storage)
@@ -304,7 +313,7 @@ class PostTask extends PostTaskFormEventHandlers {
                                     color="primary"
                                     size="large"
                                     className="classes.button btn-save"
-                                    disabled={Object.keys(this.state.errors).length !== 0}
+                                    disabled={Object.keys(this.state.errors).length !== 0 || this.checkDisable()}
                                     onClick={this.onSubmit}
                                     startIcon={<SaveIcon/>}
                                 >
