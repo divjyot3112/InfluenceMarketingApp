@@ -23,7 +23,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Pagination from '@material-ui/lab/Pagination';
 import AddRatingModal from './AddRatingModal'
+import NoData from './NoData'
 import "../../css/dashboard.css";
+import { MY_USER_ID } from "../../utils/Constants";
 
 //create the Navbar Component
 
@@ -53,19 +55,6 @@ const useStyles = (theme) => ({
         minWidth: 250,
       }
 });
-
-/*const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-const tasks = [{
-    title: "Task1",
-    description: "This is task1",
-    postedOn: "12/3/2020"
-},
-{
-    title: "Task2",
-    description: "This is task2",
-    postedOn: "12/3/2020"
-}
-]*/
 
 class SponsorDashboard extends Component {
 
@@ -99,7 +88,7 @@ class SponsorDashboard extends Component {
     //get the courses data from backend  
     componentDidMount() {
         //TODO: get all tasks instead
-        this.props.fetchDashboardTasks("john.doe@gmail.com", TaskStatus.CREATED);
+        this.props.fetchDashboardTasks(MY_USER_ID, TaskStatus.ALL);
     }
 
     handlePaginationClick = (event, value) => {
@@ -110,41 +99,51 @@ class SponsorDashboard extends Component {
 
     truncate = (input) => input.length > 30 ? `${input.substring(0, 30)}...` : input
 
+    handleOnStatusChange = (event) => {
+        console.log(event)
+        this.props.fetchDashboardTasks(MY_USER_ID, event.target.value);
+    }
+
     renderTasks() {
         const { classes } = this.props;
-        return _.map(this.props.currentPageTasks, (task) => (
+        if (this.props.currentPageTasks.length > 0) {
+            return _.map(this.props.currentPageTasks, (task) => (
             
-            <Grid item key={task} xs={10} sm={6} md={3}> {/*md was 4*/}
-                <Card className={classes.card}>
-                    <CardMedia
-                        className={classes.cardMedia}
-                        image="https://source.unsplash.com/random"
-                        title="Image title"
-                    />
-                    <CardContent className={classes.cardContent}>
-                        <Typography gutterBottom variant="h6" component="h2">
-                            {task.title}
-                        </Typography>
-                        <Typography>
-                            <div style={{overflowWrap:"break-word"}}><b>Desc:</b> {this.truncate(task.description)}</div>
-                        </Typography><br></br>
-                        <Typography>
-                            <b>Posted On:</b> {new Date(task.postedOn).toLocaleDateString()}
-                        </Typography>
-                    </CardContent>
+                <Grid item key={task} xs={10} sm={6} md={3}> {/*md was 4*/}
+                    <Card className={classes.card}>
+                        <CardMedia
+                            className={classes.cardMedia}
+                            image="https://source.unsplash.com/random"
+                            title="Image title"
+                        />
+                        <CardContent className={classes.cardContent}>
+                            <Typography gutterBottom variant="h6" component="h2">
+                                {task.title}
+                            </Typography>
+                            <Typography>
+                                <div style={{ overflowWrap: "break-word" }}><b>Desc:</b> {this.truncate(task.description)}</div>
+                            </Typography><br></br>
+                            <Typography>
+                                <b>Posted On:</b> {new Date(task.postedOn).toLocaleDateString()}
+                            </Typography>
+                        </CardContent>
                 
-                    <CardActions>
-                        <AddRatingModal taskData = {task}></AddRatingModal>
-                        <Button size="small" color="primary" onClick={() => alert(task._id)}>View</Button>
-                    </CardActions>
-                     {/*   <Button size="small" color="primary">
+                        <CardActions>
+                            <AddRatingModal taskData={task}></AddRatingModal>
+                            <Button size="small" color="primary" onClick={() => { window.location.href = "/task/description/" + task._id }}>View</Button>
+                        </CardActions>
+                        {/*   <Button size="small" color="primary">
                             Edit
                         </Button>
                     </CardActions>
                     */}
-                </Card>
-            </Grid>
-        ))
+                    </Card>
+                </Grid>
+            ))
+        } else {
+           return  <NoData image={window.location.origin + "/no_tasks.png"} description="No Matching Tasks Found"/>
+            
+        }
     }
 
     render() {
@@ -156,7 +155,7 @@ class SponsorDashboard extends Component {
                 <div className="filter">
                     <div style={{float:"left"}}>
                     <FormControl className={classes.formControl}>
-                    <RadioGroup row aria-label="position" name="position" defaultValue="end">
+                    <RadioGroup row aria-label="position" name="position" defaultValue="end" onChange={(event)=>this.handleOnStatusChange(event)}>
                         <FormControlLabel
                         value={TaskStatus.CREATED}
                         control={<Radio color="primary" />}
@@ -211,7 +210,7 @@ class SponsorDashboard extends Component {
                         {this.renderTasks()}
                     </Grid>
                     <div className={classes.root}>
-                        <Pagination count={this.props.numPages} variant="outlined" color="primary" onChange={this.handlePaginationClick} />
+                         <Pagination count={this.props.numPages} variant="outlined" color="primary" onChange={this.handlePaginationClick} hidden={this.props.currentPageTasks.length<=0} />
                     </div>
                 </Container>
             </React.Fragment>
