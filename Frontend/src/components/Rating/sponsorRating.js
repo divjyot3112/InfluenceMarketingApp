@@ -6,6 +6,7 @@ import "../../css/sponsorRating.css";
 import {Link} from "react-router-dom";
 import Pagination from "../Common/pagination";
 import {paginate} from "../Common/paginate";
+import StarRatings from "react-star-ratings";
 
 
 class SponsorRating extends Component {
@@ -28,9 +29,9 @@ class SponsorRating extends Component {
 
     handleRatingSorting = (e) => {
         if (e.target.value === "lowToHigh") {
-            this.props.sortRatingsLowToHigh(this.props.sponsorRatings);
+            this.props.sortRatingsLowToHigh(this.props.ratings);
         } else if (e.target.value === "highToLow") {
-            this.props.sortRatingsHighToLow(this.props.sponsorRatings);
+            this.props.sortRatingsHighToLow(this.props.ratings);
         } else if (e.target.value === "mostRecent") {
             window.location.reload();
         }
@@ -40,8 +41,8 @@ class SponsorRating extends Component {
     render() {
         // TODO: if user is not logged in, redirect to home
 
-        const {sponsorRatings} = this.props;
-        const data = Object.keys(sponsorRatings)
+        const {ratings} = this.props;
+        const data = Object.keys(ratings)
 
         const paginatedData = paginate(
             data ? data : "",
@@ -49,7 +50,7 @@ class SponsorRating extends Component {
             this.state.pageSize
         );
 
-        if (Object.keys(sponsorRatings).length === 0) {
+        if (Object.keys(ratings).length === 0) {
             return (
                 <React.Fragment>
                     <p className="not-found">
@@ -83,14 +84,24 @@ class SponsorRating extends Component {
 
                                 <div className="rating-card">
                                     <div className="rating-card-left">
-                                        <h4 className="card-title">Rating: {sponsorRatings[data[key]].rating}</h4>
+                                        <h4 className="card-title">Rating: {ratings[data[key]].rating}</h4>
+                                        <StarRatings
+                                            rating={Number(ratings[data[key]].rating)}
+                                            starRatedColor="black"
+                                            numberOfStars={5}
+                                            starDimension="30px"
+                                            starSpacing="0px"
+                                        />
+                                        <br/>
+                                        <br/>
+                                        <br/>
                                         <p className="card-subtitle mb-2 text-muted">
-                                            <i>" {sponsorRatings[data[key]].comment} "</i></p>
+                                            <i>" {ratings[data[key]].comment} "</i></p>
                                     </div>
 
                                     <div className="rating-card-right">
                                         <h6 className="card-title">Rated
-                                            on: {new Date(sponsorRatings[data[key]].ratedOn).toLocaleString('default', {
+                                            on: {new Date(ratings[data[key]].ratedOn).toLocaleString('default', {
                                                 month: 'long',
                                                 day: "numeric",
                                                 year: "numeric"
@@ -100,7 +111,7 @@ class SponsorRating extends Component {
                                             to={{
                                                 pathname: "/task",
                                                 state: {
-                                                    taskId: sponsorRatings[data[key]].task
+                                                    taskId: ratings[data[key]].task
                                                 }
                                             }}
                                             style={{textDecoration: 'none'}}
@@ -112,7 +123,7 @@ class SponsorRating extends Component {
                                             to={{
                                                 pathname: "/profile",
                                                 state: {
-                                                    email: sponsorRatings[data[key]].influencer
+                                                    email: ratings[data[key]].influencer
                                                 }
                                             }}
                                             style={{textDecoration: 'none'}}
@@ -141,14 +152,14 @@ class SponsorRating extends Component {
 }
 
 SponsorRating.propTypes = {
-    sponsorRatings: PropTypes.object.isRequired,
+    ratings: PropTypes.object.isRequired,
     getSponsorRatings: PropTypes.func.isRequired,
     sortRatingsHighToLow: PropTypes.func.isRequired,
     sortRatingsLowToHigh: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-    sponsorRatings: state.rating.sponsorRatings,
+    ratings: state.rating.ratings,
 });
 
 export default (

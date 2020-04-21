@@ -143,13 +143,14 @@ class UserProfileFormEventHandlers extends Component {
 
     handleGender = (e) => {
         const errors = {...this.state.errors};
+        if (e.target.value === undefined) {
+            errors["gender"] = "Please select your gender";
+        } else delete errors["gender"];
 
-        if (e.target.value ==  "") {
-            errors[e.currentTarget.name] = "Please select your gender";
-        } else delete errors[e.currentTarget.name];
 
         let data = this.state.gender;
         data = e.target.value;
+
         this.setState({gender: data, errors});
     };
 
@@ -157,8 +158,8 @@ class UserProfileFormEventHandlers extends Component {
         const errors = {...this.state.errors};
 
         var date = new Date();
-        date.setDate( date.getDate() + 1 );
-        date.setFullYear( date.getFullYear() - 18 );
+        date.setDate(date.getDate() + 1);
+        date.setFullYear(date.getFullYear() - 18);
 
         if (e > date)
             errors["dateOfBirth"] = "You should be at least 18 years old";
