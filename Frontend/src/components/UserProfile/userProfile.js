@@ -6,8 +6,6 @@ import Joi from "joi-browser";
 import {DatePicker} from "@material-ui/pickers";
 import "react-widgets/dist/css/react-widgets.css";
 import {If} from "react-if";
-import moment from "moment";
-import momentLocaliser from "react-widgets-moment";
 import UserProfileFormEventHandlers from "./UserProfileFormEventHandlers";
 import {getProfile, saveProfile} from "../../actions/userProfileActions";
 import "../../css/userProfile.css";
@@ -52,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
     },
 }));
-momentLocaliser(moment);
 
 class UserProfile extends UserProfileFormEventHandlers {
     constructor(props) {
@@ -409,7 +406,6 @@ class UserProfile extends UserProfileFormEventHandlers {
                                         <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
                                             value={this.state.gender}
                                             onChange={this.handleGender}
                                             onClick={this.handleGender}
@@ -488,24 +484,28 @@ class UserProfile extends UserProfileFormEventHandlers {
                                     <br/>
 
                                     <If condition={this.state.role === userRoles.SPONSOR}>
-                                        <TextField
-                                            error
-                                            className="input-field"
-                                            onChange={this.handleCompany}
-                                            name="company"
-                                            value={this.state.company}
-                                            required
-                                            error={this.state.errors.company}
-                                            disabled={this.state.isCurrentUser === false}
-                                            helperText={this.state.errors.company}
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <BusinessIcon/>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                            label="Company"/>
+                                        <div>
+                                            <TextField
+                                                error
+                                                className="input-field"
+                                                onChange={this.handleCompany}
+                                                name="company"
+                                                value={this.state.company}
+                                                required
+                                                error={this.state.errors.company}
+                                                disabled={this.state.isCurrentUser === false}
+                                                helperText={this.state.errors.company}
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <BusinessIcon/>
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                                label="Company"/>
+                                            <br/>
+                                            <br/>
+                                        </div>
                                     </If>
 
                                     <If condition={this.state.role === userRoles.INFLUENCER}>
@@ -535,6 +535,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                                     </div>
                                                 ))}
                                             </div>
+                                            <br/>
                                         </div>
                                     </If>
                                 </div>
