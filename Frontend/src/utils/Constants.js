@@ -33,4 +33,4 @@ const Gender = [
     "Other"
 ];
 
-export {UserRoles, TaskStatus, TaskCategories, Gender}
+export {UserRoles, TaskStatus, TaskCategories, Gender, MY_USER_ID}

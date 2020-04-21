@@ -27,7 +27,7 @@ class Messenger extends Component {
         </div>
 
         <div className="scrollable content">
-          <MessageList conversationId={this.state.currentConversationId}/>
+          <MessageList conversationId={this.state.currentConversationId} />
         </div>
       </div>
     );
