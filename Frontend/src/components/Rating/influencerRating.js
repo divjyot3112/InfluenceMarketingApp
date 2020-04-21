@@ -82,7 +82,7 @@ class InfluencerRating extends Component {
                                 <h1>Average Rating: {averageRating}</h1>
                                 <StarRatings
                                     rating={Number(averageRating)}
-                                    starRatedColor="black"
+                                    starRatedColor="#FAAD1C"
                                     numberOfStars={5}
                                 />
                             </div>
@@ -93,7 +93,7 @@ class InfluencerRating extends Component {
                                         <h4 className="card-title">Rating: {ratings[data[key]].rating}</h4>
                                         <StarRatings
                                             rating={Number(ratings[data[key]].rating)}
-                                            starRatedColor="black"
+                                            starRatedColor="#FAAD1C"
                                             numberOfStars={5}
                                             starDimension="30px"
                                             starSpacing="0px"
