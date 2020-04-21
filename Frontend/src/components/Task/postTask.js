@@ -3,17 +3,42 @@ import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import Joi from "joi-browser";
-import DateTimePicker from "react-widgets/lib/DateTimePicker";
 import "react-widgets/dist/css/react-widgets.css";
-import moment from "moment";
-import momentLocaliser from "react-widgets-moment";
 import "../../css/postTask.css";
 import PostTaskFormEventHandlers from "./PostTaskFormEventHandlers";
 import {saveTask} from "../../actions/taskActions";
+import {makeStyles, withStyles} from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import PeopleIcon from '@material-ui/icons/People';
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import {DatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import 'date-fns';
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import SaveIcon from '@material-ui/icons/Save';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const TaskCategories = require("../../utils/Constants").TaskCategories;
 
-momentLocaliser(moment);
+const useStyles = makeStyles((theme) => ({
+    root: {
+        '& > *': {
+            margin: theme.spacing(1),
+            width: '25ch',
+        },
+    },
+    button: {
+        margin: theme.spacing(1),
+    },
+}));
 
 class PostTask extends PostTaskFormEventHandlers {
     constructor(props) {
@@ -100,6 +125,8 @@ class PostTask extends PostTaskFormEventHandlers {
     render() {
         // TODO: if user is not logged in, redirect to home
 
+        const {classes} = this.props;
+
         if (false) { // TODO: check if user is not sponsor (role comes from local storage)
             return (
                 <React.Fragment>
@@ -110,136 +137,144 @@ class PostTask extends PostTaskFormEventHandlers {
             return (
                 <React.Fragment>
                     <div className="main">
-                        <form>
+                        <form className={classes.root}>
                             <div className="form-body">
                                 <div className="form_body_left">
-                                    <div className="form-group">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="title"
-                                            placeholder="Title"
-                                            onChange={this.handleTitle}
-                                            name="title"
-                                            value={this.state.title}
-                                            autoFocus={true}
-                                            error={this.state.errors.title}
-                                        />
-                                        {this.state.errors.title && (
-                                            <div className="error">
-                                                {this.state.errors.title}{" "}
-                                            </div>
-                                        )}
-                                    </div>
+                                    <TextField
+                                        error
+                                        className="input-field"
+                                        onChange={this.handleTitle}
+                                        name="title"
+                                        value={this.state.title}
+                                        autoFocus={true}
+                                        required
+                                        error={this.state.errors.title}
+                                        helperText={this.state.errors.title}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <ViewHeadlineIcon/>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        label="Title"/>
+                                    <br/>
                                     <br/>
 
-                                    <div className="form-group">
-                                    <textarea
-                                        className="form-control"
-                                        name="description"
-                                        id="description"
-                                        rows={7}
+                                    <TextField
+                                        error
+                                        className="input-field"
                                         onChange={this.handleDescription}
-                                        placeholder="Description"
-                                        error={this.state.errors.description}
+                                        name="description"
                                         value={this.state.description}
-                                    />
-                                        {this.state.errors.description && (
-                                            <div className="error">{this.state.errors.description} </div>
-                                        )}
-                                    </div>
+                                        required
+                                        error={this.state.errors.description}
+                                        helperText={this.state.errors.description}
+                                        multiline
+                                        rows={7}
+                                        variant="outlined"
+                                        label="Description"/>
+                                    <br/>
                                     <br/>
 
-                                    <div className="form-group ">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="salary"
-                                            placeholder="Salary"
-                                            onChange={this.handleSalary}
-                                            name="salary"
-                                            value={this.state.salary}
-                                            error={this.state.errors.salary}
-                                        />
-                                        {this.state.errors.salary && (
-                                            <div className="error">{this.state.errors.salary} </div>
-                                        )}
-                                    </div>
+                                    <TextField
+                                        error
+                                        className="input-field"
+                                        onChange={this.handleSalary}
+                                        name="salary"
+                                        value={this.state.salary}
+                                        required
+                                        error={this.state.errors.salary}
+                                        helperText={this.state.errors.salary}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <AttachMoneyIcon/>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        label="Salary"/>
+                                    <br/>
                                     <br/>
                                 </div>
 
                                 <div className="form_body_right">
-                                    <b>
-                                        <label>Start Date: &nbsp; </label>
-                                    </b>
-                                    <DateTimePicker
-                                        onChange={this.handleStartDate}
-                                        name="startDate"
-                                        id="startDate"
-                                        time={false}
-                                        placeholder="Start Date"
-                                        error={this.state.errors.startDate}
-                                    />
-                                    {this.state.errors.startDate && (
-                                        <div className="error">{this.state.errors.startDate} </div>
-                                    )}
+
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <Grid container justify="space-around">
+                                            <DatePicker
+                                                variant="inline"
+                                                className="input-date"
+                                                label="Start Date"
+                                                format="dd MMMM yyyy"
+                                                value={new Date(this.state.startDate)}
+                                                onChange={this.handleStartDate}
+                                                name="startDate"
+                                                error={this.state.errors.startDate}
+                                                helperText={this.state.errors.startDate}
+                                            />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
                                     <br/>
 
-                                    <b>
-                                        <label>End Date: &nbsp; </label>
-                                    </b>
-                                    <DateTimePicker
-                                        onChange={this.handleEndDate}
-                                        name="endDate"
-                                        id="endDate"
-                                        time={false}
-                                        placeholder="End Date"
-                                        error={this.state.errors.endDate}
-                                    />
-                                    {this.state.errors.endDate && (
-                                        <div className="error">{this.state.errors.endDate} </div>
-                                    )}
-                                    <br/>
-                                    <div className="form-group ">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="vacancyCount"
-                                            placeholder="Vacancy Count"
-                                            onChange={this.handleVacancyCount}
-                                            name="vacancyCount"
-                                            error={this.state.errors.vacancyCount}
-                                        />
-                                        {this.state.errors.vacancyCount && (
-                                            <div className="error">{this.state.errors.vacancyCount} </div>
-                                        )}
-                                    </div>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <Grid container justify="space-around">
+                                            <DatePicker
+                                                variant="inline"
+                                                className="input-date"
+                                                label="End Date"
+                                                format="dd MMMM yyyy"
+                                                value={new Date(this.state.endDate)}
+                                                onChange={this.handleEndDate}
+                                                name="endDate"
+                                                error={this.state.errors.endDate}
+                                                helperText={this.state.errors.endDate}
+                                            />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
                                     <br/>
 
-                                    <div className="form-group">
-                                        <b>
-                                            <label>Category: </label>
-                                        </b>
-                                        <select
-                                            className="form-control"
-                                            name="category"
-                                            id="category"
-                                            placeholder="Category"
-                                            onMouseOver={this.handleCategory}
+                                    <TextField
+                                        error
+                                        className="input-field"
+                                        onChange={this.handleVacancyCount}
+                                        name="vacancyCount"
+                                        value={this.state.vacancyCount}
+                                        required
+                                        error={this.state.errors.vacancyCount}
+                                        helperText={this.state.errors.vacancyCount}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <PeopleIcon/>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        label="Vacancy Count"/>
+                                    <br/>
+                                    <br/>
+
+                                    <FormControl className="classes.formControl input-field" required>
+                                        <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={this.state.category}
                                             onChange={this.handleCategory}
+                                            onClick={this.handleCategory}
+                                            name="category"
                                             error={this.state.errors.category}
+                                            required
                                         >
-                                            <option value="" selected disabled>Select Category</option>
                                             {TaskCategories.map(value => (
-                                                <option value={value}>{value}</option>
+                                                <MenuItem value={value}>{value}</MenuItem>
                                             ))}
-                                        </select>
-                                        {this.state.errors.category && (
-                                            <div className="error">{this.state.errors.category} </div>
-                                        )}
-                                    </div>
+                                        </Select>
+                                        <FormHelperText><span
+                                            className="error"> {this.state.errors.category}</span></FormHelperText>
+                                    </FormControl>
                                     <br/>
-
+                                    <br/>
                                 </div>
                             </div>
 
@@ -264,22 +299,28 @@ class PostTask extends PostTaskFormEventHandlers {
                             </div>
 
                             <div className="buttons">
-                                <button
-                                    type="submit"
-                                    className="btn btn-success btn-lg"
-                                    onClick={this.onSubmit}
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    size="large"
+                                    className="classes.button btn-save"
                                     disabled={Object.keys(this.state.errors).length !== 0}
+                                    onClick={this.onSubmit}
+                                    startIcon={<SaveIcon/>}
                                 >
                                     Save
-                                </button>
+                                </Button>
 
-                                <button
-                                    type="submit"
-                                    className="btn btn-danger btn-lg"
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    size="large"
+                                    className="classes.button btn-cancel"
                                     onClick={this.onCancel}
+                                    startIcon={<DeleteIcon/>}
                                 >
                                     Cancel
-                                </button>
+                                </Button>
                             </div>
 
                         </form>
@@ -305,5 +346,7 @@ PostTask = connect(
     }),
     {saveTask}
 )(PostTask);
+
+PostTask = (withStyles(useStyles)(PostTask))
 
 export default PostTask;

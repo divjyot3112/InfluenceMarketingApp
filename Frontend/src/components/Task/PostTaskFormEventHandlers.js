@@ -72,9 +72,9 @@ class PostTaskFormEventHandlers extends Component {
     handleCategory = (e) => {
         const errors = {...this.state.errors};
 
-        if (e.target.value ==  "") {
-            errors[e.currentTarget.name] = "Please select a task category";
-        } else delete errors[e.currentTarget.name];
+        if (e.target.value === undefined) {
+            errors["category"] = "Please select a task category";
+        } else delete errors["category"];
 
         let data = this.state.category;
         data = e.target.value;
@@ -109,8 +109,14 @@ class PostTaskFormEventHandlers extends Component {
 
     handleEndDate = (e) => {
         const errors = {...this.state.errors};
+        let startDate = this.state.startDate
 
-        if (e <= this.state.startDate)
+        if (startDate === "") {
+            startDate = new Date()
+            this.setState({startDate: startDate})
+        }
+
+        if (e <= startDate)
             errors["endDate"] = "End Date should be more Start Date";
         else delete errors["endDate"];
 

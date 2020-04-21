@@ -66,10 +66,6 @@
     color: red;
 }
 
-textarea{
-    resize: none;
-}
-
 .task-categories{
     width: 25%;
     color:gray;
@@ -77,7 +73,6 @@ textarea{
 
 .form-check{
     width: 70%;
-
 }
 
 .input-field{
