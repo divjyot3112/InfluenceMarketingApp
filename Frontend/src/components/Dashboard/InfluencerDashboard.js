@@ -162,7 +162,8 @@ class InfluencerDashboard extends Component {
                         labelPlacement="end"
                         />
                                 <FormControlLabel value={TaskStatus.PENDING} control={<Radio color="primary" />} label={TaskStatus.PENDING} />
-                                <FormControlLabel
+                                <FormControlLabel value={TaskStatus.APPLIED} control={<Radio color="primary" />} label={TaskStatus.APPLIED} />
+                        <FormControlLabel
                         value={TaskStatus.ALL}
                         control={<Radio color="primary" />}
                         label={TaskStatus.ALL}

@@ -10,6 +10,7 @@ const TaskStatus = {
     PENDING: 'Pending',
     COMPLETED: 'Completed',
     CANCELLED: 'Cancelled',
+    APPLIED: 'Applied',
     ALL:"All"
 }
 
