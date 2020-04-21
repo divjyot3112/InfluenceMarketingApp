@@ -22,7 +22,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Pagination from '@material-ui/lab/Pagination';
-import AddRatingModal from './AddRatingModal'
 import NoData from './NoData'
 import "../../css/dashboard.css";
 import { MY_USER_ID } from "../../utils/Constants";
@@ -56,7 +55,7 @@ const useStyles = (theme) => ({
       }
 });
 
-class SponsorDashboard extends Component {
+class InfluencerDashboard extends Component {
 
     constructor(props) {
         super(props);
@@ -129,14 +128,8 @@ class SponsorDashboard extends Component {
                         </CardContent>
                 
                         <CardActions>
-                            <AddRatingModal taskData={task}></AddRatingModal>
                             <Button size="small" color="primary" onClick={() => { window.location.href = "/task/description/" + task._id }}>View</Button>
                         </CardActions>
-                        {/*   <Button size="small" color="primary">
-                            Edit
-                        </Button>
-                    </CardActions>
-                    */}
                     </Card>
                 </Grid>
             ))
@@ -157,12 +150,6 @@ class SponsorDashboard extends Component {
                     <FormControl className={classes.formControl}>
                     <RadioGroup row aria-label="position" name="position" defaultValue="end" onChange={(event)=>this.handleOnStatusChange(event)}>
                         <FormControlLabel
-                        value={TaskStatus.CREATED}
-                        control={<Radio color="primary" />}
-                        label={TaskStatus.CREATED}
-                        labelPlacement="end"
-                        />
-                        <FormControlLabel
                         value={TaskStatus.COMPLETED}
                         control={<Radio color="primary" />}
                         label={TaskStatus.COMPLETED}
@@ -175,7 +162,8 @@ class SponsorDashboard extends Component {
                         labelPlacement="end"
                         />
                                 <FormControlLabel value={TaskStatus.PENDING} control={<Radio color="primary" />} label={TaskStatus.PENDING} />
-                                <FormControlLabel
+                                <FormControlLabel value={TaskStatus.APPLIED} control={<Radio color="primary" />} label={TaskStatus.APPLIED} />
+                        <FormControlLabel
                         value={TaskStatus.ALL}
                         control={<Radio color="primary" />}
                         label={TaskStatus.ALL}
@@ -218,7 +206,7 @@ class SponsorDashboard extends Component {
     }
 }
 
-SponsorDashboard.propTypes = {
+InfluencerDashboard.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -231,4 +219,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, { fetchDashboardTasks, getCurrentPageTasks })(withStyles(useStyles)(SponsorDashboard));
+export default connect(mapStateToProps, { fetchDashboardTasks, getCurrentPageTasks })(withStyles(useStyles)(InfluencerDashboard));
