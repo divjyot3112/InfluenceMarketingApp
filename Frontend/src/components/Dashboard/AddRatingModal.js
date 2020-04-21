@@ -8,7 +8,12 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
-
+import Box from '@material-ui/core/Box';
+import Rating from '@material-ui/lab/Rating';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 const styles = (theme) => ({
     root: {
         margin: 0,
@@ -20,6 +25,14 @@ const styles = (theme) => ({
         top: theme.spacing(1),
         color: theme.palette.grey[500],
     },
+    button: {
+        display: 'block',
+        marginTop: theme.spacing(2),
+      },
+      formControl: {
+        margin: theme.spacing(1),
+        minWidth: 400,
+      }
 });
 
 const DialogTitle = withStyles(styles)((props) => {
@@ -54,7 +67,10 @@ class AddRatingModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            open: false
+            open: false,
+            openSelect: false,
+            value: 0,
+            influencer:""
         }
     }
 
@@ -63,7 +79,30 @@ class AddRatingModal extends Component {
             open: val
         })
     }
+
+    setValue = (val) => {
+        this.setState({
+            value:val
+        })
+    }
+
+    handleOpenSelect = () => {
+        this.setState({
+            openSelect: true
+        })
+    }
     
+    handleCloseSelect = () => {
+        this.setState({
+            openSelect: false
+        })
+    }
+
+    handleChangeSelect = (event) => {
+        this.setState({
+            influencer: event.target.value
+        })
+    }
     render() {
         //const [open, setOpen] = useState(false);
         const handleClickOpen = () => {
@@ -72,28 +111,54 @@ class AddRatingModal extends Component {
         const handleClose = () => {
             this.setOpen(false);
         };
+        const { classes } = this.props;
         return (
             <div>
-                <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-                    Rate
+                <Button size="small" color="primary" onClick={handleClickOpen}>
+                            Rate
                 </Button>
                 <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={this.state.open}>
                     <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                        Modal Title
+                        {this.props.taskData.title}
                     </DialogTitle>
                     <DialogContent dividers>
                         <Typography gutterBottom>
-                            Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-                            in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+                            <FormControl className={classes.formControl}>
+                                <InputLabel id="demo-controlled-open-select-label">Influencer</InputLabel>
+                                <Select
+                                labelId="demo-controlled-open-select-label"
+                                id="demo-controlled-open-select"
+                                open={this.state.openSelect}
+                                onClose={this.handleCloseSelect}
+                                onOpen={this.handleOpenSelect}
+                                value={this.state.influencer}
+                                onChange={this.handleChangeSelect}
+                                >
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={10}>Tenmdkjdkdjkdd</MenuItem>
+                                <MenuItem value={20}>Twentydkjdkjd</MenuItem>
+                                <MenuItem value={30}>Thirtydkkdjkdj</MenuItem>
+                                </Select>
+                            </FormControl>
                         </Typography>
                         <Typography gutterBottom>
-                            Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-                            lacus vel augue laoreet rutrum faucibus dolor auctor.
+                            <FormControl className={classes.formControl}>
+                                <Typography component="legend"></Typography>
+                                <Rating
+                                name="simple-controlled"
+                                value={this.state.value}
+                                onChange={(event, newValue) => {
+                                    this.setValue(newValue);
+                                }}
+                                />
+                                </FormControl>
                         </Typography>
                         <Typography gutterBottom>
-                            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
-                            scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
-                            auctor fringilla.
+                                <FormControl className={classes.formControl}>
+                                <textarea style={{overflow:"hidden"}} rows={3} placeholder="Feedback" />
+                                </FormControl>
                          </Typography>
                     </DialogContent>
                     <DialogActions>
