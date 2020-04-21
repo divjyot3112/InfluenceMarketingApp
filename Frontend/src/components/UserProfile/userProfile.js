@@ -6,7 +6,7 @@ import Joi from "joi-browser";
 import {DatePicker} from "@material-ui/pickers";
 import "react-widgets/dist/css/react-widgets.css";
 import {If} from "react-if";
-import UserProfileFormEventHandlers from "./UserProfileFormEventHandlers";
+import UserProfileFormEventHandlers from "./userProfileFormEventHandlers";
 import {getProfile, saveProfile} from "../../actions/userProfileActions";
 import "../../css/userProfile.css";
 import {makeStyles, withStyles} from '@material-ui/core/styles';
