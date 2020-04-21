@@ -115,7 +115,7 @@ class InfluencerRating extends Component {
                                         {/*TODO: connect it with task description page */}
                                         <Link
                                             to={{
-                                                pathname: "/task",
+                                                pathname: "/task/description",
                                                 state: {
                                                     taskId: ratings[data[key]].task
                                                 }

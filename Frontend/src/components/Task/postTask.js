@@ -290,7 +290,7 @@ class PostTask extends PostTaskFormEventHandlers {
                                             className="custom-file-input"
                                             id="photos"
                                             name="photos"
-                                            multiple={true}
+                                            multiple={false}
                                             aria-describedby="inputGroupFileAddon01"/>
                                         <label className="custom-file-label" htmlFor="inputGroupFile01">Choose
                                             file</label>
