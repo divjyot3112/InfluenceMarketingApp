@@ -5,14 +5,20 @@
     margin: 30% 30% 30% 30%;
 }
 
-.main {
-    margin: 3% 3% 3% 3%;
+.main-ratings-sponsor {
+    margin: 3% 3% 0% 3%;
     height: 100%;
+    background-color: var(--main-bg-color);
+}
+
+.main-background {
+    margin: 0% 20% 0% 20%;
+    padding-bottom: 1%;
 }
 
 .sorting-options {
     margin: 3% 0% 0% 65%;
-    height: 100%;
+    height: auto;
 }
 
 .sorting-options select {
@@ -55,4 +61,5 @@
 
 .general-pagination {
     margin-left: 45%;
+    margin-top: 1%;
 }
