@@ -1,0 +1,8 @@
+.wrapper > div {
+    padding: 1em;   
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: 7fr 3fr;
+}
