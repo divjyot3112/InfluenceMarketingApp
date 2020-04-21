@@ -8,7 +8,9 @@ const TaskStatus = {
     INPROGRESS: 'In Progress',
     PENDING: 'Pending',
     COMPLETED: 'Completed',
-    CANCELLED: 'Cancelled'
+    CANCELLED: 'Cancelled',
+    ALL: 'All',
+    APPLIED: 'Applied'
 }
 
 module.exports = { UserRoles, TaskStatus };

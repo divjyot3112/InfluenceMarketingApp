@@ -136,11 +136,11 @@ router.put("/edit/:taskId", (req, res) => {
 // @access  Public
 router.get("/filter", (req, res) => {
     console.log("Inside Get tasks by current sponsor with filter by status")
-    User.findOne({ email:req.body.email })
+    User.findOne({ email:req.query.email })
     .then(user => {
         if(user.role==userRoles.INFLUENCER) {
-            if(req.query.status=="All") {
-                Task.find({ appliedCandidates: req.query.email })
+            if(req.query.status===taskStatus.ALL) {
+                Task.find({ appliedCandidates: { $elemMatch: {$eq:req.query.email}}})
                     .then(tasks => {
                         if (tasks) {
                             res.status(200).json({ message: tasks })
@@ -152,8 +152,31 @@ router.get("/filter", (req, res) => {
                         console.log(err)
                         res.status(400).json({ message: "Tasks could not be fetched" })
                     })
-            } else {
-                Task.find({ appliedCandidates: req.query.email, status: req.query.status })
+            } else if (req.query.status === taskStatus.APPLIED) {
+                Task.find({
+                    $and: [{ appliedCandidates: { $elemMatch: { $eq: req.query.email } } }, {
+                        $nor: [{
+                            selectedCandidates: {
+                                $elemMatch: { $eq: req.query.email }
+                            }
+                        }
+                    ]}],
+                    
+                })
+                    .then(tasks => {
+                        if (tasks) {
+                            res.status(200).json({ message: tasks })
+                        } else {
+                            res.status(400).json({ message: "No Tasks Found" })
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        res.status(400).json({ message: "Tasks could not be fetched" })
+                    })
+            }
+            else {
+                Task.find({ selectedCandidates: { $elemMatch: {$eq:req.query.email}}, status: req.query.status })
                     .then(tasks => {
                         if (tasks) {
                             res.status(200).json({ message: tasks })
