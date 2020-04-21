@@ -5,18 +5,24 @@
     margin: 30% 30% 30% 30%;
 }
 
-.main {
-    margin: 3% 3% 3% 3%;
+.main-ratings-influencer {
+    margin: 3% 3% 0% 3%;
     height: 100%;
+    background-color: var(--main-bg-color);
+}
+
+.main-background {
+    margin: 0% 20% 0% 20%;
+    padding-bottom: 1%;
 }
 
 .sorting-options {
-    margin: 3% 0% 0% 65%;
-    height: 100%;
+    margin: 3% 0% 0% 80%;
+    height:auto;
 }
 
 .sorting-options select {
-    width: 35%;
+    width: 90%;
 }
 
 .ratings-cards-main {
@@ -24,10 +30,11 @@
 }
 
 .average-rating {
-    margin: 3% 30% 0% 38%;
+    margin: 3% 30% 0% 35%;
+    width: auto;
 }
 
-.rating-card  {
+.rating-card {
     width: 60%;
     margin: 3% 20% 3% 20%;
     padding: 2% 2% 2% 2%;
@@ -37,26 +44,27 @@
 }
 
 .rating-card-left {
-    width:50%;
+    width: 50%;
     float: left;
     overflow-y: scroll;
 }
 
 .rating-card-right {
-    width:40%;
-    margin-left:60%;
+    width: 40%;
+    margin-left: 60%;
     text-align: right;
 }
 
 .link {
-    border:1px solid blue
+    border: 1px solid blue
 }
 
-.rating-card-right  Link:hover  {
+.rating-card-right Link:hover {
     text-decoration: none;
 
 }
 
 .general-pagination {
     margin-left: 45%;
+    margin-top: 1%;
 }

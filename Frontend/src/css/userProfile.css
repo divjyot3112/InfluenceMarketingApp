@@ -5,17 +5,25 @@
     margin: 30% 30% 30% 30%;
 }
 
-.main {
+.profile-main {
     margin: 3% 3% 3% 3%;
+    height: 100vh;
+    background-color: var(--main-bg-color);
+}
+
+.main-background{
+    margin:0% 20% 0% 20%;
+    background-color: white;
     height: 100%;
+    border:1px solid white;
 }
 
 .display_photo img {
-    margin-left: 42%;
+    margin-left: 38%;
 }
 
 .display_photo input {
-    margin-left: 1%;
+    margin-left: 4%;
 }
 
 .profileName {
@@ -52,14 +60,12 @@
 .submit_button {
     width: 100%;
     height: 100%;
-    margin-top: 3%;
+    margin-top: 4%;
 }
 
 .submit_button button {
     position: relative;
     left: 47%;
-    width:6%;
-
 }
 
 .error {
@@ -67,7 +73,6 @@
 }
 
 .task-categories{
-    width: 25%;
     color:gray;
 }
 
