@@ -3,7 +3,13 @@ import { connect } from "react-redux";
 import _ from "lodash";
 import { fetchDashboardTasks, getCurrentPageTasks } from "../../actions/dashboardActions";
 import { TaskStatus } from '../../utils/Constants';
-
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -17,6 +23,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Pagination from '@material-ui/lab/Pagination';
 import AddRatingModal from './AddRatingModal'
+import "../../css/dashboard.css";
+
 //create the Navbar Component
 
 const useStyles = (theme) => ({
@@ -39,7 +47,11 @@ const useStyles = (theme) => ({
         '& > *': {
             marginTop: theme.spacing(5),
         },
-    }
+    },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 250,
+      }
 });
 
 /*const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
@@ -61,8 +73,27 @@ class SponsorDashboard extends Component {
         super(props);
         this.state = {
             currentPageTasks: [],
-            numPages: 0
+            numPages: 0,
+            openSelect:false
         }
+    }
+
+    handleOpenSelect = () => {
+        this.setState({
+            openSelect: true
+        })
+    }
+    
+    handleCloseSelect = () => {
+        this.setState({
+            openSelect: false
+        })
+    }
+
+    handleChangeSelect = (event) => {
+        this.setState({
+            influencer: event.target.value
+        })
     }
 
     //get the courses data from backend  
@@ -77,7 +108,7 @@ class SponsorDashboard extends Component {
         })
     }
 
-    truncate = (input) => input.length > 40 ? `${input.substring(0, 40)}...` : input
+    truncate = (input) => input.length > 30 ? `${input.substring(0, 30)}...` : input
 
     renderTasks() {
         const { classes } = this.props;
@@ -120,8 +151,61 @@ class SponsorDashboard extends Component {
         const { classes } = this.props;
         return (
             <React.Fragment>
+                
                 <CssBaseline />
+                <div className="filter">
+                    <div style={{float:"left"}}>
+                    <FormControl className={classes.formControl}>
+                    <RadioGroup row aria-label="position" name="position" defaultValue="end">
+                        <FormControlLabel
+                        value={TaskStatus.CREATED}
+                        control={<Radio color="primary" />}
+                        label={TaskStatus.CREATED}
+                        labelPlacement="end"
+                        />
+                        <FormControlLabel
+                        value={TaskStatus.COMPLETED}
+                        control={<Radio color="primary" />}
+                        label={TaskStatus.COMPLETED}
+                        labelPlacement="end"
+                        />
+                        <FormControlLabel
+                        value={TaskStatus.INPROGRESS}
+                        control={<Radio color="primary" />}
+                        label={TaskStatus.INPROGRESS}
+                        labelPlacement="end"
+                        />
+                                <FormControlLabel value={TaskStatus.PENDING} control={<Radio color="primary" />} label={TaskStatus.PENDING} />
+                                <FormControlLabel
+                        value={TaskStatus.ALL}
+                        control={<Radio color="primary" />}
+                        label={TaskStatus.ALL}
+                        labelPlacement="end"
+                        />
+                        </RadioGroup>
+                        </FormControl>
+                    </div>
+                    <div style={{ float: "right", display:"inline"}}>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel id="demo-controlled-open-select-label">Sort By</InputLabel>
+                        <Select
+                        labelId="demo-controlled-open-select-label"
+                        id="demo-controlled-open-select"
+                        open={this.state.openSelect}
+                        onClose={this.handleCloseSelect}
+                        onOpen={this.handleOpenSelect}
+                        value={this.state.influencer}
+                        onChange={this.handleChangeSelect}
+                        >
+                        <MenuItem value={10}>Most Recent</MenuItem>
+                        <MenuItem value={20}>Salary: Low to High</MenuItem>
+                        <MenuItem value={30}>Salary: High to Low</MenuItem>
+                        </Select>
+                        </FormControl>
+                        </div>
+                </div>
                 <Container className={classes.cardGrid} maxWidth="md">
+                    
                     {/* End hero unit */}
                     <Grid container spacing={4}>
                         {this.renderTasks()}

@@ -1,4 +1,4 @@
-const MY_USER_ID = 'vandana@gmail.com'
+const MY_USER_ID = 'sheena@gmail.com'
 const UserRoles = {
     SPONSOR: "Sponsor",
     INFLUENCER: "Influencer"
@@ -9,7 +9,8 @@ const TaskStatus = {
     INPROGRESS: 'In Progress',
     PENDING: 'Pending',
     COMPLETED: 'Completed',
-    CANCELLED: 'Cancelled'
+    CANCELLED: 'Cancelled',
+    ALL:"All"
 }
 
 const TaskCategories = [
