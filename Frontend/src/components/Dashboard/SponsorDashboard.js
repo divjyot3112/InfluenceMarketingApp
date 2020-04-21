@@ -7,9 +7,11 @@ import { TaskStatus } from '../../utils/Constants';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
+import CardActions from '@material-ui/core/CardActions'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -31,7 +33,7 @@ const useStyles = (theme) => ({
         paddingTop: '56.25%', // 16:9
     },
     cardContent: {
-        flexGrow: 1,
+        flexGrow: 1
     },
     root: {
         '& > *': {
@@ -75,11 +77,14 @@ class SponsorDashboard extends Component {
         })
     }
 
+    truncate = (input) => input.length > 40 ? `${input.substring(0, 40)}...` : input
+
     renderTasks() {
         const { classes } = this.props;
         return _.map(this.props.currentPageTasks, (task) => (
+            
             <Grid item key={task} xs={10} sm={6} md={3}> {/*md was 4*/}
-                <Card onClick={() => alert("Hey")} className={classes.card}>
+                <Card className={classes.card}>
                     <CardMedia
                         className={classes.cardMedia}
                         image="https://source.unsplash.com/random"
@@ -90,18 +95,18 @@ class SponsorDashboard extends Component {
                             {task.title}
                         </Typography>
                         <Typography>
-                            Desc: {task.description}
-                        </Typography>
+                            <div style={{overflowWrap:"break-word"}}><b>Desc:</b> {this.truncate(task.description)}</div>
+                        </Typography><br></br>
                         <Typography>
-                            Posted On: {new Date(task.postedOn).toLocaleDateString()}
+                            <b>Posted On:</b> {new Date(task.postedOn).toLocaleDateString()}
                         </Typography>
                     </CardContent>
-                    {/*
+                
                     <CardActions>
-                        <Button size="small" color="primary">
-                            View
-                        </Button>
-                        <Button size="small" color="primary">
+                        <AddRatingModal taskData = {task}></AddRatingModal>
+                        <Button size="small" color="primary" onClick={() => alert(task._id)}>View</Button>
+                    </CardActions>
+                     {/*   <Button size="small" color="primary">
                             Edit
                         </Button>
                     </CardActions>
@@ -117,7 +122,6 @@ class SponsorDashboard extends Component {
             <React.Fragment>
                 <CssBaseline />
                 <Container className={classes.cardGrid} maxWidth="md">
-                    <AddRatingModal></AddRatingModal>
                     {/* End hero unit */}
                     <Grid container spacing={4}>
                         {this.renderTasks()}

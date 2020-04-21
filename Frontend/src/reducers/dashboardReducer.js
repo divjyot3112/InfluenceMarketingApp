@@ -21,7 +21,7 @@ export function dashboardNumPageReducer(state = 0, action) {
         case DASHBOARD_TASKS:
             if (action.payload === undefined)
                 return state
-            return action.payload.data.message.length
+            return action.payload.data.message.length/12
         default:
             return state;
     }
