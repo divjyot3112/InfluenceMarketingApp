@@ -33,6 +33,8 @@ import {
 } from '@material-ui/pickers';
 import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
+import MaskedInput from 'react-text-mask';
+import Input from '@material-ui/core/Input';
 
 const userRoles = require("../../utils/Constants").UserRoles;
 const TaskCategories = require("../../utils/Constants").TaskCategories;
@@ -50,6 +52,26 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
     },
 }));
+
+function TextMaskCustom(props) {
+    const {inputRef, ...other} = props;
+
+    return (
+        <MaskedInput
+            {...other}
+            ref={(ref) => {
+                inputRef(ref ? ref.inputElement : null);
+            }}
+            mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+            placeholderChar={'\u2000'}
+            showMask
+        />
+    );
+}
+
+TextMaskCustom.propTypes = {
+    inputRef: PropTypes.func.isRequired,
+};
 
 class UserProfile extends UserProfileFormEventHandlers {
     constructor(props) {
@@ -121,11 +143,6 @@ class UserProfile extends UserProfileFormEventHandlers {
             .max(5)
             .regex(/^[0-9]*$/)
             .label("Zipcode"),
-        phone: Joi.string()
-            .max(10)
-            .min(10)
-            .regex(/^[0-9]*$/)
-            .label("Contact Number"),
         company: Joi.string().max(20).required().label("Company"),
     };
 
@@ -134,7 +151,7 @@ class UserProfile extends UserProfileFormEventHandlers {
             this.setState({isCurrentUser: false})
 
         // TODO: Get username from local storage
-        const username = this.props.location.state ? this.props.location.state.email : "divjyot@gmail.com";
+        const username = this.props.location.state ? this.props.location.state.email : "sheena@gmail.com";
 
         this.props.getProfile(username, (response) => {
             if (response.status === 200) {
@@ -445,24 +462,19 @@ class UserProfile extends UserProfileFormEventHandlers {
                                         <br/>
                                         <br/>
 
-                                        <TextField
-                                            error
-                                            className="input-field"
-                                            onChange={this.handlePhone}
-                                            name="phone"
-                                            value={this.state.phone}
-                                            required
-                                            error={this.state.errors.phone}
-                                            disabled={this.state.isCurrentUser === false}
-                                            helperText={this.state.errors.phone}
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <ContactPhoneIcon/>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                            label="Contact Number"/>
+                                        <FormControl className="classes.formControl input-field" required>
+                                            <InputLabel>Contact Number</InputLabel>
+                                            <Input
+                                                value={this.state.phone}
+                                                onChange={this.handlePhone}
+                                                name="phone"
+                                                inputComponent={TextMaskCustom}
+                                                error={this.state.errors.phone}
+                                                disabled={this.state.isCurrentUser === false}
+                                            />
+                                            <FormHelperText><span
+                                                className="error"> {this.state.errors.phone}</span></FormHelperText>
+                                        </FormControl>
                                         <br/>
                                         <br/>
                                     </div>
