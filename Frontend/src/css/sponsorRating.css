@@ -41,7 +41,6 @@
 .rating-card-left {
     width:50%;
     float: left;
-    overflow-y: scroll;
 }
 
 .rating-card-right {
