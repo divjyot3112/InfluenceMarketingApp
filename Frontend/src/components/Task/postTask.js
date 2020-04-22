@@ -25,6 +25,8 @@ import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
 import NumberFormat from 'react-number-format';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
+import Appbar from "../Common/Appbar";
+import Sidebar from "../Common/Sidebar";
 
 const TaskCategories = require("../../utils/Constants").TaskCategories;
 
@@ -155,12 +157,20 @@ class PostTask extends PostTaskFormEventHandlers {
         if (false) { // TODO: check if user is not sponsor (role comes from local storage)
             return (
                 <React.Fragment>
-                    <p className="not_found">Access Denied.</p>
+                    <Appbar/>
+                    <Sidebar/>
+                    <div className="task-not-found-main">
+                        <div className="main-background">
+                            <p className="task-not-found">Access Denied.</p>
+                        </div>
+                    </div>
                 </React.Fragment>
             );
         } else {
             return (
                 <React.Fragment>
+                    <Appbar/>
+                    <Sidebar/>
                     <div className="main-post-task">
                         <div className="main-background">
                             <form className={classes.root}>
