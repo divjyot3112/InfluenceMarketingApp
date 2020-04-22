@@ -82,10 +82,14 @@ class PostTaskFormEventHandlers extends Component {
 
     handleVacancyCount = (e) => {
         const errors = {...this.state.errors};
-        const errorMessage = this.validateProperty(e.currentTarget);
-        if (errorMessage) {
-            errors[e.currentTarget.name] = errorMessage;
-        } else delete errors[e.currentTarget.name];
+
+        if (e.target.value == "") {
+            errors["vacancyCount"] = "Please enter the Vacancy Count";
+        } else if (!/^\d{1}$/.test(e.target.value)) {
+            errors["vacancyCount"] = "Vacancy Count should be a whole number";
+        } else if (parseInt(e.target.value) < 1 || parseInt(e.target.value) > 5) {
+            errors["vacancyCount"] = "Vacancy Count should be between 1 and 5";
+        } else delete errors["vacancyCount"];
 
         let data = this.state.vacancyCount;
         data = e.target.value;
