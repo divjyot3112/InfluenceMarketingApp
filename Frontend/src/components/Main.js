@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Route} from 'react-router-dom';
-import SponsorDashboard from './Dashboard/SponsorDashboard';
-import InfluencerDashboard from './Dashboard/InfluencerDashboard';
+import Dashboard from './Dashboard/Dashboard';
 import UserProfile from "./UserProfile/userProfile";
 import PostTask from "./Task/postTask";
 import Messenger from './Inbox/Messenger'
@@ -16,9 +15,8 @@ class Main extends Component {
         return (
             <div>
                 <Route path="/" component={Appbar}/>
-                <Route path="/" component={Sidebar}/>
-                <Route path="/dashboard/sponsor" exact component={SponsorDashboard}/>
-                <Route path="/dashboard/influencer" exact component={InfluencerDashboard}/>
+                <Route path="/" component={Sidebar} />
+                <Route path="/dashboard" exact component={Dashboard}/>
                 <Route path="/profile" exact component={UserProfile}/>
                 <Route path="/task/new" exact component={PostTask}/>
                 <Route path="/task" exact component={TaskDescription}/>

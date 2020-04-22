@@ -26,7 +26,7 @@ import AddRatingModal from './AddRatingModal'
 import NoData from './NoData'
 import "../../css/dashboard.css";
 import { MY_USER_ID } from "../../utils/Constants";
-
+import {Link} from "react-router-dom";
 //create the Navbar Component
 
 const useStyles = (theme) => ({
@@ -137,7 +137,18 @@ class SponsorDashboard extends Component {
                 
                         <CardActions>
                             <AddRatingModal taskData={task}></AddRatingModal>
-                            <Button size="small" color="primary" onClick={() => { window.location.href = "/task/description/" + task._id }}>View</Button>
+                            
+                            <Link
+                                to={{
+                                    pathname: "/task",
+                                    state: {
+                                        taskId: task._id
+                                    }
+                                }}
+                                style={{textDecoration: 'none'}}
+                            >
+                                    <Button size="small" color="primary">View</Button>
+                            </Link>
                         </CardActions>
                         {/*   <Button size="small" color="primary">
                             Edit
