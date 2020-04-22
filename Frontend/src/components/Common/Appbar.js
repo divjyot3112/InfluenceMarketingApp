@@ -63,59 +63,12 @@ export class Appbar extends Component {
 
     render() {
         let username = null;
-<<<<<<< HEAD
-        console.log(this.state.firstName)
-        if(this.state.userExists) {
-            username = <NavLink href="/profile">{this.state.firstName?this.state.firstName:"Hello"}</NavLink>
-        } else {
-            username = <NavbarText>Login or SignUp</NavbarText> //Write logic to logout
-=======
 
         if (this.state.userExists) {
             username = <NavLink href="/profile">{this.state.firstName ? this.state.firstName : ""}</NavLink>
->>>>>>> 3e0d0eab5d7ae801d07540672f5e6f9f9e1651c9
         }
 
         return (
-<<<<<<< HEAD
-            <div>
-                <Navbar color="light" light expand="md">
-                    <NavbarBrand href="/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Influence Marketing App</NavbarBrand>
-                    <NavbarToggler onClick={this.toggle} />
-                    <Collapse isOpen={this.state.isOpen} navbar>
-                        <Nav className="mr-auto" navbar>
-                            <NavItem style={{}}>
-                                <InputGroup>
-                                    <Input 
-                                        type="text" 
-                                        className="form-control" 
-                                        placeholder="Search People and Jobs"
-                                        // height={}
-                                    />
-                                    <InputGroupAddon addonType="append">
-                                        <Button variant="outline-success">
-                                            Go
-                                        </Button>
-                                    </InputGroupAddon>
-                                </InputGroup>
-                            </NavItem>
-                        </Nav>
-                        <Nav navbar>
-                            <NavItem style={{marginRight: 25}}>
-                                <FaUserAlt style={{height:40}} /> {/* To do -> add profile picture of user */}
-                            </NavItem>
-                            <NavItem style={{marginRight:10, background:"#dadee3"}}>
-                                { username }
-                            </NavItem>
-                            <NavItem style={{color:"#ff9191"}}>
-                                <NavLink>Sign Out <FaSignOutAlt style={{}} /></NavLink> {/*Redirect to signout*/}
-                            </NavItem >
-                        </Nav>
-                    </Collapse>
-                </Navbar>
-                {/* <Sidebar /> */}
-            </div>
-=======
             <React.Fragment>
                 <div>
                     <Navbar color="light" light expand="md">
@@ -154,7 +107,6 @@ export class Appbar extends Component {
                     {/* <Sidebar /> */}
                 </div>
             </React.Fragment>
->>>>>>> 3e0d0eab5d7ae801d07540672f5e6f9f9e1651c9
         )
     }
 }

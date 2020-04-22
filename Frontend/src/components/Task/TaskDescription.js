@@ -27,23 +27,44 @@ export class TaskDescription extends Component {
     render() {
         const { task }  = this.props;
         const t = ((task || {}).task || {})
-        console.log(t.postedBy)
+        let selected = false;
+        let renderSelectedCandidates = []
+        if(t.selectedCandidates) {
+            t.selectedCandidates.forEach(candidate => {
+                if(candidate===localStorage.getItem('email')){
+                    selected = true;
+                }
+            });
+        }
+        if(selected) {
+            t.selectedCandidates.forEach(candidate => {
+                renderSelectedCandidates.push(
+                    <div>
+                        {candidate}
+                    </div>
+                )
+            });
+        } else {
+
+        }
+        console.log(t)
         return (
-            <div>
+            <div style={{background: "#577284"}}>
                 <div className="wrapper">
-                    <div className="nested" style={{background:"#ddd"}}>
+                    <div className="nested">
                         <div className="imgdiv">
                             <img src={task_image} alt="No images for this task" />
                             {/* Hello */}
                         </div>
                         <div className="title">
-                            <b>{t.title}</b>
+                            <b>{t.title}</b><br/>
+                            {t.category}
                         </div>
                         <div className="description">
-                            {t.description}
+                            <b>Description: </b>{t.description}
                         </div>
                         <div className="company_details">
-                            {t.category}
+                            <b>Task Posted by: </b>
                             <Link
                                 to={{
                                     pathname: "/profile",
@@ -57,18 +78,17 @@ export class TaskDescription extends Component {
                             </Link>
                         </div>
                     </div>
-                    <div style={{background:"#eee"}}>
-                        <div className="nested2">
-                            <div className="job_details">
-                                {t._id}<br/>
-                                {t.status}<br/>
-                                {t.postedOn}<br/>
-                                {t.startDate}<br/>
-                                {t.endDate}
-                            </div>
-                            <div className="list">
-                                
-                            </div>
+                    <div className="nested2">
+                        <div className="job_details">
+                            <b>Task ID:</b>{t._id}
+                            <b>Task Status:</b>{t.status}
+                            <b>Task Posted on:</b>{t.postedOn}
+                            <b>Start Date:</b>{t.startDate}
+                            <b>End Date:</b>{t.endDate}
+                        </div>
+                        <div className="list" style={{display: selected?'block':'none'}}>
+                            <b>Selected Candidates:</b>
+                            {renderSelectedCandidates}
                         </div>
                     </div>
                 </div>
