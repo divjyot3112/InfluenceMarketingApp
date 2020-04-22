@@ -77,10 +77,12 @@ class SponsorRating extends Component {
                                     <option value="lowToHigh">Rating: Low to High</option>
                                     <option value="highToLow">Rating: High to Low</option>
                                 </select>
-                            </div>
 
+                            </div>
+                            <br/>
+                            <hr/>
+                            <br/>
                             <div className="ratings-cards-main">
-                                <hr/>
                                 {paginatedData.map(key => (
 
                                     <div className="rating-card">
