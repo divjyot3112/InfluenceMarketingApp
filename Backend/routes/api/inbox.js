@@ -8,8 +8,7 @@ require('../../config/passport')(passport)
 // Task Model
 const Conversation = require('../../models/Conversation');
 const User = require("../../models/User");
-const InfluencerProfile = require("../../models/InfluencerProfile");
-const SponsorProfile = require("../../models/SponsorProfile");
+let fetchUserDetails = require("../../utils/UserDetails")
 
 // @route   POST api/inbox/send
 // @desc    Create a Conversation or add message
@@ -91,7 +90,8 @@ router.get('/fetchusers', (req, res) => {
                 return  {
                     email: user.email,
                     photo: await profileInfo.profilePic,
-                    name: await profileInfo.name.firstName + " " + await profileInfo.name.lastName
+                    name: await profileInfo.name.firstName + " " + await profileInfo.name.lastName,
+                    role: await profileInfo.role,
                 }
             } else {
                 console.log("Profile is null")
@@ -107,36 +107,5 @@ router.get('/fetchusers', (req, res) => {
     })
 })
 
-
-    /* For conversation Name and Image */
-    let fetchUserDetails = (userid) => {
-        console.log(userid)
-        return User.findOne({ email: userid })
-            .then((user) => {
-                if (user) {
-                    if (user.role === userRoles.SPONSOR) {
-                        return SponsorProfile.findOne({ email: userid }).then((docs) => {
-                            return docs
-                        }).catch((err) => {
-                            console.log(err)
-                            return null
-                        });
-                    }
-                    else {
-                        return InfluencerProfile.findOne({ email: userid }).then((docs) => {
-                            return docs
-                        }).catch((err) => {
-                            console.log(err)
-                            return null
-                        });
-                    }
-                }
-                else return null;
-            })
-            .catch((err) => {
-                console.log(err);
-                return null;
-            })
-    }
 
 module.exports = router;
