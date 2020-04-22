@@ -1,5 +1,5 @@
 import axios from "axios";
-import {SAVE_TASK, ROOT_URL} from "./types";
+import {SAVE_TASK, GET_TASK, ROOT_URL} from "./types";
 
 export const saveTask = (data) => async (dispatch) => {
     try {
@@ -16,9 +16,10 @@ export const saveTask = (data) => async (dispatch) => {
     }
 };
 
-export const getTask = (taskId) => async (dispatch) => {
+export const getTask = (data) => async (dispatch) => {
     try {
-        const res = await axios.post(`${ROOT_URL}/tasks/:${taskId}`);
+        console.log("Actions"+data.taskId)
+        const res = await axios.get(`${ROOT_URL}/tasks/${data.taskId}`);
         dispatch({
             type: GET_TASK,
             payload: res.data,
