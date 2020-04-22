@@ -22,7 +22,7 @@ export class TaskDescription extends Component {
                 taskId: window.location.href.substring(window.location.href.lastIndexOf('/')+1)
             }
             this.props.getTask(data)
-        }        
+        }
     }
     render() {
         const { task }  = this.props;
