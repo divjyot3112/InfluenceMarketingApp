@@ -1,12 +1,16 @@
-.not-found {
+.ratings-not-found {
     text-align: center;
     color: red;
     font-size: 300%;
-    margin: 30% 30% 30% 30%;
+    margin: 40% 30% 60% 30%;
+}
+
+.ratings-not-found-main {
+    height: 100%;
+    background-color: var(--main-bg-color);
 }
 
 .main-ratings-sponsor {
-    margin: 3% 3% 0% 3%;
     height: 100%;
     background-color: var(--main-bg-color);
 }
@@ -14,10 +18,11 @@
 .main-background {
     margin: 0% 20% 0% 20%;
     padding-bottom: 1%;
+    height: 100%;
 }
 
 .sorting-options {
-    margin: 3% 0% 0% 65%;
+    margin: 3% 0% 0% 75%;
     height: auto;
 }
 

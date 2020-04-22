@@ -255,9 +255,11 @@ class UserProfile extends UserProfileFormEventHandlers {
         if (!this.state.exists) {
             return (
                 <React.Fragment>
-                    <div className="profile-main">
+                    <Appbar/>
+                    <Sidebar/>
+                    <div className="profile-not-found-main">
                         <div className="main-background">
-                            <p className="not_found">Profile does not exist</p>
+                            <p className="profile-not-found">Profile does not exist</p>
                         </div>
                     </div>
                 </React.Fragment>

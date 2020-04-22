@@ -1,8 +1,13 @@
-.not_found {
+.profile-not-found {
     text-align: center;
     color: red;
     font-size: 300%;
-    margin: 30% 30% 30% 30%;
+    margin: 40% 30% 60% 30%;
+}
+
+.profile-not-found-main {
+    height: 100%;
+    background-color: var(--main-bg-color);
 }
 
 .profile-main {
@@ -14,6 +19,7 @@
     margin: 0% 20% 0% 20%;
     background-color: white;
     height: 100%;
+    border: 1px solid white;
 }
 
 .photo-main {
@@ -24,12 +30,12 @@
     float: left;
     width: 30%;
     margin-top: 8%;
-    margin-left:5%;
+    margin-left: 5%;
 }
 
 .display_photo {
     margin-left: 37%;
-    width:fit-content;
+    width: fit-content;
 }
 
 

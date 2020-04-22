@@ -7,6 +7,8 @@ import {Link} from "react-router-dom";
 import Pagination from "../Common/pagination";
 import {paginate} from "../Common/paginate";
 import StarRatings from "react-star-ratings";
+import Appbar from "../Common/Appbar";
+import Sidebar from "../Common/Sidebar";
 
 
 class SponsorRating extends Component {
@@ -53,15 +55,20 @@ class SponsorRating extends Component {
         if (Object.keys(ratings).length === 0) {
             return (
                 <React.Fragment>
-                    <p className="not-found">
-                        No Ratings found
-                    </p>
+                    <Appbar/>
+                    <Sidebar/>
+                    <div className="ratings-not-found-main">
+                        <div className="main-background">
+                            <p className="ratings-not-found">No Ratings Found</p>
+                        </div>
+                    </div>
                 </React.Fragment>
             );
         } else {
             return (
                 <React.Fragment>
-
+                    <Appbar/>
+                    <Sidebar/>
                     <div className="main-ratings-sponsor">
                         <div className="main-background">
 
