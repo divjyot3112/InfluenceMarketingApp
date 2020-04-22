@@ -1,52 +1,53 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 //UI imports
-import { slide as Menu} from 'react-burger-menu';
+import {slide as Menu} from 'react-burger-menu';
 // Redux imports
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import { getProfile } from "../../actions/userProfileActions";
+import {getProfile} from "../../actions/userProfileActions";
 // CSS
 import "../../css/sidebar.css";
+
+const UserRoles = require("../../utils/Constants").UserRoles;
 
 export class Sidebar extends Component {
     state = {
         userExists: false,
         role: null
     }
+
     componentWillMount() {
-        if(localStorage.getItem('email')!=null) {
-            this.props.getProfile(localStorage.getItem('email'), (response) => {
-                console.log(response.status)
-                if(response.status === 200) {
+        // TODO: get email from local storage
+        // const email = localStorage.getItem("email");
+        const email = "divjyot@gmail.com";
+
+        if (email != null) {
+            this.props.getProfile(email, (response) => {
+                if (response.status === 200) {
                     this.setState({
-                        role: response.data.message.role,
+                        role: response.data.role,
                         userExists: true
                     })
                 }
             })
-        } else {
-            this.setState({
-                userExists: false
-            })
         }
     }
+
+
     render() {
-        let role = null
-        // console.log(this.state)
-        if(this.state.userExists) {
-            role = this.state.role
-        }
-        let dashLink = role ? (role=="Influencer" ? "/dashboard/influencer" : "/dashboard/sponsor" ) : "/"
-        let rateLink = role ? (role=="Influencer" ? "/ratings/influencer" : "/ratings/sponsor" ) : "/" 
+        const role = this.state.userExists ? this.state.role : null;
+        const dashboardLink = role ? (role == UserRoles.INFLUENCER ? "/dashboard/influencer" : "/dashboard/sponsor") : "/"
+        const ratingLink = role ? (role == UserRoles.INFLUENCER ? "/ratings/influencer" : "/ratings/sponsor") : "/"
+
         return (
             <div>
                 <Menu>
                     <a className='menu-item' href='/'>Home</a>
                     <a className='menu-item' href='/profile'>Profile</a>
-                    <a className='menu-item' href={dashLink}>Dashboard</a>
+                    <a className='menu-item' href={dashboardLink}>Dashboard</a>
                     <a className='menu-item' href="/">Analytics</a>
                     <a className='menu-item' href='/inbox'>Inbox</a>
-                    <a className='menu-item' href={rateLink}>My Ratings</a>
+                    <a className='menu-item' href={ratingLink}>My Ratings</a>
                 </Menu>
             </div>
         )
@@ -58,4 +59,4 @@ Sidebar.protoTypes = {
     profile: PropTypes.object.isRequired
 }
 
-export default connect(null, { getProfile } ) (Sidebar)
+export default connect(null, {getProfile})(Sidebar)
