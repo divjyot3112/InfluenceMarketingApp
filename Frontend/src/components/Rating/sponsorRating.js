@@ -62,81 +62,81 @@ class SponsorRating extends Component {
             return (
                 <React.Fragment>
 
-                    <div className="main">
+                    <div className="main-ratings-sponsor">
+                        <div className="main-background">
 
-                        <div className="sorting-options">
-                            <select
-                                className="form-control"
-                                name="sorting"
-                                id="sorting"
-                                onChange={this.handleRatingSorting}
-                            >
-                                <option value="" selected disabled>Sort by</option>
-                                <option value="mostRecent">Most Recent</option>
-                                <option value="lowToHigh">Rating: Low to High</option>
-                                <option value="highToLow">Rating: High to Low</option>
-                            </select>
-                        </div>
+                            <div className="sorting-options">
+                                <select
+                                    className="form-control"
+                                    name="sorting"
+                                    id="sorting"
+                                    onChange={this.handleRatingSorting}
+                                >
+                                    <option value="mostRecent">Sort by: Most Recent</option>
+                                    <option value="lowToHigh">Rating: Low to High</option>
+                                    <option value="highToLow">Rating: High to Low</option>
+                                </select>
+                            </div>
 
-                        <div className="ratings-cards-main">
-                            <hr/>
-                            {paginatedData.map(key => (
+                            <div className="ratings-cards-main">
+                                <hr/>
+                                {paginatedData.map(key => (
 
-                                <div className="rating-card">
-                                    <div className="rating-card-left">
-                                        <h4 className="card-title">Rating: {ratings[data[key]].rating}</h4>
-                                        <StarRatings
-                                            rating={Number(ratings[data[key]].rating)}
-                                            starRatedColor="black"
-                                            numberOfStars={5}
-                                            starDimension="30px"
-                                            starSpacing="0px"
-                                        />
-                                        <br/>
-                                        <br/>
-                                        <br/>
-                                        <p className="card-subtitle mb-2 text-muted">
-                                            <i>" {ratings[data[key]].comment} "</i></p>
+                                    <div className="rating-card">
+                                        <div className="rating-card-left">
+                                            <h4 className="card-title">Rating: {ratings[data[key]].rating}</h4>
+                                            <StarRatings
+                                                rating={Number(ratings[data[key]].rating)}
+                                                starRatedColor="#FAAD1C"
+                                                numberOfStars={5}
+                                                starDimension="30px"
+                                                starSpacing="0px"
+                                            />
+                                            <br/>
+                                            <br/>
+                                            <br/>
+                                            <p className="card-subtitle mb-2 text-muted">
+                                                <i>" {ratings[data[key]].comment} "</i></p>
+                                        </div>
+
+                                        <div className="rating-card-right">
+                                            <h6 className="card-title">Rated
+                                                on: {new Date(ratings[data[key]].ratedOn).toLocaleString('default', {
+                                                    month: 'long',
+                                                    day: "numeric",
+                                                    year: "numeric"
+                                                })}</h6>
+                                            {/*TODO: connect it with task description page */}
+                                            <Link
+                                                to={{
+                                                    pathname: "/task/description",
+                                                    state: {
+                                                        taskId: ratings[data[key]].task
+                                                    }
+                                                }}
+                                                style={{textDecoration: 'none'}}
+                                            >
+                                                <h6>Task</h6>
+                                            </Link>
+
+                                            <Link
+                                                to={{
+                                                    pathname: "/profile",
+                                                    state: {
+                                                        email: ratings[data[key]].influencer
+                                                    }
+                                                }}
+                                                style={{textDecoration: 'none'}}
+                                            >
+                                                <h6>Rated Influencer</h6>
+                                            </Link>
+                                        </div>
+
                                     </div>
-
-                                    <div className="rating-card-right">
-                                        <h6 className="card-title">Rated
-                                            on: {new Date(ratings[data[key]].ratedOn).toLocaleString('default', {
-                                                month: 'long',
-                                                day: "numeric",
-                                                year: "numeric"
-                                            })}</h6>
-                                        {/*TODO: connect it with task description page */}
-                                        <Link
-                                            to={{
-                                                pathname: "/task",
-                                                state: {
-                                                    taskId: ratings[data[key]].task
-                                                }
-                                            }}
-                                            style={{textDecoration: 'none'}}
-                                        >
-                                            <h6>Task</h6>
-                                        </Link>
-
-                                        <Link
-                                            to={{
-                                                pathname: "/profile",
-                                                state: {
-                                                    email: ratings[data[key]].influencer
-                                                }
-                                            }}
-                                            style={{textDecoration: 'none'}}
-                                        >
-                                            <h6>Rated Influencer</h6>
-                                        </Link>
-                                    </div>
-
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                     </div>
-
                     <div className="general-pagination">
                         <Pagination
                             itemsCount={data ? data.length : ""}
@@ -145,6 +145,7 @@ class SponsorRating extends Component {
                             currentPage={this.state.currentPage}
                         />
                     </div>
+
                 </React.Fragment>
             );
         }

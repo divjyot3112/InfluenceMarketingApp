@@ -131,10 +131,10 @@ class UserProfileFormEventHandlers extends Component {
 
     handlePhone = (e) => {
         const errors = {...this.state.errors};
-        const errorMessage = this.validateProperty(e.currentTarget);
-        if (errorMessage) {
-            errors[e.currentTarget.name] = errorMessage;
-        } else delete errors[e.currentTarget.name];
+        if (!/^\({1}\d{3}\){1}\s{1}\d{3}-\d{4}$/.test(e.target.value)) {
+            errors["phone"] = "Contact Number should have 10 digits";
+        } else delete errors["phone"];
+
 
         let data = this.state.phone;
         data = e.target.value;
