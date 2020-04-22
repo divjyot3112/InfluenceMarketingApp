@@ -64,7 +64,8 @@ class SponsorDashboard extends Component {
             currentPageTasks: [],
             numPages: 0,
             openSelect: false,
-            sortBy: 0
+            sortBy: 0,
+            currPage:1
         }
     }
 
@@ -82,7 +83,7 @@ class SponsorDashboard extends Component {
 
     handleChangeSelect = (event) => {
         let sortBy = event.target.value;
-        this.props.sortTasks(sortBy,()=>{this.props.getCurrentPageTasks(1, this.props.dashboardTasks)})
+        this.props.sortTasks(sortBy,()=>{this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks)})
         this.setState({
             sortBy: sortBy
         })
@@ -91,12 +92,13 @@ class SponsorDashboard extends Component {
     //get the courses data from backend  
     componentDidMount() {
         //TODO: get all tasks instead
-        this.props.fetchDashboardTasks(MY_USER_ID, TaskStatus.ALL, ()=>{this.props.getCurrentPageTasks(1, this.props.dashboardTasks)});
+        this.props.fetchDashboardTasks(MY_USER_ID, TaskStatus.ALL, ()=>{this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks)});
     }
 
     handlePaginationClick = (event, value) => {
         this.setState({
-            currentPageTasks: this.props.getCurrentPageTasks(value, this.props.dashboardTasks)
+            currentPageTasks: this.props.getCurrentPageTasks(value, this.props.dashboardTasks),
+            currPage:value
         })
     }
 
@@ -104,7 +106,7 @@ class SponsorDashboard extends Component {
 
     handleOnStatusChange = (event) => {
         console.log(event)
-        this.props.fetchDashboardTasks(MY_USER_ID, event.target.value, () => { this.props.getCurrentPageTasks(1, this.props.dashboardTasks);this.setState({
+        this.props.fetchDashboardTasks(MY_USER_ID, event.target.value, () => { this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks);this.setState({
             sortBy: 0
         })});
     }
