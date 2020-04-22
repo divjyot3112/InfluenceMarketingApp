@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Route} from 'react-router-dom';
-import SponsorDashboard from './Dashboard/SponsorDashboard';
-import InfluencerDashboard from './Dashboard/InfluencerDashboard';
+import Dashboard from './Dashboard/Dashboard';
 import UserProfile from "./UserProfile/userProfile";
 import PostTask from "./Task/postTask";
 import Messenger from './Inbox/Messenger'
@@ -13,8 +12,7 @@ class Main extends Component {
     render() {
         return (
             <div>
-                <Route path="/dashboard/sponsor" component={SponsorDashboard}/>
-                <Route path="/dashboard/influencer" component={InfluencerDashboard}/>
+                <Route path="/dashboard" component={Dashboard}/>
                 <Route path="/profile" exact component={UserProfile}/>
                 <Route path="/task/new" exact component={PostTask}/>
                 <Route path="/task/description" component={TaskDescription}/>

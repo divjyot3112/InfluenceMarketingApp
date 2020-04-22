@@ -36,7 +36,6 @@ export class Sidebar extends Component {
 
     render() {
         const role = this.state.userExists ? this.state.role : null;
-        const dashboardLink = role ? (role == UserRoles.INFLUENCER ? "/dashboard/influencer" : "/dashboard/sponsor") : "/"
         const ratingLink = role ? (role == UserRoles.INFLUENCER ? "/ratings/influencer" : "/ratings/sponsor") : "/"
 
         return (
@@ -44,7 +43,7 @@ export class Sidebar extends Component {
                 <Menu>
                     <a className='menu-item' href='/'>Home</a>
                     <a className='menu-item' href='/profile'>Profile</a>
-                    <a className='menu-item' href={dashboardLink}>Dashboard</a>
+                    <a className='menu-item' href='/dashboard'>Dashboard</a>
                     <a className='menu-item' href="/">Analytics</a>
                     <a className='menu-item' href='/inbox'>Inbox</a>
                     <a className='menu-item' href={ratingLink}>My Ratings</a>
