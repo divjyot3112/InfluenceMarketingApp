@@ -25,6 +25,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import NoData from './NoData'
 import "../../css/dashboard.css";
 import { MY_USER_ID } from "../../utils/Constants";
+import {Link} from "react-router-dom";
 
 //create the Navbar Component
 
@@ -138,7 +139,17 @@ class InfluencerDashboard extends Component {
                         </CardContent>
                 
                         <CardActions>
-                            <Button size="small" color="primary" onClick={() => { window.location.href = "/task/description/" + task._id }}>View</Button>
+                            <Link
+                            to={{
+                                pathname: "/task",
+                                state: {
+                                    taskId: task._id
+                                }
+                            }}
+                            style={{textDecoration: 'none'}}
+                            >
+                                <Button size="small" color="primary">View</Button>
+                            </Link>
                         </CardActions>
                     </Card>
                 </Grid>
