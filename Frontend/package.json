@@ -28,6 +28,7 @@
     "react-icons": "^3.9.0",
     "react-if": "^3.4.3",
     "react-md": "latest",
+    "react-number-format": "^4.4.1",
     "react-redux": "^7.2.0",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
