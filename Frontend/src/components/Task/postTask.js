@@ -155,7 +155,11 @@ class PostTask extends PostTaskFormEventHandlers {
         if (false) { // TODO: check if user is not sponsor (role comes from local storage)
             return (
                 <React.Fragment>
-                    <p className="not_found">Access Denied.</p>
+                    <div className="task-not-found-main">
+                        <div className="main-background">
+                            <p className="task-not-found">Access Denied.</p>
+                        </div>
+                    </div>
                 </React.Fragment>
             );
         } else {

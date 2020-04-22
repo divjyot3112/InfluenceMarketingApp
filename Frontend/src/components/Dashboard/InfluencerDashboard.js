@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import _ from "lodash";
-import { fetchDashboardTasks, getCurrentPageTasks } from "../../actions/dashboardActions";
+import { fetchDashboardTasks, getCurrentPageTasks, sortTasks } from "../../actions/dashboardActions";
 import { TaskStatus } from '../../utils/Constants';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -25,6 +25,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import NoData from './NoData'
 import "../../css/dashboard.css";
 import { MY_USER_ID } from "../../utils/Constants";
+import {Link} from "react-router-dom";
 
 //create the Navbar Component
 
@@ -62,7 +63,9 @@ class InfluencerDashboard extends Component {
         this.state = {
             currentPageTasks: [],
             numPages: 0,
-            openSelect:false
+            openSelect: false,
+            sortBy: 0,
+            currPage:1
         }
     }
 
@@ -79,20 +82,23 @@ class InfluencerDashboard extends Component {
     }
 
     handleChangeSelect = (event) => {
+        let sortBy = event.target.value;
+        this.props.sortTasks(sortBy,()=>{this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks)})
         this.setState({
-            influencer: event.target.value
+            sortBy: sortBy
         })
     }
 
     //get the courses data from backend  
     componentDidMount() {
         //TODO: get all tasks instead
-        this.props.fetchDashboardTasks(MY_USER_ID, TaskStatus.ALL);
+        this.props.fetchDashboardTasks(MY_USER_ID, TaskStatus.ALL, ()=>{this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks)});
     }
 
     handlePaginationClick = (event, value) => {
         this.setState({
-            currentPageTasks: this.props.getCurrentPageTasks(value, this.props.dashboardTasks)
+            currentPageTasks: this.props.getCurrentPageTasks(value, this.props.dashboardTasks),
+            currPage:value
         })
     }
 
@@ -100,7 +106,9 @@ class InfluencerDashboard extends Component {
 
     handleOnStatusChange = (event) => {
         console.log(event)
-        this.props.fetchDashboardTasks(MY_USER_ID, event.target.value);
+        this.props.fetchDashboardTasks(MY_USER_ID, event.target.value, () => { this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks);this.setState({
+            sortBy: 0
+        })});
     }
 
     renderTasks() {
@@ -125,10 +133,23 @@ class InfluencerDashboard extends Component {
                             <Typography>
                                 <b>Posted On:</b> {new Date(task.postedOn).toLocaleDateString()}
                             </Typography>
+                            <Typography>
+                                <b>Salary:</b> ${task.salary}
+                            </Typography>
                         </CardContent>
                 
                         <CardActions>
-                            <Button size="small" color="primary" onClick={() => { window.location.href = "/task/description/" + task._id }}>View</Button>
+                            <Link
+                            to={{
+                                pathname: "/task",
+                                state: {
+                                    taskId: task._id
+                                }
+                            }}
+                            style={{textDecoration: 'none'}}
+                            >
+                                <Button size="small" color="primary">View</Button>
+                            </Link>
                         </CardActions>
                     </Card>
                 </Grid>
@@ -181,12 +202,12 @@ class InfluencerDashboard extends Component {
                         open={this.state.openSelect}
                         onClose={this.handleCloseSelect}
                         onOpen={this.handleOpenSelect}
-                        value={this.state.influencer}
+                        value={this.state.sortBy}
                         onChange={this.handleChangeSelect}
                         >
-                        <MenuItem value={10}>Most Recent</MenuItem>
-                        <MenuItem value={20}>Salary: Low to High</MenuItem>
-                        <MenuItem value={30}>Salary: High to Low</MenuItem>
+                        <MenuItem value={0}>Most Recent</MenuItem>
+                        <MenuItem value={1}>Salary: Low to High</MenuItem>
+                        <MenuItem value={2}>Salary: High to Low</MenuItem>
                         </Select>
                         </FormControl>
                         </div>
@@ -219,4 +240,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, { fetchDashboardTasks, getCurrentPageTasks })(withStyles(useStyles)(InfluencerDashboard));
+export default connect(mapStateToProps, { fetchDashboardTasks, getCurrentPageTasks, sortTasks })(withStyles(useStyles)(InfluencerDashboard));

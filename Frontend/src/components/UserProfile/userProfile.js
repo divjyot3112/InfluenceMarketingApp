@@ -19,7 +19,6 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import PublicIcon from '@material-ui/icons/Public';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import ExploreIcon from '@material-ui/icons/Explore';
-import ContactPhoneIcon from '@material-ui/icons/ContactPhone';
 import BusinessIcon from '@material-ui/icons/Business';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -151,7 +150,7 @@ class UserProfile extends UserProfileFormEventHandlers {
             this.setState({isCurrentUser: false})
 
         // TODO: Get username from local storage
-        const username = this.props.location.state ? this.props.location.state.email : "sheena@gmail.com";
+        const username = this.props.location.state ? this.props.location.state.email : "divjyot@gmail.com";
 
         this.props.getProfile(username, (response) => {
             if (response.status === 200) {
@@ -254,9 +253,9 @@ class UserProfile extends UserProfileFormEventHandlers {
         if (!this.state.exists) {
             return (
                 <React.Fragment>
-                    <div className="profile-main">
+                    <div className="profile-not-found-main">
                         <div className="main-background">
-                            <p className="not_found">Profile does not exist</p>
+                            <p className="profile-not-found">Profile does not exist</p>
                         </div>
                     </div>
                 </React.Fragment>
@@ -266,24 +265,27 @@ class UserProfile extends UserProfileFormEventHandlers {
                 <React.Fragment>
                     <div className="profile-main">
                         <div className="main-background">
+                            <div className="photo-main">
+                                <div className="edit-photo">
+                                    <If condition={this.state.isCurrentUser === true}>
+                                        <input
+                                            type="file"
+                                            name="files"
+                                            // onChange={this.onPhotoChange}
+                                        />
+                                    </If>
+                                </div>
 
-                            <div className="display_photo">
-                                <img
-                                    // TODO: add image
-                                    src="https://source.unsplash.com/random"
-                                    width="300"
-                                    height="200"
-                                    alt="User has not uploaded anything yet"
-                                />
-                                <If condition={this.state.isCurrentUser === true}>
-                                    <input
-                                        type="file"
-                                        name="files"
-                                        // onChange={this.onPhotoChange}
+                                <div className="display_photo">
+                                    <img
+                                        // TODO: add image
+                                        src="https://source.unsplash.com/random"
+                                        width="300"
+                                        height="200"
+                                        alt="User has not uploaded anything yet"
                                     />
-                                </If>
+                                </div>
                             </div>
-
                             <div className="profileName">
                                 {this.state.firstName} {this.state.lastName}
                             </div>

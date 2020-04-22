@@ -1,12 +1,16 @@
-.not_found {
+.task-not-found {
     text-align: center;
     color: red;
     font-size: 300%;
-    margin: 30% 30% 30% 30%;
+    margin: 40% 30% 60% 30%;
+}
+
+.task-not-found-main {
+    height: 100%;
+    background-color: var(--main-bg-color);
 }
 
 .main-post-task {
-    margin: 3% 3% 3% 3%;
     height: 100vh;
     background-color: var(--main-bg-color);
 }

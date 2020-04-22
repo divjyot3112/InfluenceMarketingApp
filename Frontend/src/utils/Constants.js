@@ -1,4 +1,6 @@
+//TODO: update MY_USER_ID and MY_ROLE to get form localStorage 
 const MY_USER_ID = 'sheena@gmail.com'
+const MY_ROLE = "Sponsor"
 const UserRoles = {
     SPONSOR: "Sponsor",
     INFLUENCER: "Influencer"
@@ -35,4 +37,4 @@ const Gender = [
     "Other"
 ];
 
-export {UserRoles, TaskStatus, TaskCategories, Gender, MY_USER_ID}
+export {UserRoles, TaskStatus, TaskCategories, Gender, MY_USER_ID, MY_ROLE}

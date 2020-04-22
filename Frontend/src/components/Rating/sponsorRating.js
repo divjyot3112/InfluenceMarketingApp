@@ -53,15 +53,16 @@ class SponsorRating extends Component {
         if (Object.keys(ratings).length === 0) {
             return (
                 <React.Fragment>
-                    <p className="not-found">
-                        No Ratings found
-                    </p>
+                    <div className="ratings-not-found-main">
+                        <div className="main-background">
+                            <p className="ratings-not-found">No Ratings Found</p>
+                        </div>
+                    </div>
                 </React.Fragment>
             );
         } else {
             return (
                 <React.Fragment>
-
                     <div className="main-ratings-sponsor">
                         <div className="main-background">
 
@@ -109,7 +110,7 @@ class SponsorRating extends Component {
                                             {/*TODO: connect it with task description page */}
                                             <Link
                                                 to={{
-                                                    pathname: "/task/description",
+                                                    pathname: "/task",
                                                     state: {
                                                         taskId: ratings[data[key]].task
                                                     }
