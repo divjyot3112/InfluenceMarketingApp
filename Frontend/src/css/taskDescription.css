@@ -1,8 +1,63 @@
-.wrapper > div {
-    padding: 1em;   
-}
-
 .wrapper {
+    margin-left: 10%;
+    margin-right:10%;
+    margin-top: 3%;
     display: grid;
     grid-template-columns: 7fr 3fr;
+    grid-gap: 1%;
+    grid-auto-rows: minmax(100px, auto);
+    background: #eee
+}
+
+.wrapper > div {
+    padding: 5%;
+}
+
+.nested {
+    margin-left: 5%;
+    margin-right:5%;
+    margin-top: 1%;
+    grid-gap: 1%;
+    display:grid;
+    grid-template-columns: repeat(5,1fr);
+    grid-auto-rows: minmax(60px, auto);
+}
+
+.imgdiv {
+    grid-column: 1/6;
+    overflow: hidden;
+}
+.title {
+    grid-column: 2/5;
+    padding: 1%;
+    text-align: center;
+}
+.description {
+    grid-column: 1/6;
+    grid-row: 3/5;
+    padding: 1%;
+    text-align: left;
+}
+.company_details {
+    grid-column: 1/5;
+    padding: 1%;
+    text-align: left;
+}
+
+.nested2 > div {
+    margin-left: 5%;
+    margin-right:5%;
+    margin-top: 12%;
+    display:grid;
+    grid-template-rows: repeat(2,1fr);
+    grid-auto-columns: minmax(100px, auto);
+    background: #919191;
+    padding: 1em;
+}
+.job_details {
+    overflow-wrap: anywhere;
+    margin-bottom: 10%;
+}
+.list {
+    
 }

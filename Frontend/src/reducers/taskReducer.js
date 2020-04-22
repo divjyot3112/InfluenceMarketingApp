@@ -1,4 +1,4 @@
-import {SAVE_TASK} from "../actions/types";
+import {SAVE_TASK, GET_TASK} from "../actions/types";
 
 const initialState = {
     saved: false,
@@ -12,7 +12,11 @@ export default function (state = initialState, action) {
                 ...state,
                 saved: true,
             };
-
+        case GET_TASK:
+            return {
+                ...state,
+                task: action.payload.message,
+            };
         default:
             return state;
     }

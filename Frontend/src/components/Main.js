@@ -7,15 +7,19 @@ import Messenger from './Inbox/Messenger'
 import SponsorRating from "./Rating/sponsorRating"
 import InfluencerRating from "./Rating/influencerRating"
 import TaskDescription from './Task/TaskDescription'
+import Appbar from "./Common/Appbar"
+import Sidebar from "./Common/Sidebar"
 
 class Main extends Component {
     render() {
         return (
             <div>
-                <Route path="/dashboard" component={Dashboard}/>
+                <Route path="/" component={Appbar}/>
+                <Route path="/" component={Sidebar} />
+                <Route path="/dashboard" exact component={Dashboard}/>
                 <Route path="/profile" exact component={UserProfile}/>
                 <Route path="/task/new" exact component={PostTask}/>
-                <Route path="/task/description" component={TaskDescription}/>
+                <Route path="/task" exact component={TaskDescription}/>
                 <Route path="/inbox" exact component={Messenger}/>
                 <Route path="/ratings/sponsor" exact component={SponsorRating}/>
                 <Route path="/ratings/influencer" exact component={InfluencerRating}/>

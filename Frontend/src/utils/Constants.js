@@ -1,3 +1,4 @@
+//TODO: update MY_USER_ID and MY_ROLE to get form localStorage 
 const MY_USER_ID = 'sheena@gmail.com'
 const MY_ROLE = "Sponsor"
 const UserRoles = {
