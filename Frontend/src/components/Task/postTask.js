@@ -25,9 +25,12 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
+import NumberFormat from 'react-number-format';
+import CreditCardIcon from '@material-ui/icons/CreditCard';
 
 const TaskCategories = require("../../utils/Constants").TaskCategories;
 
+// for material-ui
 const useStyles = makeStyles((theme) => ({
     root: {
         '& > *': {
@@ -39,6 +42,33 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
     },
 }));
+
+// to format salary field
+function NumberFormatCustom(props) {
+    const {inputRef, onChange, ...other} = props;
+
+    return (
+        <NumberFormat
+            {...other}
+            getInputRef={inputRef}
+            onValueChange={(values) => {
+                onChange({
+                    target: {
+                        name: props.name,
+                        value: values.value,
+                    },
+                });
+            }}
+            thousandSeparator
+            isNumericString
+            prefix="$"
+        />
+    );
+}
+
+NumberFormatCustom.propTypes = {
+    inputRef: PropTypes.func.isRequired,
+};
 
 class PostTask extends PostTaskFormEventHandlers {
     constructor(props) {
@@ -77,12 +107,6 @@ class PostTask extends PostTaskFormEventHandlers {
             .min(50)
             .required()
             .label("Description"),
-        salary: Joi.string()
-            .max(9)
-            .min(1)
-            .required()
-            .regex(/^\d{1,6}(?:\.\d{0,2})?$/) // max 6 digits without decimal and max 2 digits after decimal
-            .label("Salary"),
         vacancyCount: Joi.string()
             .required()
             .max(3)
@@ -189,21 +213,41 @@ class PostTask extends PostTaskFormEventHandlers {
 
                                         <TextField
                                             error
+                                            label="Salary"
                                             className="input-field"
                                             onChange={this.handleSalary}
-                                            name="salary"
                                             value={this.state.salary}
                                             required
                                             error={this.state.errors.salary}
                                             helperText={this.state.errors.salary}
+                                            name="salary"
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <AttachMoneyIcon/>
+                                                        <CreditCardIcon/>
                                                     </InputAdornment>
                                                 ),
+                                                inputComponent: NumberFormatCustom,
                                             }}
-                                            label="Salary"/>
+                                        />
+
+                                        {/*<TextField*/}
+                                        {/*    error*/}
+                                        {/*    className="input-field"*/}
+                                        {/*    onChange={this.handleSalary}*/}
+                                        {/*    name="salary"*/}
+                                        {/*    value={this.state.salary}*/}
+                                        {/*    required*/}
+                                        {/*    error={this.state.errors.salary}*/}
+                                        {/*    helperText={this.state.errors.salary}*/}
+                                        {/*    InputProps={{*/}
+                                        {/*        startAdornment: (*/}
+                                        {/*            <InputAdornment position="start">*/}
+                                        {/*                <AttachMoneyIcon/>*/}
+                                        {/*            </InputAdornment>*/}
+                                        {/*        ),*/}
+                                        {/*    }}*/}
+                                        {/*    label="Salary"/>*/}
                                         <br/>
                                         <br/>
                                     </div>

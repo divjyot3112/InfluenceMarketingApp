@@ -59,10 +59,9 @@ class PostTaskFormEventHandlers extends Component {
 
     handleSalary = (e) => {
         const errors = {...this.state.errors};
-        const errorMessage = this.validateProperty(e.currentTarget);
-        if (errorMessage) {
-            errors[e.currentTarget.name] = errorMessage;
-        } else delete errors[e.currentTarget.name];
+        if (e.target.value.length == 0) {
+            errors["salary"] = "Please enter Salary";
+        } else delete errors["salary"];
 
         let data = this.state.salary;
         data = e.target.value;
