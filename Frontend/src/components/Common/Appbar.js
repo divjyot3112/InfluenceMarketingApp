@@ -111,7 +111,7 @@ export class Appbar extends Component {
     }
 }
 
-// Defining props
+// Defining proptypes
 Appbar.protoTypes = {
     getProfile: PropTypes.func.isRequired,
     // profile: PropTypes.object.isRequired
