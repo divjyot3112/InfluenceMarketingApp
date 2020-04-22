@@ -6,25 +6,32 @@
 }
 
 .profile-main {
-    margin: 3% 3% 3% 3%;
-    height: 100vh;
+    height: 100%;
     background-color: var(--main-bg-color);
 }
 
-.main-background{
-    margin:0% 20% 0% 20%;
+.main-background {
+    margin: 0% 20% 0% 20%;
     background-color: white;
     height: 100%;
-    border:1px solid white;
 }
 
-.display_photo img {
-    margin-left: 38%;
+.photo-main {
+    overflow: hidden;
 }
 
-.display_photo input {
-    margin-left: 4%;
+.edit-photo {
+    float: left;
+    width: 30%;
+    margin-top: 8%;
+    margin-left:5%;
 }
+
+.display_photo {
+    margin-left: 37%;
+    width:fit-content;
+}
+
 
 .profileName {
     color: #323f4d;
@@ -71,22 +78,22 @@
     color: red;
 }
 
-.task-categories{
-    color:gray;
+.task-categories {
+    color: gray;
 }
 
-.form-check{
+.form-check {
     width: 70%;
 }
 
-.input-field{
+.input-field {
     width: 100%
 }
 
-.input-date{
+.input-date {
     width: 100%
 }
 
-.dob-label{
+.dob-label {
     width: 20%
 }
