@@ -11,8 +11,6 @@ import {makeStyles, withStyles} from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import PeopleIcon from '@material-ui/icons/People';
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -106,13 +104,7 @@ class PostTask extends PostTaskFormEventHandlers {
             .max(5000)
             .min(50)
             .required()
-            .label("Description"),
-        vacancyCount: Joi.string()
-            .required()
-            .max(3)
-            .min(1)
-            .regex(/^[0-9]*$/)
-            .label("Vacancy Count"),
+            .label("Description")
     };
 
     onCancel = (e) => {
@@ -230,24 +222,6 @@ class PostTask extends PostTaskFormEventHandlers {
                                                 inputComponent: NumberFormatCustom,
                                             }}
                                         />
-
-                                        {/*<TextField*/}
-                                        {/*    error*/}
-                                        {/*    className="input-field"*/}
-                                        {/*    onChange={this.handleSalary}*/}
-                                        {/*    name="salary"*/}
-                                        {/*    value={this.state.salary}*/}
-                                        {/*    required*/}
-                                        {/*    error={this.state.errors.salary}*/}
-                                        {/*    helperText={this.state.errors.salary}*/}
-                                        {/*    InputProps={{*/}
-                                        {/*        startAdornment: (*/}
-                                        {/*            <InputAdornment position="start">*/}
-                                        {/*                <AttachMoneyIcon/>*/}
-                                        {/*            </InputAdornment>*/}
-                                        {/*        ),*/}
-                                        {/*    }}*/}
-                                        {/*    label="Salary"/>*/}
                                         <br/>
                                         <br/>
                                     </div>
@@ -289,22 +263,16 @@ class PostTask extends PostTaskFormEventHandlers {
                                         <br/>
 
                                         <TextField
-                                            error
+                                            required
+                                            type="number"
+                                            label="Vacancy Count"
                                             className="input-field"
                                             onChange={this.handleVacancyCount}
-                                            name="vacancyCount"
                                             value={this.state.vacancyCount}
-                                            required
                                             error={this.state.errors.vacancyCount}
                                             helperText={this.state.errors.vacancyCount}
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <PeopleIcon/>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                            label="Vacancy Count"/>
+                                            name="vacancyCount"
+                                            inputProps={{ min: "1", max: "5", step: "1" }} />
                                         <br/>
                                         <br/>
 
