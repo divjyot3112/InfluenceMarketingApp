@@ -7,8 +7,6 @@ import {Link} from "react-router-dom";
 import Pagination from "../Common/pagination";
 import {paginate} from "../Common/paginate";
 import StarRatings from "react-star-ratings";
-import Appbar from "../Common/Appbar";
-import Sidebar from "../Common/Sidebar";
 
 
 class SponsorRating extends Component {
@@ -55,8 +53,6 @@ class SponsorRating extends Component {
         if (Object.keys(ratings).length === 0) {
             return (
                 <React.Fragment>
-                    <Appbar/>
-                    <Sidebar/>
                     <div className="ratings-not-found-main">
                         <div className="main-background">
                             <p className="ratings-not-found">No Ratings Found</p>
@@ -67,8 +63,6 @@ class SponsorRating extends Component {
         } else {
             return (
                 <React.Fragment>
-                    <Appbar/>
-                    <Sidebar/>
                     <div className="main-ratings-sponsor">
                         <div className="main-background">
 
@@ -116,7 +110,7 @@ class SponsorRating extends Component {
                                             {/*TODO: connect it with task description page */}
                                             <Link
                                                 to={{
-                                                    pathname: "/task/description",
+                                                    pathname: "/task",
                                                     state: {
                                                         taskId: ratings[data[key]].task
                                                     }

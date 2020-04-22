@@ -34,8 +34,6 @@ import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import MaskedInput from 'react-text-mask';
 import Input from '@material-ui/core/Input';
-import Appbar from "../Common/Appbar";
-import Sidebar from "../Common/Sidebar";
 
 const userRoles = require("../../utils/Constants").UserRoles;
 const TaskCategories = require("../../utils/Constants").TaskCategories;
@@ -152,7 +150,7 @@ class UserProfile extends UserProfileFormEventHandlers {
             this.setState({isCurrentUser: false})
 
         // TODO: Get username from local storage
-        const username = this.props.location.state ? this.props.location.state.email : "sheena@gmail.com";
+        const username = this.props.location.state ? this.props.location.state.email : "divjyot@gmail.com";
 
         this.props.getProfile(username, (response) => {
             if (response.status === 200) {
@@ -255,8 +253,6 @@ class UserProfile extends UserProfileFormEventHandlers {
         if (!this.state.exists) {
             return (
                 <React.Fragment>
-                    <Appbar/>
-                    <Sidebar/>
                     <div className="profile-not-found-main">
                         <div className="main-background">
                             <p className="profile-not-found">Profile does not exist</p>
@@ -267,8 +263,6 @@ class UserProfile extends UserProfileFormEventHandlers {
         } else {
             return (
                 <React.Fragment>
-                    <Appbar/>
-                    <Sidebar/>
                     <div className="profile-main">
                         <div className="main-background">
                             <div className="photo-main">
