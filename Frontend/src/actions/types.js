@@ -9,6 +9,7 @@ export const GET_PROFILE = "GET_PROFILE";
 export const SAVE_PROFILE = "SAVE_PROFILE";
 
 export const SAVE_TASK = "SAVE_TASK";
+export const GET_TASK = "GET_TASK";
 
 export const FETCH_CONVERSATIONS = 'FETCH_CONVERSATIONS'
 export const SEND_MESSAGE = 'SEND_MESSAGE'

@@ -66,7 +66,7 @@ export class Appbar extends Component {
         if(this.state.userExists) {
             username = <NavLink href="/profile">{this.state.firstName?this.state.firstName:"Hello"}</NavLink>
         } else {
-            username = "Login or SignUp"
+            username = <NavbarText>Login or SignUp</NavbarText> //Write logic to logout
         }
         return (
             <div>
@@ -75,7 +75,7 @@ export class Appbar extends Component {
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="mr-auto" navbar>
-                            <NavItem style={{width:350, marginLeft:25}}>
+                            <NavItem style={{}}>
                                 <InputGroup>
                                     <Input 
                                         type="text" 
@@ -92,13 +92,13 @@ export class Appbar extends Component {
                             </NavItem>
                         </Nav>
                         <Nav navbar>
-                            <NavItem style={{marginLeft:25}}>
+                            <NavItem style={{marginRight: 25}}>
                                 <FaUserAlt style={{height:40}} /> {/* To do -> add profile picture of user */}
                             </NavItem>
-                            <NavItem style={{marginLeft:25, background:"#dadee3"}}>
+                            <NavItem style={{marginRight:10, background:"#dadee3"}}>
                                 { username }
                             </NavItem>
-                            <NavItem style={{marginLeft:25, color:"#ff9191"}}>
+                            <NavItem style={{color:"#ff9191"}}>
                                 <NavLink>Sign Out <FaSignOutAlt style={{}} /></NavLink> {/*Redirect to signout*/}
                             </NavItem >
                         </Nav>

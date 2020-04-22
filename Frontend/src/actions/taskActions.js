@@ -15,3 +15,18 @@ export const saveTask = (data) => async (dispatch) => {
         };
     }
 };
+
+export const getTask = (taskId) => async (dispatch) => {
+    try {
+        const res = await axios.post(`${ROOT_URL}/tasks/:${taskId}`);
+        dispatch({
+            type: GET_TASK,
+            payload: res.data,
+        });
+    } catch (e) {
+        return {
+            type: GET_TASK,
+            payload: e,
+        };
+    }
+};

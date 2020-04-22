@@ -2,54 +2,44 @@ import React, { Component } from 'react'
 // Importing UI components
 // CSS
 import "../../css/taskDescription.css" 
-import { Carousel, CarouselItem, } from 'react-bootstrap'
+// import { Carousel, } from 'react-bootstrap'
+import task_image from './task_image.JPEG'
 
 export class TaskDescription extends Component {
     render() {
         return (
             <div>
                 <div className="wrapper">
-                    <div style={{background:"#ddd"}}>
-                        <Carousel>
-  <Carousel.Item>
-    <img
-      className="d-block w-100"
-      src="holder.js/800x400?text=First slide&bg=373940"
-      alt="First slide"
-    />
-    <Carousel.Caption>
-      <h3>First slide label</h3>
-      <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-    </Carousel.Caption>
-  </Carousel.Item>
-  <Carousel.Item>
-    <img
-      className="d-block w-100"
-      src="holder.js/800x400?text=Second slide&bg=282c34"
-      alt="Second slide"
-    />
-
-    <Carousel.Caption>
-      <h3>Second slide label</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    </Carousel.Caption>
-  </Carousel.Item>
-  <Carousel.Item>
-    <img
-      className="d-block w-100"
-      src="holder.js/800x400?text=Third slide&bg=20232a"
-      alt="Third slide"
-    />
-
-    <Carousel.Caption>
-      <h3>Third slide label</h3>
-      <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-    </Carousel.Caption>
-  </Carousel.Item>
-</Carousel>
+                    <div className="nested" style={{background:"#ddd"}}>
+                        <div className="imgdiv">
+                            <img src={task_image} alt="No images for this task" />
+                            {/* Hello */}
+                        </div>
+                        <div className="title">
+                            TITLE
+                        </div>
+                        <div className="description">
+                            DESCRIPTION
+                        </div>
+                        <div className="company_details">
+                            COMPANY<br/>
+                            CATEGORY<br/>
+                            SPONSOR PROFILE
+                        </div>
                     </div>
                     <div style={{background:"#eee"}}>
-                        Hello
+                        <div className="nested2">
+                            <div className="job_details">
+                                JOB ID<br/>
+                                JOB STATUS<br/>
+                                POSTED ON<br/>
+                                START DATE<br/>
+                                END DATE
+                            </div>
+                            <div className="list">
+                                Hello
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
