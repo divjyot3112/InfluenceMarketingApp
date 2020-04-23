@@ -65,22 +65,22 @@ class InfluencerRating extends Component {
                     <div className="main-ratings-influencer">
                         <div className="main-background">
 
-                            <div className="sorting-options">
-                                <select
-                                    className="form-control"
-                                    name="sorting"
-                                    id="sorting"
-                                    onChange={this.handleRatingSorting}
-                                >
-                                    <option value="mostRecent">Sort by: Most Recent</option>
-                                    <option value="lowToHigh">Rating: Low to High</option>
-                                    <option value="highToLow">Rating: High to Low</option>
-                                </select>
-                            </div>
+                            <div className="main-background-top">
+                                <div className="sorting-options">
+                                    <select
+                                        className="form-control"
+                                        name="sorting"
+                                        id="sorting"
+                                        onChange={this.handleRatingSorting}
+                                    >
+                                        <option value="mostRecent">Sort by: Most Recent</option>
+                                        <option value="lowToHigh">Rating: Low to High</option>
+                                        <option value="highToLow">Rating: High to Low</option>
+                                    </select>
+                                </div>
 
-                            <div className="ratings-cards-main">
-                                <hr/>
                                 <div className="average-rating">
+                                    <hr/>
                                     <h1>Average Rating: {averageRating}</h1>
                                     <StarRatings
                                         rating={Number(averageRating)}
@@ -88,6 +88,11 @@ class InfluencerRating extends Component {
                                         numberOfStars={5}
                                     />
                                 </div>
+                            </div>
+
+                            <div className="main-background-bottom">
+
+
                                 {paginatedData.map(key => (
 
                                     <div className="rating-card" key={key}>
