@@ -15,7 +15,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import { fetchUnratedInfluencers } from "../../actions/dashboardActions";
+import { fetchUnratedInfluencers, addRating } from "../../actions/dashboardActions";
 import {MY_USER_ID} from "../../utils/Constants"
 const styles = (theme) => ({
     root: {
@@ -125,16 +125,15 @@ class AddRatingModal extends Component {
         let data = {
             sponsor: MY_USER_ID,
             rating: this.state.value,
-            task: this.props.taskData._id
-            //comment: window.document.getElementById('comment').value
+            task: this.props.taskData._id,
+            comment: document.getElementById("comment").value
         }
-        console.log("Query: ", this.state.influencer_email)
+        this.props.addRating(data, this.state.influencer)
         let unratedInfluencers = this.state.unratedInfluencers.filter(c => c.email !== this.state.influencer)
         console.log(unratedInfluencers)
         this.setState({
             unratedInfluencers: unratedInfluencers,
-            influencer: "",
-            influencer_email:""
+            influencer: ""
         })
     }
 
@@ -219,4 +218,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, { fetchUnratedInfluencers })(withStyles(styles)(AddRatingModal));
+export default connect(mapStateToProps, { fetchUnratedInfluencers, addRating })(withStyles(styles)(AddRatingModal));

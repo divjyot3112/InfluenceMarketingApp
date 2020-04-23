@@ -6,6 +6,7 @@ import {
     SORT_INCOME_HIGH_TO_LOW,
     MOST_RECENT_TASKS,
     UNRATED_INFLUENCERS,
+    ADD_RATING,
     ROOT_URL
 } from './types';
 
@@ -65,5 +66,17 @@ export const fetchUnratedInfluencers = (taskId, nextFun) => dispatch => {
                 payload: response
             })
             nextFun()
+        })
+}
+
+export const addRating = (data, email) => dispatch => {
+    axios.defaults.withCredentials = true;
+    axios.put(`${ROOT_URL}/influencers/rate`,data, {params:{email:email}})
+        .then((response) => { //Action dispatched
+            console.log("Response", response);
+            dispatch({
+                type: ADD_RATING,
+                payload: response
+            })
         })
 }
