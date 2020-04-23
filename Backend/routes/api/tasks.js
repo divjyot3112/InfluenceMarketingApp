@@ -406,4 +406,22 @@ router.put("/:taskId/apply", (req, res) => {
         })
 });
 
+// @route   GET /task/:taskId
+// @desc    Fetch a task by Task ID
+// @access  Public
+
+router.get("/:taskId", (req, res) => {
+    console.log("Inside fetch task by ID", req.params.taskId);
+  
+    Task.findOne({ _id: ObjectID(req.params.taskId) })
+      .then((task) => {
+        console.log("Task found successfully");
+        res.status(200).json({message: task});
+      })
+      .catch((err) => {
+        console.log("Task not found");
+        res.status(400).json({ message: "Task does not exists" });
+      });
+  });
+
 module.exports = router;
