@@ -11,14 +11,18 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "animate.css": "^3.7.2",
     "antd": "^4.1.4",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
     "date-fns": "latest",
     "globalize": "^1.5.0",
     "joi-browser": "^13.4.0",
+    "jquery": "^3.5.0",
+    "mdbootstrap": "^4.16.0",
     "mdbreact": "latest",
     "moment": "^2.24.0",
+    "nan": "^2.14.0",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.0",
     "react-burger-menu": "^2.6.13",
@@ -45,7 +49,8 @@
     "redux-form": "^8.3.5",
     "redux-thunk": "^2.3.0",
     "universal-cookie": "^4.0.3",
-    "uuid": "^7.0.2"
+    "uuid": "^7.0.2",
+    "wow.js": "^1.2.2"
   },
   "scripts": {
     "start": "react-scripts start",
