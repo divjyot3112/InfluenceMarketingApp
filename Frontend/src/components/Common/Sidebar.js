@@ -22,11 +22,14 @@ export class Sidebar extends Component {
         const email = "divjyot@gmail.com";
 
         if (email != null) {
-            this.props.getProfile(email, (response) => {
-                if (response.status === 200) {
+            this.props.getProfile(email).then((response) => {
+                if (response === undefined && this.props.profile.status === 200) {
                     this.setState({
-                        role: response.data.role,
-                        userExists: true
+                        firstName: this.props.profile.data.message
+                            ? this.props.profile.data.message.name.firstName
+                            : "",
+                        userExists: true,
+                        role: this.props.profile.data.role
                     })
                 }
             })
@@ -58,4 +61,10 @@ Sidebar.protoTypes = {
     profile: PropTypes.object.isRequired
 }
 
-export default connect(null, {getProfile})(Sidebar)
+function mapStateToProps(state) {
+    return {
+        profile: state.userProfile.profile
+    };
+}
+
+export default connect(mapStateToProps, {getProfile})(Sidebar)

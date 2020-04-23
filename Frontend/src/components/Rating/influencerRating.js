@@ -7,19 +7,24 @@ import {Link} from "react-router-dom";
 import Pagination from "../Common/pagination";
 import {paginate} from "../Common/paginate";
 import StarRatings from 'react-star-ratings';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import {Else, If, Then} from "react-if";
 
 
 class InfluencerRating extends Component {
     state = {
         currentPage: 1,
         pageSize: 5,
+        loading: true
     };
 
 
     componentDidMount() {
         // TODO: Get influencer email from local storage
         const email = "divjyot@gmail.com";
-        this.props.getInfluencerRatings(email)
+        this.props.getInfluencerRatings(email).then((response) => {
+            this.setState({loading: false});
+        });
     }
 
     handlePageChange = page => {
@@ -54,7 +59,17 @@ class InfluencerRating extends Component {
                 <React.Fragment>
                     <div className="ratings-not-found-main">
                         <div className="main-background">
-                            <p className="ratings-not-found">No Ratings Found</p>
+                            <If condition={this.state.loading}>
+                                <Then>
+                                    <p className="ratings-not-found">
+                                        <CircularProgress/>
+                                        <CircularProgress color="secondary"/>
+                                    </p>
+                                </Then>
+                                <Else>
+                                    <p className="ratings-not-found">No Ratings Found</p>
+                                </Else>
+                            </If>
                         </div>
                     </div>
                 </React.Fragment>
