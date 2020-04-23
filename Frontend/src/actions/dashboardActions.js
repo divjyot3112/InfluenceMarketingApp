@@ -4,13 +4,16 @@ import {
     DASHBOARD_CURRENT_PAGE_TASKS,
     SORT_INCOME_LOW_TO_HIGH,
     SORT_INCOME_HIGH_TO_LOW,
-    MOST_RECENT_TASKS
+    MOST_RECENT_TASKS,
+    UNRATED_INFLUENCERS,
+    ADD_RATING,
+    ROOT_URL
 } from './types';
 
 export const fetchDashboardTasks = (email, status,nextFun) => dispatch => {
     console.log("Dashboard action")
     axios.defaults.withCredentials = true;
-    axios.get(`http://localhost:5000/api/tasks/filter`, { params: { email: email, status: status } })
+    axios.get(`${ROOT_URL}/tasks/filter`, { params: { email: email, status: status } })
         .then((response) => { //Action dispatched
             console.log("Response", response);
             dispatch({
@@ -48,4 +51,32 @@ export const sortTasks = (sortBy,nextFun) => dispatch => {
         })
     }
     nextFun()
+}
+
+
+//get unrated influencers for a task
+export const fetchUnratedInfluencers = (taskId, nextFun) => dispatch => {
+    console.log("Get Unrated Influencers action")
+    axios.defaults.withCredentials = true;
+    axios.get(`${ROOT_URL}/tasks/unrated`, { params: { taskId:taskId } })
+        .then((response) => { //Action dispatched
+            console.log("Response", response);
+            dispatch({
+                type: UNRATED_INFLUENCERS,
+                payload: response
+            })
+            nextFun()
+        })
+}
+
+export const addRating = (data, email) => dispatch => {
+    axios.defaults.withCredentials = true;
+    axios.put(`${ROOT_URL}/influencers/rate`,data, {params:{email:email}})
+        .then((response) => { //Action dispatched
+            console.log("Response", response);
+            dispatch({
+                type: ADD_RATING,
+                payload: response
+            })
+        })
 }

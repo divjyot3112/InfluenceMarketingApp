@@ -1,4 +1,5 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -14,6 +15,8 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import { fetchUnratedInfluencers, addRating } from "../../actions/dashboardActions";
+import {MY_USER_ID} from "../../utils/Constants"
 const styles = (theme) => ({
     root: {
         margin: 0,
@@ -70,14 +73,22 @@ class AddRatingModal extends Component {
             open: false,
             openSelect: false,
             value: 0,
-            influencer:""
+            influencer: "",
+            unratedInfluencers: []
         }
     }
 
     setOpen = (val) => {
-        this.setState({
-            open: val
-        })
+        if (val === true) {
+            this.props.fetchUnratedInfluencers(this.props.taskData._id, () => {
+                this.setState({ unratedInfluencers: this.props.unratedInfluencers, open:val })
+            })
+        } else {
+            this.setState({
+                open: val
+            })
+        }
+        
     }
 
     setValue = (val) => {
@@ -100,8 +111,39 @@ class AddRatingModal extends Component {
 
     handleChangeSelect = (event) => {
         this.setState({
-            influencer: event.target.value
+            influencer:event.target.value
         })
+    }
+
+    renderInfluencers = () => {
+        return this.state.unratedInfluencers.map(candidate => {
+            return <MenuItem value={candidate.email}>{candidate.name}</MenuItem>
+        })
+    }
+
+    addRating = () => {
+        let data = {
+            sponsor: MY_USER_ID,
+            rating: this.state.value,
+            task: this.props.taskData._id,
+            comment: document.getElementById("comment").value
+        }
+        this.props.addRating(data, this.state.influencer)
+        let unratedInfluencers = this.state.unratedInfluencers.filter(c => c.email !== this.state.influencer)
+        console.log(unratedInfluencers)
+        this.setState({
+            unratedInfluencers: unratedInfluencers,
+            influencer: ""
+        })
+    }
+
+    rateAndContinue = () => {
+        this.addRating();
+    }
+
+    rateAndClose = () => {
+        this.addRating();
+        this.setOpen(false);
     }
     render() {
         //const [open, setOpen] = useState(false);
@@ -134,12 +176,7 @@ class AddRatingModal extends Component {
                                 value={this.state.influencer}
                                 onChange={this.handleChangeSelect}
                                 >
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
-                                <MenuItem value={10}>Tenmdkjdkdjkdd</MenuItem>
-                                <MenuItem value={20}>Twentydkjdkjd</MenuItem>
-                                <MenuItem value={30}>Thirtydkkdjkdj</MenuItem>
+                                {this.renderInfluencers()}
                                 </Select>
                             </FormControl>
                         </Typography>
@@ -157,13 +194,16 @@ class AddRatingModal extends Component {
                         </Typography>
                         <Typography gutterBottom>
                                 <FormControl className={classes.formControl}>
-                                <textarea style={{overflow:"hidden"}} rows={3} placeholder="Feedback" />
+                                <textarea style={{overflow:"hidden"}} rows={3} placeholder="Feedback" id ="comment"/>
                                 </FormControl>
                          </Typography>
                     </DialogContent>
                     <DialogActions>
-                        <Button autoFocus onClick={handleClose} color="primary">
-                            Rate
+                        <Button autoFocus onClick={this.rateAndContinue} color="primary">
+                            Rate and Continue
+                        </Button>
+                        <Button autoFocus onClick={this.rateAndClose} color="primary">
+                            Rate and Close
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -172,4 +212,10 @@ class AddRatingModal extends Component {
     }
 }
 
-export default withStyles(styles)(AddRatingModal);
+function mapStateToProps(state) {
+    return {
+        unratedInfluencers: state.unratedInfluencers
+    };
+}
+
+export default connect(mapStateToProps, { fetchUnratedInfluencers, addRating })(withStyles(styles)(AddRatingModal));
