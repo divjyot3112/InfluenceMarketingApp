@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Joi from "joi-browser";
 import {DatePicker} from "@material-ui/pickers";
 import "react-widgets/dist/css/react-widgets.css";
-import {If} from "react-if";
+import {If, Else, Then} from "react-if";
 import UserProfileFormEventHandlers from "./userProfileFormEventHandlers";
 import {getProfile, saveProfile} from "../../actions/userProfileActions";
 import "../../css/userProfile.css";
@@ -34,6 +34,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import MaskedInput from 'react-text-mask';
 import Input from '@material-ui/core/Input';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const userRoles = require("../../utils/Constants").UserRoles;
 const TaskCategories = require("../../utils/Constants").TaskCategories;
@@ -94,7 +95,8 @@ class UserProfile extends UserProfileFormEventHandlers {
             exists: false,
             role: "",
             company: "",
-            isCurrentUser: true //to different between current user and the visiting user
+            isCurrentUser: true, //to different between current user and the visiting user
+            loading: true
         };
 
         this.handleFirstName = this.handleFirstName.bind(this);
@@ -145,54 +147,56 @@ class UserProfile extends UserProfileFormEventHandlers {
         company: Joi.string().max(20).required().label("Company"),
     };
 
+
     componentDidMount() {
         if (this.props.location.state)
             this.setState({isCurrentUser: false})
 
         // TODO: Get username from local storage
-        const username = this.props.location.state ? this.props.location.state.email : "divjyot@gmail.com";
+        const username = this.props.location.state ? this.props.location.state.email : "sheena@gmail.com";
 
-        this.props.getProfile(username, (response) => {
-            if (response.status === 200) {
+        this.props.getProfile(username).then((response) => {
+            if (response === undefined && this.props.profile.status === 200) {
                 this.setState({exists: true});
                 this.setState({
-                    firstName: response.data.message.name
-                        ? response.data.message.name.firstName
+                    firstName: this.props.profile.data.message
+                        ? this.props.profile.data.message.name.firstName
                         : "",
-                    lastName: response.data.message.name
-                        ? response.data.message.name.lastName
+                    lastName: this.props.profile.data.message
+                        ? this.props.profile.data.message.name.lastName
                         : "",
-                    aboutMe: response.data.message.aboutMe,
-                    city: response.data.message.address
-                        ? response.data.message.address.city
+                    aboutMe: this.props.profile.data.message.aboutMe,
+                    city: this.props.profile.data.message.address
+                        ? this.props.profile.data.message.address.city
                         : "",
-                    streetAddress: response.data.message.address
-                        ? response.data.message.address.streetAddress
+                    streetAddress: this.props.profile.data.message.address
+                        ? this.props.profile.data.message.address.streetAddress
                         : "",
-                    state: response.data.message.address
-                        ? response.data.message.address.state
+                    state: this.props.profile.data.message.address
+                        ? this.props.profile.data.message.address.state
                         : "",
-                    country: response.data.message.address
-                        ? response.data.message.address.country
+                    country: this.props.profile.data.message.address
+                        ? this.props.profile.data.message.address.country
                         : "",
-                    zipcode: response.data.message.address
-                        ? response.data.message.address.zipcode
+                    zipcode: this.props.profile.data.message.address
+                        ? this.props.profile.data.message.address.zipcode
                         : "",
-                    gender: response.data.message.gender,
-                    phone: response.data.message.phone,
-                    dateOfBirth: response.data.message.dateOfBirth,
+                    gender: this.props.profile.data.message.gender,
+                    phone: this.props.profile.data.message.phone,
+                    dateOfBirth: this.props.profile.data.message.dateOfBirth,
                     taskCategories:
-                        response.data.role === userRoles.INFLUENCER
-                            ? response.data.message.taskCategories
+                        this.props.profile.data.role === userRoles.INFLUENCER
+                            ? this.props.profile.data.message.taskCategories
                             : "",
-                    role: response.data.role,
+                    role: this.props.profile.data.role,
                     company:
-                        response.data.role === userRoles.SPONSOR
-                            ? response.data.message.company
+                        this.props.profile.data.role === userRoles.SPONSOR
+                            ? this.props.profile.data.message.company
                             : "",
                 });
             }
-        });
+            this.setState({loading: false})
+        })
     }
 
     handleProfile = (e) => {
@@ -255,7 +259,18 @@ class UserProfile extends UserProfileFormEventHandlers {
                 <React.Fragment>
                     <div className="profile-not-found-main">
                         <div className="main-background">
-                            <p className="profile-not-found">Profile does not exist</p>
+                            <If condition={this.state.loading}>
+                                <Then>
+                                    <p className="profile-not-found">
+                                        <CircularProgress/>
+                                        <CircularProgress color="secondary"/>
+                                    </p>
+                                </Then>
+                                <Else>
+                                    <p className="profile-not-found">Profile Not Found</p>
+                                </Else>
+                            </If>
+
                         </div>
                     </div>
                 </React.Fragment>

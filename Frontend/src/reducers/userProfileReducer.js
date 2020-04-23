@@ -10,7 +10,7 @@ export default function (state = initialState, action) {
         case GET_PROFILE:
             return {
                 ...state,
-                profile: action.payload.message,
+                profile: action.payload,
             };
 
         case SAVE_PROFILE:
