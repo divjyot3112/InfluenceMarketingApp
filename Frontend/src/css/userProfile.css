@@ -59,7 +59,6 @@
     padding: 2% 2% 0.5% 2%;
     width: 40%;
     float: left;
-
 }
 
 .profile_information_right {
@@ -84,8 +83,8 @@
     color: red;
 }
 
-.task-categories {
-    color: gray;
+.small-label {
+    color: #6e6e6e;
 }
 
 .form-check {
@@ -102,4 +101,28 @@
 
 .dob-label {
     width: 20%
+}
+
+.address-autocomplete {
+    background-color: inherit;
+}
+
+.input-field-address {
+    width: 100%;
+    border-top: 0px none;
+    border-left: 0px none;
+    border-right: 0px none;
+    border-bottom-color: gray;
+    border-bottom-width: thin;
+}
+
+.input-field-address:hover {
+    border-bottom-color: rgba(0, 0, 0, 0.73);
+    border-bottom-width: medium;
+}
+
+.input-field-address:focus {
+    border-bottom-color: #313d8b;
+    border-bottom-width: medium;
+    outline: none;
 }
