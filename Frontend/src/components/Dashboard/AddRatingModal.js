@@ -145,6 +145,57 @@ class AddRatingModal extends Component {
         this.addRating();
         this.setOpen(false);
     }
+
+    renderDialogContent = () => {
+        const { classes } = this.props;
+        if (this.state.unratedInfluencers.length === 0) {
+            return <DialogContent dividers><p style={{margin:"5%"}}>All Influencers for this task have been rated!</p></DialogContent>
+        }
+        return <><DialogContent dividers>
+            <Typography gutterBottom>
+                <FormControl className={classes.formControl}>
+                    <InputLabel id="demo-controlled-open-select-label">Influencer</InputLabel>
+                    <Select
+                        labelId="demo-controlled-open-select-label"
+                        id="demo-controlled-open-select"
+                        open={this.state.openSelect}
+                        onClose={this.handleCloseSelect}
+                        onOpen={this.handleOpenSelect}
+                        value={this.state.influencer}
+                        onChange={this.handleChangeSelect}
+                    >
+                        {this.renderInfluencers()}
+                    </Select>
+                </FormControl>
+            </Typography>
+            <Typography gutterBottom>
+                <FormControl className={classes.formControl}>
+                    <Typography component="legend"></Typography>
+                    <Rating
+                        name="simple-controlled"
+                        value={this.state.value}
+                        onChange={(event, newValue) => {
+                            this.setValue(newValue);
+                        }}
+                    />
+                </FormControl>
+            </Typography>
+            <Typography gutterBottom>
+                <FormControl className={classes.formControl}>
+                    <textarea style={{ overflow: "hidden" }} rows={3} placeholder="Feedback" id="comment" />
+                </FormControl>
+            </Typography>
+        </DialogContent>
+            <DialogActions>
+                <Button autoFocus onClick={this.rateAndContinue} color="primary">
+                    Rate and Continue
+        </Button>
+                <Button autoFocus onClick={this.rateAndClose} color="primary">
+                    Rate and Close
+        </Button>
+            </DialogActions>
+        </>
+            }
     render() {
         //const [open, setOpen] = useState(false);
         const handleClickOpen = () => {
@@ -153,7 +204,6 @@ class AddRatingModal extends Component {
         const handleClose = () => {
             this.setOpen(false);
         };
-        const { classes } = this.props;
         return (
             <div>
                 <Button size="small" color="primary" onClick={handleClickOpen}>
@@ -163,50 +213,9 @@ class AddRatingModal extends Component {
                     <DialogTitle id="customized-dialog-title" onClose={handleClose}>
                         {this.props.taskData.title}
                     </DialogTitle>
-                    <DialogContent dividers>
-                        <Typography gutterBottom>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel id="demo-controlled-open-select-label">Influencer</InputLabel>
-                                <Select
-                                labelId="demo-controlled-open-select-label"
-                                id="demo-controlled-open-select"
-                                open={this.state.openSelect}
-                                onClose={this.handleCloseSelect}
-                                onOpen={this.handleOpenSelect}
-                                value={this.state.influencer}
-                                onChange={this.handleChangeSelect}
-                                >
-                                {this.renderInfluencers()}
-                                </Select>
-                            </FormControl>
-                        </Typography>
-                        <Typography gutterBottom>
-                            <FormControl className={classes.formControl}>
-                                <Typography component="legend"></Typography>
-                                <Rating
-                                name="simple-controlled"
-                                value={this.state.value}
-                                onChange={(event, newValue) => {
-                                    this.setValue(newValue);
-                                }}
-                                />
-                                </FormControl>
-                        </Typography>
-                        <Typography gutterBottom>
-                                <FormControl className={classes.formControl}>
-                                <textarea style={{overflow:"hidden"}} rows={3} placeholder="Feedback" id ="comment"/>
-                                </FormControl>
-                         </Typography>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button autoFocus onClick={this.rateAndContinue} color="primary">
-                            Rate and Continue
-                        </Button>
-                        <Button autoFocus onClick={this.rateAndClose} color="primary">
-                            Rate and Close
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                    {this.renderDialogContent()}
+                </Dialog >
+                   
             </div>
         )
     }
