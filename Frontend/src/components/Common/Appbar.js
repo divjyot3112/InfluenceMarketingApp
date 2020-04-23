@@ -43,10 +43,12 @@ export class Appbar extends Component {
         const email = "divjyot@gmail.com";
 
         if (email != null) {
-            this.props.getProfile(email, (response) => {
-                if (response.status === 200) {
+            this.props.getProfile(email).then((response) => {
+                if (response === undefined && this.props.profile.status === 200) {
                     this.setState({
-                        firstName: response.data.message.name ? response.data.message.name.firstName : "",
+                        firstName: this.props.profile.data.message
+                            ? this.props.profile.data.message.name.firstName
+                            : "",
                         userExists: true
                     })
                 }
@@ -114,7 +116,13 @@ export class Appbar extends Component {
 // Defining proptypes
 Appbar.protoTypes = {
     getProfile: PropTypes.func.isRequired,
-    // profile: PropTypes.object.isRequired
+    profile: PropTypes.object.isRequired
 }
 
-export default connect(null, {getProfile})(Appbar);
+function mapStateToProps(state) {
+    return {
+        profile: state.userProfile.profile
+    };
+}
+
+export default connect(mapStateToProps, {getProfile})(Appbar);

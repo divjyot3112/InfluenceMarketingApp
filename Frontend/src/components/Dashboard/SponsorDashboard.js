@@ -114,50 +114,47 @@ class SponsorDashboard extends Component {
     renderTasks() {
         const { classes } = this.props;
         if (this.props.currentPageTasks.length > 0) {
-            return _.map(this.props.currentPageTasks, (task) => (
-            
-                <Grid item key={task} xs={10} sm={6} md={3}> {/*md was 4*/}
-                    <Card className={classes.card}>
-                        <CardMedia
-                            className={classes.cardMedia}
-                            image="https://source.unsplash.com/random"
-                            title="Image title"
-                        />
-                        <CardContent className={classes.cardContent}>
-                            <Typography gutterBottom variant="h6" component="h2">
-                                {task.title}
-                            </Typography>
-                            <Typography>
-                                <div style={{ overflowWrap: "break-word" }}><b>Desc:</b> {this.truncate(task.description)}</div>
-                            </Typography><br></br>
-                            <Typography>
-                                <b>Posted On:</b> {new Date(task.postedOn).toLocaleDateString()}
-                            </Typography>
-                        </CardContent>
+            return _.map(this.props.currentPageTasks, (task) => {
+                let rateButton = (task.status === TaskStatus.COMPLETED) ?<AddRatingModal taskData={task}></AddRatingModal>: null;
+                return (
+                    <Grid item key={task} xs={10} sm={6} md={3}> {/*md was 4*/}
+                        <Card className={classes.card}>
+                            <CardMedia
+                                className={classes.cardMedia}
+                                image="https://source.unsplash.com/random"
+                                title="Image title"
+                            />
+                            <CardContent className={classes.cardContent}>
+                                <Typography gutterBottom variant="h6" component="h2">
+                                    {task.title}
+                                </Typography>
+                                <Typography>
+                                    <div style={{ overflowWrap: "break-word" }}><b>Desc:</b> {this.truncate(task.description)}</div>
+                                </Typography><br></br>
+                                <Typography>
+                                    <b>Posted On:</b> {new Date(task.postedOn).toLocaleDateString()}
+                                </Typography>
+                            </CardContent>
                 
-                        <CardActions>
-                            <AddRatingModal taskData={task}></AddRatingModal>
+                            <CardActions>
+                                {rateButton}
                             
-                            <Link
-                                to={{
-                                    pathname: "/task",
-                                    state: {
-                                        taskId: task._id
-                                    }
-                                }}
-                                style={{textDecoration: 'none'}}
-                            >
+                                <Link
+                                    to={{
+                                        pathname: "/task",
+                                        state: {
+                                            taskId: task._id
+                                        }
+                                    }}
+                                    style={{ textDecoration: 'none' }}
+                                >
                                     <Button size="small" color="primary">View</Button>
-                            </Link>
-                        </CardActions>
-                        {/*   <Button size="small" color="primary">
-                            Edit
-                        </Button>
-                    </CardActions>
-                    */}
-                    </Card>
-                </Grid>
-            ))
+                                </Link>
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                )
+            })
         } else {
            return  <NoData image={window.location.origin + "/no_tasks.png"} description="No Matching Tasks Found"/>
             

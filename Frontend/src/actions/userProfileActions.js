@@ -1,23 +1,22 @@
 import axios from "axios";
 import {SAVE_PROFILE, GET_PROFILE, ROOT_URL} from "./types";
 
-export function getProfile(email, callback) {
+export const getProfile = email => async (dispatch) => {
     try {
-        const request = axios
-            .get(`${ROOT_URL}/users/profile?email=${email}`)
-            .then((res) => callback(res));
-
-        return {
+        const res = await axios.get(
+            `${ROOT_URL}/users/profile?email=${email}`
+        );
+        dispatch({
             type: GET_PROFILE,
-            payload: request,
-        };
+            payload: res,
+        });
     } catch (e) {
         return {
             type: GET_PROFILE,
             payload: e,
         };
     }
-}
+};
 
 export const saveProfile = (data, email) => async (dispatch) => {
     try {

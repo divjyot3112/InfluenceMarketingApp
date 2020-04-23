@@ -4,7 +4,7 @@ const passport = require('passport');
 var ObjectID = require('mongodb').ObjectID
 const taskStatus = require('../../utils/Constants').TaskStatus;
 const userRoles = require("../../utils/Constants").UserRoles;
-
+let fetchUserDetails = require("../../utils/UserDetails")
 // Bring in passport strategy
 require('../../config/passport')(passport)
 
@@ -12,6 +12,7 @@ require('../../config/passport')(passport)
 const Task = require('../../models/Task');
 const SponsorProfile = require('../../models/SponsorProfile');
 const InfluencerProfile = require('../../models/InfluencerProfile');
+const Rating = require('../../models/Rating');
 
 // @route   POST api/task/create
 // @desc    Create a task
@@ -423,5 +424,41 @@ router.get("/:taskId", (req, res) => {
         res.status(400).json({ message: "Task does not exists" });
       });
   });
+
+  
+router.get("/unrated", (req, res) => {
+    console.log("Inside get all unrated influencers");
+
+    Task.findOne({ _id: ObjectID(req.query.taskId) })
+        .then(async task => {
+            let selectedCandidates = task.selectedCandidates
+            let unratedCandidates = await Promise.all( selectedCandidates.map(candidate => {
+                return Rating.findOne({
+                    task: req.query.taskId,
+                    influencer: candidate
+                }).then(async (rating) => {
+                    if (rating) {
+                        return null;
+                    }
+                    else {
+                        let profileInfo = await fetchUserDetails(candidate);
+                        if (await profileInfo != null) {
+                            return {
+                                name: await profileInfo.name.firstName + " " + await profileInfo.name.lastName,
+                                email: await profileInfo.email
+                            }
+                        }
+                    }
+                })
+            }))
+            unratedCandidates =  unratedCandidates.filter(c=>c!=null)
+            res.status(200).json({success:true,message:unratedCandidates})
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400).json({ message: "Influencers could not be fetched" });
+        })
+});
+
 
 module.exports = router;

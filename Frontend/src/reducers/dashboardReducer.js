@@ -3,7 +3,8 @@ import {
     DASHBOARD_CURRENT_PAGE_TASKS,
     SORT_INCOME_LOW_TO_HIGH,
     SORT_INCOME_HIGH_TO_LOW,
-    MOST_RECENT_TASKS
+    MOST_RECENT_TASKS,
+    UNRATED_INFLUENCERS
 } from '../actions/types';
 
 const initialState = []
@@ -40,6 +41,15 @@ export function dashboardCurrentPageTasksReducer(state = initialState, action) {
     switch (action.type) {
         case DASHBOARD_CURRENT_PAGE_TASKS:
             return action.payload
+        default:
+            return state;
+    }
+}
+
+export function unratedInfluencersReducer(state = [], action) {
+    switch (action.type) {
+        case UNRATED_INFLUENCERS:
+            return action.payload.data.message
         default:
             return state;
     }

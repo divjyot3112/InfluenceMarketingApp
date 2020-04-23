@@ -11,7 +11,7 @@
 }
 
 .main-ratings-sponsor {
-    height: 100%;
+    height: 100vh;
     background-color: var(--main-bg-color);
 }
 
@@ -19,10 +19,11 @@
     margin: 0% 20% 0% 20%;
     padding-bottom: 1%;
     height: 100%;
+    padding-top: 3%;
 }
 
 .sorting-options {
-    margin: 3% 0% 0% 75%;
+    margin: 0% 0% 0% 75%;
     height: auto;
 }
 
@@ -32,9 +33,11 @@
 
 .ratings-cards-main {
     margin: 0% 3% 0% 3%;
+    overflow: scroll;
+    height: 85%;
 }
 
-.rating-card  {
+.rating-card {
     width: 60%;
     margin: 3% 20% 3% 20%;
     padding: 2% 2% 2% 2%;
@@ -44,21 +47,17 @@
 }
 
 .rating-card-left {
-    width:50%;
+    width: 50%;
     float: left;
 }
 
 .rating-card-right {
-    width:40%;
-    margin-left:60%;
+    width: 40%;
+    margin-left: 60%;
     text-align: right;
 }
 
-.link {
-    border:1px solid blue
-}
-
-.rating-card-right  Link:hover  {
+.rating-card-right Link:hover {
     text-decoration: none;
 
 }
