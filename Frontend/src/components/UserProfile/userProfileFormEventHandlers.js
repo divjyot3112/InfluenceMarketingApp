@@ -69,64 +69,15 @@ class UserProfileFormEventHandlers extends Component {
         this.setState({aboutMe: data, errors});
     };
 
-    handleCity = (e) => {
+    handleAddress = (e) => {
         const errors = {...this.state.errors};
-        const errorMessage = this.validateProperty(e.currentTarget);
-        if (errorMessage) {
-            errors[e.currentTarget.name] = errorMessage;
-        } else delete errors[e.currentTarget.name];
+        if (e === undefined) {
+            errors["address"] = "Please enter your Address";
+        } else delete errors["address"];
 
-        let data = this.state.city;
-        data = e.target.value;
-        this.setState({city: data, errors});
-    };
-
-    handleStreetAddress = (e) => {
-        const errors = {...this.state.errors};
-        const errorMessage = this.validateProperty(e.currentTarget);
-        if (errorMessage) {
-            errors[e.currentTarget.name] = errorMessage;
-        } else delete errors[e.currentTarget.name];
-
-        let data = this.state.streetAddress;
-        data = e.target.value;
-        this.setState({streetAddress: data, errors});
-    };
-
-    handleState = (e) => {
-        const errors = {...this.state.errors};
-        const errorMessage = this.validateProperty(e.currentTarget);
-        if (errorMessage) {
-            errors[e.currentTarget.name] = errorMessage;
-        } else delete errors[e.currentTarget.name];
-
-        let data = this.state.state;
-        data = e.target.value;
-        this.setState({state: data, errors});
-    };
-
-    handleCountry = (e) => {
-        const errors = {...this.state.errors};
-        const errorMessage = this.validateProperty(e.currentTarget);
-        if (errorMessage) {
-            errors[e.currentTarget.name] = errorMessage;
-        } else delete errors[e.currentTarget.name];
-
-        let data = this.state.country;
-        data = e.target.value;
-        this.setState({country: data, errors});
-    };
-
-    handleZipcode = (e) => {
-        const errors = {...this.state.errors};
-        const errorMessage = this.validateProperty(e.currentTarget);
-        if (errorMessage) {
-            errors[e.currentTarget.name] = errorMessage;
-        } else delete errors[e.currentTarget.name];
-
-        let data = this.state.zipcode;
-        data = e.target.value;
-        this.setState({zipcode: data, errors});
+        let data = this.state.address;
+        data = e.description;
+        this.setState({address: data, errors});
     };
 
     handlePhone = (e) => {
