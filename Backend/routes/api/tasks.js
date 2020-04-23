@@ -419,6 +419,9 @@ router.get("/unrated", (req, res) => {
                     influencer: candidate
                 }).then(async (rating) => {
                     if (rating) {
+                        return null;
+                    }
+                    else {
                         let profileInfo = await fetchUserDetails(candidate);
                         if (await profileInfo != null) {
                             return {
@@ -429,6 +432,7 @@ router.get("/unrated", (req, res) => {
                     }
                 })
             }))
+            unratedCandidates =  unratedCandidates.filter(c=>c!=null)
             res.status(200).json({success:true,message:unratedCandidates})
         })
         .catch(err => {
