@@ -13,7 +13,7 @@ const TaskStatus = {
     COMPLETED: 'Completed',
     CANCELLED: 'Cancelled',
     APPLIED: 'Applied',
-    ALL:"All"
+    ALL: "All"
 }
 
 const TaskCategories = [
@@ -37,4 +37,6 @@ const Gender = [
     "Other"
 ];
 
-export {UserRoles, TaskStatus, TaskCategories, Gender, MY_USER_ID, MY_ROLE}
+const NoImageFoundForTask = "https://firebasestorage.googleapis.com/v0/b/masterfinalproject-4583d.appspot.com/o/tasks%2FnoImageFound.jpg?alt=media&token=cad1cdd5-4571-4192-8962-d67f42a54cdb";
+
+export {UserRoles, TaskStatus, TaskCategories, Gender, MY_USER_ID, MY_ROLE, NoImageFoundForTask}
