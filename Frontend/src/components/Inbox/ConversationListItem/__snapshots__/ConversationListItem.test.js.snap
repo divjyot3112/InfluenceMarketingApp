@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render correctly 1`] = `
+<div
+  className="conversation-list-item"
+  onClick={[Function]}
+>
+  <img
+    alt="conversation"
+    className="conversation-photo"
+    src="http://localhost/dummy.png"
+  />
+  <div
+    className="conversation-info"
+  >
+    <h1
+      className="conversation-title"
+    >
+      John Doe
+    </h1>
+  </div>
+  <span
+    className="MuiBadge-root"
+    style={
+      Object {
+        "marginLeft": "auto",
+        "marginRight": "10px",
+      }
+    }
+  >
+    <span
+      className="MuiBadge-badge MuiBadge-anchorOriginTopRightRectangle MuiBadge-colorPrimary"
+    >
+      10
+    </span>
+  </span>
+</div>
+`;

@@ -15,7 +15,10 @@
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
     "date-fns": "latest",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
     "globalize": "^1.5.0",
+    "jest": "^24.9.0",
     "joi-browser": "^13.4.0",
     "mdbreact": "latest",
     "moment": "^2.24.0",
@@ -35,6 +38,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "react-star-ratings": "^2.3.0",
+    "react-test-renderer": "^16.13.1",
     "react-transition-group": "^4.3.0",
     "react-widgets": "^4.5.0",
     "react-widgets-globalize": "^5.0.21",
@@ -70,6 +74,7 @@
     ]
   },
   "devDependencies": {
-    "eslint-plugin-react-hooks": "^3.0.0"
+    "eslint-plugin-react-hooks": "^3.0.0",
+    "redux-mock-store": "^1.5.4"
   }
 }
