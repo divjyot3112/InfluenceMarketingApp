@@ -146,6 +146,19 @@ class UserProfileFormEventHandlers extends Component {
         data = e.target.value;
         this.setState({company: data, errors});
     };
+
+    handleFollowersCount = (e) => {
+        const errors = {...this.state.errors};
+        if (e.target.value.length == 0) {
+            errors["followersCount"] = "Please enter Number of Followers";
+        } else if (!/^\d*$/.test(e.target.value)) {
+            errors["followersCount"] = "Number of Followers should have digits only";
+        } else delete errors["followersCount"];
+
+        let data = this.state.followersCount;
+        data = e.target.value;
+        this.setState({followersCount: data, errors});
+    };
 }
 
 export default UserProfileFormEventHandlers;
