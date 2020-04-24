@@ -63,20 +63,20 @@ router.put('/rate', (req, res) => {
 
 });
 
-// @route   GET api/influencers/profile?city
-// @desc    Fetch all Influencer profiles by city
+// @route   GET api/influencers/profile?address
+// @desc    Fetch all Influencer profiles by address
 // @access  Public
 router.get("/profile", (req, res) => {
     console.log("Inside GET request to fetch all Influencer Profiles by" +
-        " city: " + req.query.city);
+        " address: " + req.query.address);
 
     InfluencerProfile.find({
-        "address.city": {$regex: new RegExp(req.query.city, "i")}
+        "address": {$regex: new RegExp(req.query.address, "i")}
     })
         .then(profile => {
             if (profile.length != 0) {
                 console.log("Influencer Profiles fetched successfully for " +
-                    "city: " + req.query.city);
+                    "address: " + req.query.address);
                 res.status(200).json({message: profile});
             } else {
                 console.log("No Influencer Profiles found");
