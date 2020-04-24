@@ -193,7 +193,7 @@ router.put("/profile", (req, res) => {
                                 address: req.body.address,
                                 aboutMe: req.body.aboutMe,
                                 gender: req.body.gender,
-                                dateOfBirth: req.body.dateOfBirth,
+                                dateOfBirth: req.body.dateOfBirth
                             },
                         },
                         {returnOriginal: false, useFindAndModify: false}
@@ -221,6 +221,7 @@ router.put("/profile", (req, res) => {
                                 aboutMe: req.body.aboutMe,
                                 gender: req.body.gender,
                                 dateOfBirth: req.body.dateOfBirth,
+                                followersCount: req.body.followersCount
                             },
                         },
                         {returnOriginal: false, useFindAndModify: false}
