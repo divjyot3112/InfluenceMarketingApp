@@ -28,16 +28,22 @@
 
 .edit-photo {
     float: left;
-    width: 30%;
-    margin-top: 8%;
-    margin-left: 5%;
+    margin-top: 20%;
+    margin-left: 28%;
+}
+
+.edit-photo > input {
+    display: none;
+}
+
+.edit-photo img {
+    cursor: pointer;
 }
 
 .display_photo {
     margin-left: 37%;
     width: fit-content;
 }
-
 
 .profileName {
     color: #323f4d;

@@ -9,7 +9,7 @@ const Schema = mongoose.Schema;
 
 var InfluencerProfileSchema = new Schema({
     email: {type: String, unique: true},
-    profilePicture: String,
+    image: String,
     gender: String,
     followersCount: Number,
     aboutMe: String,

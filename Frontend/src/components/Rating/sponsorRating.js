@@ -124,7 +124,6 @@ class SponsorRating extends Component {
                                                     day: "numeric",
                                                     year: "numeric"
                                                 })}</h6>
-                                            {/*TODO: connect it with task description page */}
                                             <Link
                                                 to={{
                                                     pathname: "/task",

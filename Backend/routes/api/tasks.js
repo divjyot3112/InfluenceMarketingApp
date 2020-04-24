@@ -23,7 +23,7 @@ router.post('/create', (req, res) => {
         title: req.body.title,
         postedBy: req.body.postedBy,
         description: req.body.description,
-        images: req.body.images,
+        image: req.body.image,
         salary: req.body.salary,
         category: req.body.category,
         vacancyCount: req.body.vacancyCount,

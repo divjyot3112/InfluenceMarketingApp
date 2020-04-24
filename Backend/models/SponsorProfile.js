@@ -16,7 +16,7 @@ var SponsorProfileSchema = new Schema({
         firstName: String,
         lastName: String
     },
-    profilePicture: String,
+    image: String,
     phone: String,
     tasksCancelled: [String], // task id array
     address: String,
