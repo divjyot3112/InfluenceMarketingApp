@@ -34,10 +34,13 @@ import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import 'react-google-places-autocomplete/dist/index.min.css';
 import NumberFormat from "react-number-format";
 import PeopleIcon from '@material-ui/icons/People';
+import ExampleComponent from "react-rounded-image";
+import UploadImageIcon from '../../images/uploadImageIcon.png'
 
 const userRoles = require("../../utils/Constants").UserRoles;
 const TaskCategories = require("../../utils/Constants").TaskCategories;
 const Gender = require("../../utils/Constants").Gender;
+const NoImageFoundForUser = require("../../utils/Constants").NoImageFoundForUser;
 
 
 const useStyles = makeStyles((theme) => ({
@@ -118,7 +121,10 @@ class UserProfile extends UserProfileFormEventHandlers {
             company: "",
             followersCount: "",
             isCurrentUser: true, //to different between current user and the visiting user
-            loading: true
+            loading: true,
+            //firebase
+            image: "",
+            url: ""
         };
 
         this.handleFirstName = this.handleFirstName.bind(this);
@@ -131,6 +137,7 @@ class UserProfile extends UserProfileFormEventHandlers {
         this.handleTaskCategories = this.handleTaskCategories.bind(this);
         this.handleCompany = this.handleCompany.bind(this);
         this.handleFollowersCount = this.handleFollowersCount.bind(this);
+        this.handleUpload = this.handleUpload.bind(this);
     }
 
     schema = {
@@ -171,6 +178,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                     gender: this.props.profile.data.message.gender,
                     phone: this.props.profile.data.message.phone,
                     dateOfBirth: this.props.profile.data.message.dateOfBirth,
+                    url: this.props.profile.data.message.image,
                     taskCategories:
                         this.props.profile.data.role === userRoles.INFLUENCER
                             ? this.props.profile.data.message.taskCategories
@@ -207,7 +215,8 @@ class UserProfile extends UserProfileFormEventHandlers {
             dateOfBirth: this.state.dateOfBirth,
             taskCategories: this.state.taskCategories,
             company: this.state.company,
-            followersCount: this.state.followersCount
+            followersCount: this.state.followersCount,
+            image: this.state.url === "" ? NoImageFoundForUser : this.state.url
         };
 
         this.props.saveProfile(data, email).then(() => {
@@ -233,7 +242,6 @@ class UserProfile extends UserProfileFormEventHandlers {
 
     render() {
         // TODO: if user is not logged in, redirect to home
-
         const {classes} = this.props;
 
         if (!this.state.exists) {
@@ -263,23 +271,28 @@ class UserProfile extends UserProfileFormEventHandlers {
                     <div className="profile-main">
                         <div className="main-background">
                             <div className="photo-main">
-                                <div className="edit-photo">
-                                    <If condition={this.state.isCurrentUser === true}>
+
+                                <If condition={this.state.isCurrentUser === true}>
+                                    <div className="edit-photo">
+                                        <label htmlFor="image">
+                                            <img src={UploadImageIcon} height="50" width="60"/>
+                                        </label>
                                         <input
                                             type="file"
-                                            name="files"
-                                            // onChange={this.onPhotoChange}
+                                            id="image"
+                                            name="image"
+                                            multiple={false}
+                                            onChange={this.handleUpload}
                                         />
-                                    </If>
-                                </div>
+                                    </div>
+                                </If>
 
                                 <div className="display_photo">
-                                    <img
-                                        // TODO: add image
-                                        src="https://source.unsplash.com/random"
-                                        width="300"
-                                        height="200"
-                                        alt="User has not uploaded anything yet"
+                                    <ExampleComponent
+                                        image={this.state.url}
+                                        roundedSize="0"
+                                        imageWidth="300"
+                                        imageHeight="300"
                                     />
                                 </div>
                             </div>
@@ -370,6 +383,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                                         inputComponent: NumberFormatCustom,
                                                     }}
                                                     label="Number of Followers"/>
+                                                <br/>
                                                 <br/>
                                             </div>
                                         </If>

@@ -7,7 +7,7 @@ var TaskSchema = new Schema({
     postedBy: String, //Adding only email id as it gives error if interdependent schemas
     postedOn: { type: Date, default: Date.now },
     description: String,
-    images: [String],
+    image: String,
     status: String,
     salary: Number,
     category: String, // Category id

@@ -188,7 +188,7 @@ router.put("/profile", (req, res) => {
                             $set: {
                                 name: req.body.name,
                                 company: req.body.company,
-                                profilePic: req.body.profilePic,
+                                image: req.body.image,
                                 phone: req.body.phone,
                                 address: req.body.address,
                                 aboutMe: req.body.aboutMe,
@@ -215,7 +215,7 @@ router.put("/profile", (req, res) => {
                             $set: {
                                 name: req.body.name,
                                 taskCategories: req.body.taskCategories,
-                                profilePic: req.body.profilePic,
+                                image: req.body.image,
                                 phone: req.body.phone,
                                 address: req.body.address,
                                 aboutMe: req.body.aboutMe,
