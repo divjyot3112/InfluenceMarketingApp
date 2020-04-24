@@ -10,7 +10,8 @@ class ConversationListItem extends Component {
   }
 
   render() {
-    let { photo, name, text, unreadCount } = this.props.data;
+    let { photo, name, text, unreadCount , role} = this.props.data;
+    let roleBadge = (role !== null && role !== undefined) ? <span title={role} class="badge badge-danger ml-2">{role[0]}</span> : null;
     if (photo === null || photo === undefined) photo = window.location.origin + '/dummy.png';
     let className = "conversation-list-item"
     if (this.props.isActive) {
@@ -24,6 +25,8 @@ class ConversationListItem extends Component {
           {/*<p className="conversation-snippet">{text}</p>*/}
         </div>
         <Badge style={{ marginLeft: "auto", marginRight: "10px" }} badgeContent={unreadCount} color="primary"></Badge>
+        
+        {roleBadge}
       </div>
     );
   }

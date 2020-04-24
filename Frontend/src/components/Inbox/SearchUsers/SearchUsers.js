@@ -95,10 +95,11 @@ class SearchUsers extends Component {
     
     renderAllUsers = () => {
         return this.state.visibleUsers.map(user => {
-            return <ConversationListItem
+            return<ConversationListItem
                 key={user.name}
                 data={user}
                 onClick={() => this.selectUser(user)}
+                role={"I"}
             />
         })
     }
