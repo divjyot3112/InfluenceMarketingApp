@@ -442,7 +442,29 @@ router.put("/:taskId/apply", (req, res) => {
         });
 });
 
+<<<<<<< HEAD
+// @route   GET /task/:taskId
+// @desc    Fetch a task by Task ID
+// @access  Public
 
+router.get("/:taskId", (req, res) => {
+    console.log("Inside fetch task by ID", req.params.taskId);
+  
+    Task.findOne({ _id: ObjectID(req.params.taskId) })
+      .then((task) => {
+        console.log("Task found successfully");
+        res.status(200).json({message: task});
+      })
+      .catch((err) => {
+        console.log("Task not found");
+        res.status(400).json({ message: "Task does not exists" });
+      });
+  });
+
+  
+=======
+
+>>>>>>> 5184ba1bd0b54fb81d44183301f43696a57a7b03
 router.get("/unrated", (req, res) => {
     console.log("Inside get all unrated influencers");
 

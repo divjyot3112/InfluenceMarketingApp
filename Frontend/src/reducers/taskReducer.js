@@ -2,6 +2,7 @@ import {SAVE_TASK, GET_TASK} from "../actions/types";
 
 const initialState = {
     saved: false,
+    task: {}
 };
 
 export default function (state = initialState, action) {

@@ -6,12 +6,15 @@
     margin-bottom: 5%;
     color: #d1d1d1;
     transition: color 0.2s;
+    outline: none;
+    /* border: 1px solid #d1d1d1; */
 }
 
 /* Change color on hover */
 .bm-item:hover {
-    color: white;
     text-decoration: none;
+    background: #eeeeee;
+    color: #11161a;
 }
 
 /* The rest copied directly from react-burger-menu docs */
@@ -45,7 +48,7 @@
 
 /* General sidebar styles */
 .bm-menu {
-    background: #373a47;
+    background: #26323b;
     padding: 2.5em 1.5em 0;
     font-size: 1.15em;
 }
@@ -62,5 +65,5 @@
 
 /* Styling of overlay */
 .bm-overlay {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(80, 145, 71, 0.3);
 }
