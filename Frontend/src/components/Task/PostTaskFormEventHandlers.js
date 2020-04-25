@@ -1,5 +1,6 @@
 import {Component} from "react";
 import Joi from "joi-browser";
+import {storage} from "../../utils/firebase";
 
 class PostTaskFormEventHandlers extends Component {
     state = {
@@ -126,6 +127,35 @@ class PostTaskFormEventHandlers extends Component {
         let data = this.state.endDate;
         data = e;
         this.setState({endDate: data, errors});
+    };
+
+    onCancel = (e) => {
+        window.location.reload();
+    }
+
+    handleUpload = (e) => {
+        const image = e.target.files[0];
+        if (image) {
+            this.setState({image: image});
+        }
+
+        // TODO: get email from local storage
+        const email = "sheena@gmail.com";
+        const fileName = email + "_" + image.name;
+
+        const uploadTask = storage.ref("tasks/" + fileName).put(image);
+        uploadTask.on("state_changed",
+            (snapshot) => {
+            },
+            (error) => {
+                console.log("error in uploading task image= " + JSON.stringify(error));
+            },
+            () => {
+                storage.ref("tasks")
+                    .child(fileName).getDownloadURL().then(url => {
+                    this.setState({url: url})
+                })
+            });
     };
 
 }
