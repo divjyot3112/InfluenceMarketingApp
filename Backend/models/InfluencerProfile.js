@@ -9,7 +9,7 @@ const Schema = mongoose.Schema;
 
 var InfluencerProfileSchema = new Schema({
     email: {type: String, unique: true},
-    profilePic: String,
+    image: String,
     gender: String,
     followersCount: Number,
     aboutMe: String,
@@ -23,7 +23,6 @@ var InfluencerProfileSchema = new Schema({
         lastName: String
     },
     tasksCompleted: [String], // Task id Array
-    profileViewCount: Number,
     dateOfBirth: {type: Date, default: Date.now},
     address: String
 });

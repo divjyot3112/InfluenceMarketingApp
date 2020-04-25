@@ -7,7 +7,7 @@ var TaskSchema = new Schema({
     postedBy: String, //Adding only email id as it gives error if interdependent schemas
     postedOn: { type: Date, default: Date.now },
     description: String,
-    images: [String],
+    image: String,
     status: String,
     salary: Number,
     category: String, // Category id
@@ -15,7 +15,8 @@ var TaskSchema = new Schema({
     selectedCandidates: [String], // User email array
     vacancyCount: Number,
     startDate: Date,
-    endDate: Date
+    endDate: Date,
+    isActive: Boolean
 });
 
 module.exports = Task = mongoose.model('Task', TaskSchema); 

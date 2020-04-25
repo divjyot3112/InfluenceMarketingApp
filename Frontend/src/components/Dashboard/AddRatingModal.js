@@ -16,7 +16,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { fetchUnratedInfluencers, addRating } from "../../actions/dashboardActions";
-import {MY_USER_ID} from "../../utils/Constants"
+import { MY_USER_ID } from "../../utils/Constants"
+import StarsIcon from '@material-ui/icons/Stars';
+import Tooltip from '@material-ui/core/Tooltip';
+
 const styles = (theme) => ({
     root: {
         margin: 0,
@@ -206,9 +209,12 @@ class AddRatingModal extends Component {
         };
         return (
             <div>
-                <Button size="small" color="primary" onClick={handleClickOpen}>
-                            Rate
-                </Button>
+                <Tooltip title="Rate the influencers">
+                <IconButton aria-label="rate" onClick={handleClickOpen} style={{outline:"none"}}>
+                <StarsIcon size="small" color="primary">
+                </StarsIcon>
+                </IconButton>
+                </Tooltip>
                 <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={this.state.open}>
                     <DialogTitle id="customized-dialog-title" onClose={handleClose}>
                         {this.props.taskData.title}

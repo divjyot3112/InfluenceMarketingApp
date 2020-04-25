@@ -188,12 +188,12 @@ router.put("/profile", (req, res) => {
                             $set: {
                                 name: req.body.name,
                                 company: req.body.company,
-                                profilePic: req.body.profilePic,
+                                image: req.body.image,
                                 phone: req.body.phone,
                                 address: req.body.address,
                                 aboutMe: req.body.aboutMe,
                                 gender: req.body.gender,
-                                dateOfBirth: req.body.dateOfBirth,
+                                dateOfBirth: req.body.dateOfBirth
                             },
                         },
                         {returnOriginal: false, useFindAndModify: false}
@@ -215,12 +215,13 @@ router.put("/profile", (req, res) => {
                             $set: {
                                 name: req.body.name,
                                 taskCategories: req.body.taskCategories,
-                                profilePic: req.body.profilePic,
+                                image: req.body.image,
                                 phone: req.body.phone,
                                 address: req.body.address,
                                 aboutMe: req.body.aboutMe,
                                 gender: req.body.gender,
                                 dateOfBirth: req.body.dateOfBirth,
+                                followersCount: req.body.followersCount
                             },
                         },
                         {returnOriginal: false, useFindAndModify: false}

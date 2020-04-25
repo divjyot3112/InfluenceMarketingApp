@@ -13,12 +13,7 @@ import {makeStyles, withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import PersonIcon from '@material-ui/icons/Person';
-import HomeIcon from '@material-ui/icons/Home';
-import LocationCityIcon from '@material-ui/icons/LocationCity';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import PublicIcon from '@material-ui/icons/Public';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import ExploreIcon from '@material-ui/icons/Explore';
 import BusinessIcon from '@material-ui/icons/Business';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -35,14 +30,17 @@ import Button from '@material-ui/core/Button';
 import MaskedInput from 'react-text-mask';
 import Input from '@material-ui/core/Input';
 import CircularProgress from '@material-ui/core/CircularProgress';
-// import Autocomplete from 'react-google-autocomplete';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
-// If you want to use the provided css
 import 'react-google-places-autocomplete/dist/index.min.css';
+import NumberFormat from "react-number-format";
+import PeopleIcon from '@material-ui/icons/People';
+import ExampleComponent from "react-rounded-image";
+import UploadImageIcon from '../../images/uploadImageIcon.png'
 
 const userRoles = require("../../utils/Constants").UserRoles;
 const TaskCategories = require("../../utils/Constants").TaskCategories;
 const Gender = require("../../utils/Constants").Gender;
+const NoImageFoundForUser = require("../../utils/Constants").NoImageFoundForUser;
 
 
 const useStyles = makeStyles((theme) => ({
@@ -56,6 +54,32 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
     },
 }));
+
+// to format number of followers field
+function NumberFormatCustom(props) {
+    const {inputRef, onChange, ...other} = props;
+
+    return (
+        <NumberFormat
+            {...other}
+            getInputRef={inputRef}
+            onValueChange={(values) => {
+                onChange({
+                    target: {
+                        name: props.name,
+                        value: values.value,
+                    },
+                });
+            }}
+            thousandSeparator
+            isNumericString
+        />
+    );
+}
+
+NumberFormatCustom.propTypes = {
+    inputRef: PropTypes.func.isRequired,
+};
 
 function TextMaskCustom(props) {
     const {inputRef, ...other} = props;
@@ -95,8 +119,12 @@ class UserProfile extends UserProfileFormEventHandlers {
             exists: false,
             role: "",
             company: "",
+            followersCount: "",
             isCurrentUser: true, //to different between current user and the visiting user
-            loading: true
+            loading: true,
+            //firebase
+            image: "",
+            url: ""
         };
 
         this.handleFirstName = this.handleFirstName.bind(this);
@@ -108,6 +136,8 @@ class UserProfile extends UserProfileFormEventHandlers {
         this.handleDateOfBirth = this.handleDateOfBirth.bind(this);
         this.handleTaskCategories = this.handleTaskCategories.bind(this);
         this.handleCompany = this.handleCompany.bind(this);
+        this.handleFollowersCount = this.handleFollowersCount.bind(this);
+        this.handleUpload = this.handleUpload.bind(this);
     }
 
     schema = {
@@ -148,6 +178,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                     gender: this.props.profile.data.message.gender,
                     phone: this.props.profile.data.message.phone,
                     dateOfBirth: this.props.profile.data.message.dateOfBirth,
+                    url: this.props.profile.data.message.image,
                     taskCategories:
                         this.props.profile.data.role === userRoles.INFLUENCER
                             ? this.props.profile.data.message.taskCategories
@@ -156,6 +187,10 @@ class UserProfile extends UserProfileFormEventHandlers {
                     company:
                         this.props.profile.data.role === userRoles.SPONSOR
                             ? this.props.profile.data.message.company
+                            : "",
+                    followersCount:
+                        this.props.profile.data.role === userRoles.INFLUENCER
+                            ? this.props.profile.data.message.followersCount
                             : "",
                 });
             }
@@ -180,6 +215,8 @@ class UserProfile extends UserProfileFormEventHandlers {
             dateOfBirth: this.state.dateOfBirth,
             taskCategories: this.state.taskCategories,
             company: this.state.company,
+            followersCount: this.state.followersCount,
+            image: this.state.url === "" ? NoImageFoundForUser : this.state.url
         };
 
         this.props.saveProfile(data, email).then(() => {
@@ -200,12 +237,11 @@ class UserProfile extends UserProfileFormEventHandlers {
             new Date(this.state.dateOfBirth).setHours(0, 0, 0, 0)
             === new Date().setHours(0, 0, 0, 0) ||
             this.state.aboutMe === undefined ||
-            (this.state.taskCategories == "" && this.state.company === undefined);
+            ((this.state.taskCategories == "" || this.state.followersCount === undefined) && this.state.company === "");
     }
 
     render() {
         // TODO: if user is not logged in, redirect to home
-
         const {classes} = this.props;
 
         if (!this.state.exists) {
@@ -235,23 +271,28 @@ class UserProfile extends UserProfileFormEventHandlers {
                     <div className="profile-main">
                         <div className="main-background">
                             <div className="photo-main">
-                                <div className="edit-photo">
-                                    <If condition={this.state.isCurrentUser === true}>
+
+                                <If condition={this.state.isCurrentUser === true}>
+                                    <div className="edit-photo">
+                                        <label htmlFor="image">
+                                            <img src={UploadImageIcon} height="50" width="60"/>
+                                        </label>
                                         <input
                                             type="file"
-                                            name="files"
-                                            // onChange={this.onPhotoChange}
+                                            id="image"
+                                            name="image"
+                                            multiple={false}
+                                            onChange={this.handleUpload}
                                         />
-                                    </If>
-                                </div>
+                                    </div>
+                                </If>
 
                                 <div className="display_photo">
-                                    <img
-                                        // TODO: add image
-                                        src="https://source.unsplash.com/random"
-                                        width="300"
-                                        height="200"
-                                        alt="User has not uploaded anything yet"
+                                    <ExampleComponent
+                                        image={this.state.url}
+                                        roundedSize="0"
+                                        imageWidth="300"
+                                        imageHeight="300"
                                     />
                                 </div>
                             </div>
@@ -321,6 +362,32 @@ class UserProfile extends UserProfileFormEventHandlers {
                                         </div>
                                         <br/>
 
+                                        <If condition={this.state.role === userRoles.INFLUENCER}>
+                                            <div>
+                                                <TextField
+                                                    error
+                                                    className="input-field"
+                                                    onChange={this.handleFollowersCount}
+                                                    name="followersCount"
+                                                    value={this.state.followersCount}
+                                                    required
+                                                    error={this.state.errors.followersCount}
+                                                    disabled={this.state.isCurrentUser === false}
+                                                    helperText={this.state.errors.followersCount}
+                                                    InputProps={{
+                                                        startAdornment: (
+                                                            <InputAdornment position="start">
+                                                                <PeopleIcon/>
+                                                            </InputAdornment>
+                                                        ),
+                                                        inputComponent: NumberFormatCustom,
+                                                    }}
+                                                    label="Number of Followers"/>
+                                                <br/>
+                                                <br/>
+                                            </div>
+                                        </If>
+
                                         <FormControl className="classes.formControl input-field" required>
                                             <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                                             <Select
@@ -355,7 +422,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                             disabled={this.state.isCurrentUser === false}
                                             helperText={this.state.errors.aboutMe}
                                             multiline
-                                            rows={10}
+                                            rows={7}
                                             variant="outlined"
                                             label="About Me"/>
                                         <br/>
@@ -426,7 +493,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                             <div className="form-group">
 
                                                 <label className="small-label">
-                                                    <small>Task Categories</small>
+                                                    <small>Task Categories*</small>
                                                 </label>
 
                                                 <div className="form-check">

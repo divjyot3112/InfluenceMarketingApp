@@ -13,22 +13,24 @@ const TaskStatus = {
     COMPLETED: 'Completed',
     CANCELLED: 'Cancelled',
     APPLIED: 'Applied',
-    ALL:"All"
+    ALL: "All"
 }
 
 const TaskCategories = [
-    "Movies & TV",
-    "Food",
-    "Travel",
-    "Sports & Outdoors",
-    "Fitness & Gym",
+    "Apparels",
     "Automobile",
     "Beauty and Personal Care",
-    "Video Games",
-    "Electronics",
-    "Health",
     "Education",
-    "Photography"
+    "Electronics",
+    "Entertainment",
+    "Fitness & Gym",
+    "Food",
+    "Health",
+    "Kids",
+    "Photography",
+    "Sports & Outdoors",
+    "Travel",
+    "Video Games"
 ];
 
 const Gender = [
@@ -37,4 +39,7 @@ const Gender = [
     "Other"
 ];
 
-export {UserRoles, TaskStatus, TaskCategories, Gender, MY_USER_ID, MY_ROLE}
+const NoImageFoundForTask = "https://firebasestorage.googleapis.com/v0/b/masterfinalproject-4583d.appspot.com/o/tasks%2FnoImageFound.jpg?alt=media&token=cad1cdd5-4571-4192-8962-d67f42a54cdb";
+const NoImageFoundForUser = "https://firebasestorage.googleapis.com/v0/b/masterfinalproject-4583d.appspot.com/o/users%2FNoImageFoundForUser.jpg?alt=media&token=dc0e62e8-ebda-4459-9d2d-88ba55b351eb";
+
+export {UserRoles, TaskStatus, TaskCategories, Gender, MY_USER_ID, MY_ROLE, NoImageFoundForTask, NoImageFoundForUser}
