@@ -143,7 +143,7 @@ router.put("/edit/:taskId", (req, res) => {
 // @access  Public
 router.get("/filter", (req, res) => {
     console.log("Inside Get tasks by current sponsor with filter by status")
-  
+
     User.findOne({email: req.query.email})
         .then(user => {
             // check if user exists
@@ -166,7 +166,7 @@ router.get("/filter", (req, res) => {
                             })
                     } else if (req.query.status === taskStatus.APPLIED) {
                         Task.find({
-                            isActive:true,
+                            isActive: true,
                             $and: [{appliedCandidates: {$elemMatch: {$eq: req.query.email}}}, {
                                 $nor: [{
                                     selectedCandidates: {
@@ -191,7 +191,11 @@ router.get("/filter", (req, res) => {
                                 res.status(400).json({message: err})
                             })
                     } else {
-                        Task.find({isActive:true, selectedCandidates: {$elemMatch: {$eq: req.query.email}}, status: req.query.status})
+                        Task.find({
+                            isActive: true,
+                            selectedCandidates: {$elemMatch: {$eq: req.query.email}},
+                            status: req.query.status
+                        })
                             .then(tasks => {
                                 if (tasks) {
                                     console.log("Tasks fetched successsfully")
@@ -209,7 +213,7 @@ router.get("/filter", (req, res) => {
                 } else {
                     // user is sponsor
                     if (req.query.status == "All") {
-                        Task.find({isActive:true, postedBy: req.query.email})
+                        Task.find({isActive: true, postedBy: req.query.email})
                             .then(tasks => {
                                 if (tasks) {
                                     console.log("Tasks fetched successsfully")
@@ -224,7 +228,7 @@ router.get("/filter", (req, res) => {
                                 res.status(400).json({message: err})
                             })
                     } else {
-                        Task.find({isActive:true, postedBy: req.query.email, status: req.query.status})
+                        Task.find({isActive: true, postedBy: req.query.email, status: req.query.status})
                             .then(tasks => {
                                 if (tasks) {
                                     console.log("Tasks fetched successsfully")
@@ -242,7 +246,7 @@ router.get("/filter", (req, res) => {
                 }
             } else {
                 console.log("User does not exist")
-                res.status(404).json({message: "User does not exist"}
+                res.status(404).json({message: "User does not exist"});
             }
         })
         .catch(err => {
@@ -497,17 +501,17 @@ router.put("/:taskId/apply", (req, res) => {
 
 router.get("/:taskId", (req, res) => {
     console.log("Inside fetch task by ID", req.params.taskId);
-  
-    Task.findOne({ _id: ObjectID(req.params.taskId) })
-      .then((task) => {
-        console.log("Task found successfully");
-        res.status(200).json({message: task});
-      })
-      .catch((err) => {
-        console.log("Task not found");
-        res.status(400).json({ message: "Task does not exists" });
-      });
-  });
+
+    Task.findOne({_id: ObjectID(req.params.taskId)})
+        .then((task) => {
+            console.log("Task found successfully");
+            res.status(200).json({message: task});
+        })
+        .catch((err) => {
+            console.log("Task not found");
+            res.status(400).json({message: "Task does not exists"});
+        });
+});
 
 // @route   GET api/tasks/unrated?taskId
 // @desc    Fetch all unrated influencers for the given taskId

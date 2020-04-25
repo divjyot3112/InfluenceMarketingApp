@@ -17,8 +17,6 @@ import Messenger from "./Inbox/Messenger";
 import SponsorRating from "./Rating/sponsorRating";
 import InfluencerRating from "./Rating/influencerRating";
 import TaskDescription from "./Task/TaskDescription";
-import Appbar from "./Common/Appbar";
-import Sidebar from "./Common/Sidebar";
 import Landing from "./LandingPage/LandingPage";
 import SponsorHome from "./Home/SponsorHome";
 
