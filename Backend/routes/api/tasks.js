@@ -81,7 +81,7 @@ router.get('/:taskId/applicants', (req, res) => {
             if (task) {
                 if (task.appliedCandidates.length > 0) {
                     InfluencerProfile.find({_id: {$in: task.appliedCandidates}}).then((candidates) => {
-                        console.log("Successfully fetches all candidates who applied for this task")
+                        console.log("Successfully fetched all candidates who applied for this task")
                         res.status(200).json({success: true, message: candidates})
                     }).catch(err => {
                         console.log(err);
