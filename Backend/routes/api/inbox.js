@@ -40,7 +40,7 @@ router.get('/', (req, res) => {
             let profileInfo = await fetchUserDetails(with_email).then((profile) => profile)
             if (await profileInfo != null) {
                 conversation = conversation.toJSON()
-                conversation.photo = await profileInfo.profilePic,
+                conversation.photo = await profileInfo.image,
                 conversation.email = await profileInfo.email,
                 conversation.name= await profileInfo.name.firstName + " " + await profileInfo.name.lastName
                 return conversation
@@ -81,7 +81,7 @@ router.post('/markread', (req, res) => {
 
 router.get('/fetchusers', (req, res) => {
     console.log('Inside Get fetch all users Request'+req.body);
-    User.find().then(async (users) => {
+    User.find({isActive: true}).then(async (users) => {
         
         let docs =  await Promise.all(users.map(async user => {
            
@@ -89,7 +89,7 @@ router.get('/fetchusers', (req, res) => {
             if (await profileInfo != null) {
                 return  {
                     email: user.email,
-                    photo: await profileInfo.profilePic,
+                    photo: await profileInfo.image,
                     name: await profileInfo.name.firstName + " " + await profileInfo.name.lastName,
                     role: await profileInfo.role,
                 }

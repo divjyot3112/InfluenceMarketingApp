@@ -36,7 +36,7 @@ class ConversationList extends Component {
         let conversationName = (c.firstUser === MY_USER_ID) ? c.secondUser : c.firstUser
         let unreadCount = c.conversation.filter(f => f.author!== MY_USER_ID && f.read === false).length
         return {
-          photo: window.location.origin + '/dummy.png', //TODO: add profile image
+          photo: c.photo, //TODO: add profile image
           email: conversationName,
           unreadCount: unreadCount,
           name: c.name,
@@ -58,7 +58,7 @@ class ConversationList extends Component {
       let newConversations = this.props.conversations.map(c => {
         let unreadCount = c.conversation.filter(f => f.author!== MY_USER_ID && f.read === false).length
         return {
-          photo: window.location.origin + '/dummy.png', //TODO: add profile image
+          photo: c.photo, //TODO: add profile image
           name: c.name,
           email:c.email,
           unreadCount: unreadCount
