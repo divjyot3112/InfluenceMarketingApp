@@ -23,14 +23,12 @@ import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Pagination from '@material-ui/lab/Pagination';
 import AddRatingModal from './AddRatingModal'
+import DeleteModal from './DeleteModal'
+import MarkCompleteModal from './MarkCompleteModal'
 import NoData from './NoData'
 import "../../css/dashboard.css";
 import { MY_USER_ID } from "../../utils/Constants";
 import { Link } from "react-router-dom";
-import DeleteIcon from '@material-ui/icons/Delete';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
 
 //create the Navbar Component
 
@@ -116,24 +114,21 @@ class SponsorDashboard extends Component {
         })});
     }
 
+    deleteTask = (taskId) => {
+        alert(taskId)
+    }
+
+    markComplete = (taskId) => {
+        alert(taskId)
+    }
+
     renderTasks() {
         const { classes } = this.props;
         if (this.props.currentPageTasks.length > 0) {
             return _.map(this.props.currentPageTasks, (task) => {
                 let rateButton = (task.status === TaskStatus.COMPLETED) ? <AddRatingModal taskData={task}></AddRatingModal> : null;
-                let deleteButton = (task.status !== TaskStatus.COMPLETED && task.selectedCandidates !== undefined && task.selectedCandidates.length <= 0) ?<Tooltip title="Delete the Task">
-                <IconButton aria-label="delete" style={{outline:"none"}}>
-                <DeleteIcon size="small" color="primary">
-                </DeleteIcon>
-                </IconButton>
-                </Tooltip>: null;
-                let completeButton = (task.status === TaskStatus.INPROGRESS) ?
-                <Tooltip title="Mark Task Complete">
-                <IconButton aria-label="complete" style={{outline:"none"}}>
-                <CheckCircleIcon size="small" color="primary">
-                </CheckCircleIcon>
-                </IconButton>
-                </Tooltip> : null;
+                let deleteButton = (task.status !== TaskStatus.COMPLETED && task.selectedCandidates !== undefined && task.selectedCandidates.length <= 0) ?<DeleteModal taskData={task} deleteTask={()=>this.deleteTask(task._id)}></DeleteModal>: null;
+                let completeButton = (task.status === TaskStatus.INPROGRESS) ?<MarkCompleteModal taskData={task} markComplete={()=>this.markComplete(task._id)}></MarkCompleteModal>: null;
 
                 return (
                     <Grid item key={task} xs={10} sm={6} md={3}> {/*md was 4*/}

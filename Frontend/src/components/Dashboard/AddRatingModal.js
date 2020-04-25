@@ -47,7 +47,7 @@ const DialogTitle = withStyles(styles)((props) => {
         <MuiDialogTitle disableTypography className={classes.root} {...other}>
             <Typography variant="h6">{children}</Typography>
             {onClose ? (
-                <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={onClose} style={{outline:"none"}}>
                     <CloseIcon />
                 </IconButton>
             ) : null}
@@ -190,10 +190,10 @@ class AddRatingModal extends Component {
             </Typography>
         </DialogContent>
             <DialogActions>
-                <Button autoFocus onClick={this.rateAndContinue} color="primary">
+                <Button autoFocus onClick={this.rateAndContinue} color="primary" style={{outline:"none"}}>
                     Rate and Continue
         </Button>
-                <Button autoFocus onClick={this.rateAndClose} color="primary">
+                <Button autoFocus onClick={this.rateAndClose} color="primary" style={{outline:"none"}}>
                     Rate and Close
         </Button>
             </DialogActions>
