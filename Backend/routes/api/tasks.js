@@ -352,82 +352,96 @@ router.put("/:taskId/apply", (req, res) => {
     console.log("Inside Apply for a Task for Task ID:", req.params.taskId);
     console.log("Influencer who is applying for the task: " + req.body.email);
 
-    // adding influencer's email to appliedCandidates list of the task
-    Task.findOneAndUpdate(
-        {_id: ObjectID(req.params.taskId)},
-        {
-            $addToSet: {
-                appliedCandidates: req.body.email
-            }
-        }
-    )
+    Task.findOne({_id: ObjectID(req.params.taskId)})
         .then(task => {
-            // if task does not exists
-            if (task == null) {
-                console.log("Task does not exists");
-                res.status(404).json({message: "Task does not exists"});
-            } else {
-                // adding taskId to tasksApplied list of the Influencer
-                InfluencerProfile.findOneAndUpdate(
-                    {email: req.body.email},
-                    {
-                        $addToSet: {
-                            tasksApplied: req.params.taskId
+            // check if task exists
+            if (task) {
+                // check if task status is Created
+                if (task.status === taskStatus.CREATED) {
+                    // adding influencer's email to appliedCandidates list of the task
+                    Task.findOneAndUpdate(
+                        {_id: ObjectID(req.params.taskId)},
+                        {
+                            $addToSet: {
+                                appliedCandidates: req.body.email
+                            }
                         }
-                    }
-                )
-                    .then(influencer => {
-                        // if Influencer profile does not exists
-                        if (influencer == null) {
-                            console.log("Influencer Profile does not exists");
-
-                            // remove Influencer email from appliedCandidates list of the task
-                            Task.findOneAndUpdate(
-                                {_id: ObjectID(req.params.taskId)},
+                    )
+                        .then(task => {
+                            // adding taskId to tasksApplied list of the Influencer
+                            InfluencerProfile.findOneAndUpdate(
+                                {email: req.body.email},
                                 {
-                                    $pull: {
-                                        appliedCandidates: req.body.email
+                                    $addToSet: {
+                                        tasksApplied: req.params.taskId
                                     }
                                 }
                             )
+                                .then(influencer => {
+                                    // if Influencer profile does not exists
+                                    if (influencer == null) {
+                                        console.log("Influencer Profile does not exists");
+                                        // remove Influencer email from appliedCandidates list of the task
+                                        Task.findOneAndUpdate(
+                                            {_id: ObjectID(req.params.taskId)},
+                                            {
+                                                $pull: {
+                                                    appliedCandidates: req.body.email
+                                                }
+                                            }
+                                        )
+                                            .catch(err => {
+                                                console.log("Error in applying for the task");
+                                                res.status(400).json({message: "Error in applying for the task"});
+                                            })
+
+                                        res.status(404).json({message: "Influencer Profile does not exists"});
+                                    } else {
+                                        console.log("Applied for task Successfully");
+                                        res.status(200).json({message: "Applied for task Successfully"});
+                                    }
+                                })
                                 .catch(err => {
-                                    console.log("Error in applying for the task");
-                                    res.status(400).json({message: "Error in applying for the task"});
+                                    console.log("Something went wrong");
+
+                                    // remove Influencer email from appliedCandidates list of the task
+                                    Task.findOneAndUpdate(
+                                        {_id: ObjectID(req.params.taskId)},
+                                        {
+                                            $pull: {
+                                                appliedCandidates: req.body.email
+                                            }
+                                        }
+                                    )
+                                        .catch(err => {
+                                            console.log("Something went wrong");
+                                            res.status(400).json({message: "Something went wrong"});
+                                        })
+
+                                    res.status(400).json({message: "Something went wrong"});
                                 })
 
-                            res.status(404).json({message: "Influencer Profile does not exists"});
-                        } else {
-                            console.log("Applied for task Successfully");
-                            res.status(200).json({message: "Applied for task Successfully"});
-                        }
-                    })
-                    .catch(err => {
-                        console.log("Error in applying for the task");
-
-                        // remove Influencer email from appliedCandidates list of the task
-                        Task.findOneAndUpdate(
-                            {_id: ObjectID(req.params.taskId)},
-                            {
-                                $pull: {
-                                    appliedCandidates: req.body.email
-                                }
-                            }
-                        )
-                            .catch(err => {
-                                console.log("Error in applying for the task");
-                                res.status(400).json({message: "Error in applying for the task"});
-                            })
-
-                        res.status(400).json({message: "Error in applying for the task"});
-                    })
+                        })
+                        .catch(err => {
+                            console.log("Something went wrong");
+                            res.status(400).json({message: "Something went wrong"});
+                        })
+                } else {
+                    // cannot apply for the task
+                    console.log("Cannot apply for the task");
+                    res.status(401).json({message: "Cannot apply for the task"});
+                }
+            } else {
+                console.log("Task does not exist");
+                res.status(404).json({message: "Task does not exist"});
             }
-
         })
-        .catch(err => {
-            console.log("Error in applying for the task");
-            res.status(400).json({message: "Error in applying for the task"});
-        })
+        .catch((err) => {
+            console.log(err);
+            res.status(400).json({message: "Something went wrong"});
+        });
 });
+
 
 router.get("/unrated", (req, res) => {
     console.log("Inside get all unrated influencers");
