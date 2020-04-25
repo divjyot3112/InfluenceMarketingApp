@@ -141,7 +141,7 @@ router.get("/filter", (req, res) => {
     .then(user => {
         if(user.role==userRoles.INFLUENCER) {
             if(req.query.status===taskStatus.ALL) {
-                Task.find({ appliedCandidates: { $elemMatch: {$eq:req.query.email}}})
+                Task.find({ appliedCandidates: { $elemMatch: {$eq:req.query.email}, isActive:true}})
                     .then(tasks => {
                         if (tasks) {
                             res.status(200).json({ message: tasks })
@@ -155,6 +155,7 @@ router.get("/filter", (req, res) => {
                     })
             } else if (req.query.status === taskStatus.APPLIED) {
                 Task.find({
+                    isActive:true,
                     $and: [{ appliedCandidates: { $elemMatch: { $eq: req.query.email } } }, {
                         $nor: [{
                             selectedCandidates: {
@@ -177,7 +178,7 @@ router.get("/filter", (req, res) => {
                     })
             }
             else {
-                Task.find({ selectedCandidates: { $elemMatch: {$eq:req.query.email}}, status: req.query.status })
+                Task.find({ isActive:true, selectedCandidates: { $elemMatch: {$eq:req.query.email}}, status: req.query.status })
                     .then(tasks => {
                         if (tasks) {
                             res.status(200).json({ message: tasks })
@@ -192,7 +193,7 @@ router.get("/filter", (req, res) => {
             }
         } else {
             if(req.query.status=="All") {
-                Task.find({ postedBy: req.query.email })
+                Task.find({isActive:true, postedBy: req.query.email })
                     .then(tasks => {
                         if (tasks) {
                             res.status(200).json({ message: tasks })
@@ -205,7 +206,7 @@ router.get("/filter", (req, res) => {
                         res.status(400).json({ message: "Tasks could not be fetched" })
                     })
             } else {
-                Task.find({ postedBy: req.query.email, status: req.query.status })
+                Task.find({ isActive:true, postedBy: req.query.email, status: req.query.status })
                     .then(tasks => {
                         if (tasks) {
                             res.status(200).json({ message: tasks })

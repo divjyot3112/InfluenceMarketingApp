@@ -16,7 +16,7 @@ var TaskSchema = new Schema({
     vacancyCount: Number,
     startDate: Date,
     endDate: Date,
-    isActive: Boolean
+    isActive: { type: Boolean, default: true }
 });
 
 module.exports = Task = mongoose.model('Task', TaskSchema); 

@@ -81,7 +81,7 @@ router.post('/markread', (req, res) => {
 
 router.get('/fetchusers', (req, res) => {
     console.log('Inside Get fetch all users Request'+req.body);
-    User.find().then(async (users) => {
+    User.find({isActive: true}).then(async (users) => {
         
         let docs =  await Promise.all(users.map(async user => {
            
