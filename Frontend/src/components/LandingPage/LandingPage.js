@@ -34,7 +34,7 @@ class Landing extends Component {
                 data-wow-duration="10s"
                 style={{ color: "black" }}
               >
-                INFLUENCE MARKETING APP
+                TOGETHER APP
               </strong>
             </a>
 
@@ -123,7 +123,7 @@ class Landing extends Component {
         <header class="">
           <div class="container">
             <div class="row">
-              <div class="col-sm-6 tophead"></div>
+              <div class="col-sm-6 "></div>
               <div class="col-sm-6 hidden-xs">
                 <div class="row">
                   <div class="col-sm-5">
@@ -305,7 +305,7 @@ class Landing extends Component {
 
                   <hr />
                   <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.wh
                     Autem exercitationem totam dignissimos necessitatibus
                     eveniet, numquam porro vitae repudiandae praesentium maiores
                     nihil amet ex, fugit adipisci doloremque voluptate unde quas

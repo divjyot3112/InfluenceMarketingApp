@@ -7,7 +7,7 @@ header,
 
 .masthead {
   height: 100vh;
-  min-height: 500px;
+  min-height: 50vh;
   background-image: url("./Images/social17.jpg");
   background-size: cover;
   background-position: center;
@@ -15,7 +15,7 @@ header,
 }
 
 .tophead {
-  min-height: 110px;
+  min-height: 10vh;
   background-image: url("./Images/social14.jpg");
   background-size: cover;
   background-position: center;
@@ -24,7 +24,7 @@ header,
 
 .firstcontainer {
   height: 600vh;
-  min-height: 1500px;
+  min-height: 1500vh;
   background-image: url("./Images/social9.jpg");
   background-size: cover;
   background-position: center;
@@ -36,7 +36,7 @@ header,
   body,
   header,
   .view {
-    height: 1000px;
+    height: 1000vh;
   }
 }
 
@@ -45,7 +45,7 @@ header,
   body,
   header,
   .view {
-    height: 650px;
+    height: 650vh;
   }
 }
 @media (min-width: 800px) and (max-width: 850px) {

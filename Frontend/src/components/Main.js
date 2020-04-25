@@ -10,6 +10,7 @@ import TaskDescription from "./Task/TaskDescription";
 import Appbar from "./Common/Appbar";
 import Sidebar from "./Common/Sidebar";
 import Landing from "./LandingPage/LandingPage";
+import SponsorHome from "./Home/SponsorHome";
 
 class Main extends Component {
   render() {
@@ -24,6 +25,7 @@ class Main extends Component {
         <Route path="/inbox" exact component={Messenger} />
         <Route path="/ratings/sponsor" exact component={SponsorRating} />
         <Route path="/ratings/influencer" exact component={InfluencerRating} />
+        <Route path="/sponsorhome" component={SponsorHome} />
         <Route exact path="/" component={Landing} />
       </div>
     );
