@@ -37,21 +37,24 @@ router.post("/login", (req, res) => {
                         var token = jwt.sign({user}, config.secret, {
                             expiresIn: 10080, // In seconds
                         });
+                        console.log("Login Successful")
                         res.status(200).json({
                             message: "Login Successful",
                             token: "Bearer " + token,
                         });
                     } else {
-                        res.status(401).json({message: "Incorrect Password"});
+                        console.log("Password is incorrect")
+                        res.status(401).json({message: "Password is incorrect"});
                     }
                 });
             } else {
-                res.status(404).json({message: "User not found"});
+                console.log("User does not exist")
+                res.status(404).json({message: "User does not exist"});
             }
         })
         .catch((err) => {
             console.log(err);
-            res.status(404).json({message: "Something went wrong"});
+            res.status(400).json({message: "Something went wrong"});
         });
 });
 
@@ -138,29 +141,32 @@ router.post("/login", (req, res) => {
 // @route   GET api/users/profile?email
 // @desc    Get Profile
 // @access  Public
+
 router.get("/profile", (req, res) => {
     console.log("Inside Get Profile Request", req.query.email);
     User.findOne({email: req.query.email})
         .then(user => {
+            // check if user exists
             if (user) {
                 if (user.role == userRoles.INFLUENCER) {
                     console.log("Getting influencer profile")
                     InfluencerProfile.findOne({email: req.query.email})
-                        .then(infProfile => {
-                            res.status(200).json({message: infProfile, role: userRoles.INFLUENCER})
+                        .then(influencerProfile => {
+                            res.status(200).json({message: influencerProfile, role: userRoles.INFLUENCER})
                         })
                         .catch(err => {
-                            console.log(err);
-                            res.status(400).json({message: "Could not fetch profile"});
+                            console.log("Something went wrong");
+                            res.status(400).json({message: "Something went wrong"});
                         })
                 } else {
+                    // user is sponsor
                     SponsorProfile.findOne({email: req.query.email})
-                        .then(sponProfile => {
-                            res.status(200).json({message: sponProfile, role: userRoles.SPONSOR})
+                        .then(sponsorProfile => {
+                            res.status(200).json({message: sponsorProfile, role: userRoles.SPONSOR})
                         })
                         .catch(err => {
-                            console.log(err);
-                            res.status(400).json({message: "Could not fetch profile"});
+                            console.log("Something went wrong");
+                            res.status(400).json({message: "Something went wrong"});
                         })
                 }
             } else {
@@ -169,10 +175,11 @@ router.get("/profile", (req, res) => {
             }
         })
         .catch((err) => {
-            console.log(err);
-            res.status(400).json({message: "Something went wrong!"});
+            console.log("Something went wrong");
+            res.status(400).json({message: "Something went wrong"});
         });
 });
+
 // @route   PUT api/users/profile?email
 // @desc    User profile update
 // @access  Public
@@ -182,6 +189,7 @@ router.put("/profile", (req, res) => {
     User.findOne({email: req.query.email})
         .then((user) => {
             console.log("User: ", user);
+            // check if user exists
             if (user) {
                 if (user.role == userRoles.SPONSOR) {
                     SponsorProfile.findOneAndUpdate(
@@ -203,7 +211,7 @@ router.put("/profile", (req, res) => {
                         .then((result) =>
                             res.status(200).json({
                                 success: true,
-                                message: "Sponsor Profile updated successfully!",
+                                message: "Sponsor Profile updated successfully",
                             })
                         )
                         .catch((err) => {
@@ -211,6 +219,7 @@ router.put("/profile", (req, res) => {
                             res.status(400).json({success: false, message: err});
                         });
                 } else {
+                    // user is influencer
                     InfluencerProfile.findOneAndUpdate(
                         {email: req.query.email},
                         {
@@ -231,7 +240,7 @@ router.put("/profile", (req, res) => {
                         .then((result) =>
                             res.status(200).json({
                                 success: true,
-                                message: "Influencer Profile updated successfully!",
+                                message: "Influencer Profile updated successfully",
                             })
                         )
                         .catch((err) => {
@@ -240,7 +249,8 @@ router.put("/profile", (req, res) => {
                         });
                 }
             } else {
-                res.status(400).json({success: false, message: "User not found"});
+                console.log("User does not exist")
+                res.status(404).json({success: false, message: "User does not exist"});
             }
         })
         .catch((err) => {
