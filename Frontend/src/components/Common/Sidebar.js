@@ -13,8 +13,16 @@ const UserRoles = require("../../utils/Constants").UserRoles;
 export class Sidebar extends Component {
     state = {
         userExists: false,
+        sideNavLeft: false,
         role: null
     }
+
+    sidenavToggle = sidenavId => () => {
+        const sidenavNr = `sideNav${sidenavId}`
+        this.setState({
+            [sidenavNr]: !this.state[sidenavNr]
+        });
+    };
 
     componentWillMount() {
         // TODO: get email from local storage
@@ -25,9 +33,9 @@ export class Sidebar extends Component {
             this.props.getProfile(email).then((response) => {
                 if (response === undefined && this.props.profile.status === 200) {
                     this.setState({
-                        firstName: this.props.profile.data.message
-                            ? this.props.profile.data.message.name.firstName
-                            : "",
+                        // firstName: this.props.profile.data.message
+                        //     ? this.props.profile.data.message.name.firstName
+                        //     : "",
                         userExists: true,
                         role: this.props.profile.data.role
                     })
@@ -43,7 +51,7 @@ export class Sidebar extends Component {
 
         return (
             <div>
-                <Menu>
+                <Menu noOverlay>
                     <a className='menu-item' href='/'>Home</a>
                     <a className='menu-item' href='/profile'>Profile</a>
                     <a className='menu-item' href='/dashboard'>Dashboard</a>
