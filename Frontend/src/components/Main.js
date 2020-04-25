@@ -11,6 +11,7 @@ import Appbar from "./Common/Appbar";
 import Sidebar from "./Common/Sidebar";
 import Landing from "./LandingPage/LandingPage";
 import SponsorHome from "./Home/SponsorHome";
+import About from "./About/About";
 
 class Main extends Component {
   render() {
@@ -27,8 +28,9 @@ class Main extends Component {
         <Route path="/ratings/influencer" exact component={InfluencerRating} />
 
         <Route exact path="/" component={Landing} />
-        <Route exact path="/home" component={Landing} />
-        <Route exact path="/home/sponsor" component={SponsorHome} />
+        <Route path="/home" component={Landing} />
+        <Route path="/home/sponsor" component={SponsorHome} />
+        <Route path="/about" component={About} />
       </div>
     );
   }
