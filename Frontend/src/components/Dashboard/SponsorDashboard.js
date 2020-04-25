@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import _ from "lodash";
-import { fetchDashboardTasks, getCurrentPageTasks, sortTasks } from "../../actions/dashboardActions";
+import { fetchDashboardTasks, getCurrentPageTasks, sortTasks, cancelTask, markComplete } from "../../actions/dashboardActions";
 import { TaskStatus } from '../../utils/Constants';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -266,4 +266,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, { fetchDashboardTasks, getCurrentPageTasks, sortTasks })(withStyles(useStyles)(SponsorDashboard));
+export default connect(mapStateToProps, { fetchDashboardTasks, getCurrentPageTasks, sortTasks, markComplete, cancelTask })(withStyles(useStyles)(SponsorDashboard));
