@@ -50,7 +50,6 @@ export class Sidebar extends Component {
           <a className="menu-item" href="/">
             Home
           </a>
-
           <a className="menu-item" href="/profile">
             Profile
           </a>

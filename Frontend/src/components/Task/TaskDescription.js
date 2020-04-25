@@ -12,17 +12,27 @@ import { getTask } from "../../actions/taskActions";
 
 export class TaskDescription extends Component {
     state = {
-        task: null
+        loadingScreen: true,
     }
     componentDidMount() {
         if(this.props.location.state) {
             this.props.getTask(this.props.location.state)
-        } else {
+            this.setState({
+                loadingScreen: false
+            })
+        } else if(window.location.href.substring(window.location.href.lastIndexOf('/')+1)!=="task") {
             const data = {
                 taskId: window.location.href.substring(window.location.href.lastIndexOf('/')+1)
             }
+            this.setState({
+                loadingScreen: false
+            })
             this.props.getTask(data)
-        }        
+        } else {
+            this.setState({
+                loadingScreen: true
+            })
+        }
     }
     render() {
         const { task }  = this.props;
