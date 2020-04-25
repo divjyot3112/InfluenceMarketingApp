@@ -7,6 +7,8 @@ import {
     MOST_RECENT_TASKS,
     UNRATED_INFLUENCERS,
     ADD_RATING,
+    MARK_DASHBOARD_TASK_COMPLETE,
+    CANCEL_DASHBOARD_TASK,
     ROOT_URL
 } from './types';
 
@@ -76,6 +78,30 @@ export const addRating = (data, email) => dispatch => {
             console.log("Response", response);
             dispatch({
                 type: ADD_RATING,
+                payload: response
+            })
+        })
+}
+
+export const cancelTask = (data, email) => dispatch => {
+    axios.defaults.withCredentials = true;
+    axios.put(`${ROOT_URL}/tasks/delete`,data, {params:{email:email}})
+        .then((response) => { //Action dispatched
+            console.log("Response", response);
+            dispatch({
+                type: CANCEL_DASHBOARD_TASK,
+                payload: response
+            })
+        })
+}
+
+export const markComplete = (taskId) => dispatch => {
+    axios.defaults.withCredentials = true;
+    axios.put(`${ROOT_URL}/tasks/complete`, {params:{taskId:taskId}})
+        .then((response) => { //Action dispatched
+            console.log("Response", response);
+            dispatch({
+                type: MARK_DASHBOARD_TASK_COMPLETE,
                 payload: response
             })
         })
