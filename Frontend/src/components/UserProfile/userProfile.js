@@ -13,12 +13,7 @@ import {makeStyles, withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import PersonIcon from '@material-ui/icons/Person';
-import HomeIcon from '@material-ui/icons/Home';
-import LocationCityIcon from '@material-ui/icons/LocationCity';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import PublicIcon from '@material-ui/icons/Public';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import ExploreIcon from '@material-ui/icons/Explore';
 import BusinessIcon from '@material-ui/icons/Business';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -35,10 +30,17 @@ import Button from '@material-ui/core/Button';
 import MaskedInput from 'react-text-mask';
 import Input from '@material-ui/core/Input';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import 'react-google-places-autocomplete/dist/index.min.css';
+import NumberFormat from "react-number-format";
+import PeopleIcon from '@material-ui/icons/People';
+import ExampleComponent from "react-rounded-image";
+import UploadImageIcon from '../../images/uploadImageIcon.png'
 
 const userRoles = require("../../utils/Constants").UserRoles;
 const TaskCategories = require("../../utils/Constants").TaskCategories;
 const Gender = require("../../utils/Constants").Gender;
+const NoImageFoundForUser = require("../../utils/Constants").NoImageFoundForUser;
 
 
 const useStyles = makeStyles((theme) => ({
@@ -52,6 +54,32 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
     },
 }));
+
+// to format number of followers field
+function NumberFormatCustom(props) {
+    const {inputRef, onChange, ...other} = props;
+
+    return (
+        <NumberFormat
+            {...other}
+            getInputRef={inputRef}
+            onValueChange={(values) => {
+                onChange({
+                    target: {
+                        name: props.name,
+                        value: values.value,
+                    },
+                });
+            }}
+            thousandSeparator
+            isNumericString
+        />
+    );
+}
+
+NumberFormatCustom.propTypes = {
+    inputRef: PropTypes.func.isRequired,
+};
 
 function TextMaskCustom(props) {
     const {inputRef, ...other} = props;
@@ -82,11 +110,7 @@ class UserProfile extends UserProfileFormEventHandlers {
             firstName: "",
             lastName: "",
             aboutMe: "",
-            city: "",
-            streetAddress: "",
-            state: "",
-            country: "",
-            zipcode: "",
+            address: "",
             gender: "",
             phone: "",
             dateOfBirth: "",
@@ -95,23 +119,25 @@ class UserProfile extends UserProfileFormEventHandlers {
             exists: false,
             role: "",
             company: "",
+            followersCount: "",
             isCurrentUser: true, //to different between current user and the visiting user
-            loading: true
+            loading: true,
+            //firebase
+            image: "",
+            url: ""
         };
 
         this.handleFirstName = this.handleFirstName.bind(this);
         this.handleLastName = this.handleLastName.bind(this);
         this.handleAboutMe = this.handleAboutMe.bind(this);
-        this.handleCity = this.handleCity.bind(this);
-        this.handleStreetAddress = this.handleStreetAddress.bind(this);
-        this.handleState = this.handleState.bind(this);
-        this.handleCountry = this.handleCountry.bind(this);
-        this.handleZipcode = this.handleZipcode.bind(this);
+        this.handleAddress = this.handleAddress.bind(this);
         this.handleGender = this.handleGender.bind(this);
         this.handlePhone = this.handlePhone.bind(this);
         this.handleDateOfBirth = this.handleDateOfBirth.bind(this);
         this.handleTaskCategories = this.handleTaskCategories.bind(this);
         this.handleCompany = this.handleCompany.bind(this);
+        this.handleFollowersCount = this.handleFollowersCount.bind(this);
+        this.handleUpload = this.handleUpload.bind(this);
     }
 
     schema = {
@@ -126,24 +152,6 @@ class UserProfile extends UserProfileFormEventHandlers {
             .regex(/^[a-zA-Z\s]*$/)
             .label("Last Name"),
         aboutMe: Joi.string().max(3000).label("About me"),
-        streetAddress: Joi.string().max(30).label("Street Address"),
-        city: Joi.string()
-            .max(20)
-            .regex(/^[a-zA-Z\s]*$/)
-            .label("City"),
-        state: Joi.string()
-            .max(5)
-            .regex(/^[a-zA-Z\s]*$/)
-            .label("State"),
-        country: Joi.string()
-            .max(20)
-            .regex(/^[a-zA-Z\s]*$/)
-            .label("Country"),
-        zipcode: Joi.string()
-            .min(5)
-            .max(5)
-            .regex(/^[0-9]*$/)
-            .label("Zipcode"),
         company: Joi.string().max(20).required().label("Company"),
     };
 
@@ -166,24 +174,11 @@ class UserProfile extends UserProfileFormEventHandlers {
                         ? this.props.profile.data.message.name.lastName
                         : "",
                     aboutMe: this.props.profile.data.message.aboutMe,
-                    city: this.props.profile.data.message.address
-                        ? this.props.profile.data.message.address.city
-                        : "",
-                    streetAddress: this.props.profile.data.message.address
-                        ? this.props.profile.data.message.address.streetAddress
-                        : "",
-                    state: this.props.profile.data.message.address
-                        ? this.props.profile.data.message.address.state
-                        : "",
-                    country: this.props.profile.data.message.address
-                        ? this.props.profile.data.message.address.country
-                        : "",
-                    zipcode: this.props.profile.data.message.address
-                        ? this.props.profile.data.message.address.zipcode
-                        : "",
+                    address: this.props.profile.data.message.address,
                     gender: this.props.profile.data.message.gender,
                     phone: this.props.profile.data.message.phone,
                     dateOfBirth: this.props.profile.data.message.dateOfBirth,
+                    url: this.props.profile.data.message.image,
                     taskCategories:
                         this.props.profile.data.role === userRoles.INFLUENCER
                             ? this.props.profile.data.message.taskCategories
@@ -192,6 +187,10 @@ class UserProfile extends UserProfileFormEventHandlers {
                     company:
                         this.props.profile.data.role === userRoles.SPONSOR
                             ? this.props.profile.data.message.company
+                            : "",
+                    followersCount:
+                        this.props.profile.data.role === userRoles.INFLUENCER
+                            ? this.props.profile.data.message.followersCount
                             : "",
                 });
             }
@@ -209,19 +208,15 @@ class UserProfile extends UserProfileFormEventHandlers {
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
             },
-            address: {
-                streetAddress: this.state.streetAddress,
-                city: this.state.city,
-                state: this.state.state,
-                country: this.state.country,
-                zipcode: this.state.zipcode,
-            },
+            address: this.state.address,
             aboutMe: this.state.aboutMe,
             phone: this.state.phone,
             gender: this.state.gender,
             dateOfBirth: this.state.dateOfBirth,
             taskCategories: this.state.taskCategories,
             company: this.state.company,
+            followersCount: this.state.followersCount,
+            image: this.state.url === "" ? NoImageFoundForUser : this.state.url
         };
 
         this.props.saveProfile(data, email).then(() => {
@@ -236,22 +231,17 @@ class UserProfile extends UserProfileFormEventHandlers {
     checkDisable() {
         return this.state.firstName == "" ||
             this.state.lastName == "" ||
-            this.state.streetAddress == "" ||
-            this.state.city == "" ||
-            this.state.state == "" ||
-            this.state.country == "" ||
-            this.state.zipcode == "" ||
+            this.state.address === undefined ||
             this.state.gender === undefined ||
             this.state.phone == "" ||
             new Date(this.state.dateOfBirth).setHours(0, 0, 0, 0)
             === new Date().setHours(0, 0, 0, 0) ||
             this.state.aboutMe === undefined ||
-            (this.state.taskCategories == "" && this.state.company === undefined);
+            ((this.state.taskCategories == "" || this.state.followersCount === undefined) && this.state.company === "");
     }
 
     render() {
         // TODO: if user is not logged in, redirect to home
-
         const {classes} = this.props;
 
         if (!this.state.exists) {
@@ -281,23 +271,28 @@ class UserProfile extends UserProfileFormEventHandlers {
                     <div className="profile-main">
                         <div className="main-background">
                             <div className="photo-main">
-                                <div className="edit-photo">
-                                    <If condition={this.state.isCurrentUser === true}>
+
+                                <If condition={this.state.isCurrentUser === true}>
+                                    <div className="edit-photo">
+                                        <label htmlFor="image">
+                                            <img src={UploadImageIcon} height="50" width="60"/>
+                                        </label>
                                         <input
                                             type="file"
-                                            name="files"
-                                            // onChange={this.onPhotoChange}
+                                            id="image"
+                                            name="image"
+                                            multiple={false}
+                                            onChange={this.handleUpload}
                                         />
-                                    </If>
-                                </div>
+                                    </div>
+                                </If>
 
                                 <div className="display_photo">
-                                    <img
-                                        // TODO: add image
-                                        src="https://source.unsplash.com/random"
-                                        width="300"
-                                        height="200"
-                                        alt="User has not uploaded anything yet"
+                                    <ExampleComponent
+                                        image={this.state.url}
+                                        roundedSize="0"
+                                        imageWidth="300"
+                                        imageHeight="300"
                                     />
                                 </div>
                             </div>
@@ -351,110 +346,47 @@ class UserProfile extends UserProfileFormEventHandlers {
                                         <br/>
                                         <br/>
 
-                                        <TextField
-                                            error
-                                            className="input-field"
-                                            onChange={this.handleStreetAddress}
-                                            name="streetAddress"
-                                            value={this.state.streetAddress}
-                                            required
-                                            error={this.state.errors.streetAddress}
-                                            disabled={this.state.isCurrentUser === false}
-                                            helperText={this.state.errors.streetAddress}
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <HomeIcon/>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                            label="Street Address"/>
-                                        <br/>
+                                        <small className="small-label address-label">Address*</small>
+                                        <div className="address-autocomplete">
+                                            <GooglePlacesAutocomplete
+                                                onSelect={this.handleAddress}
+                                                inputClassName="input-field-address"
+                                                error={this.state.errors.address}
+                                                placeholder={false}
+                                                name="address"
+                                                value={this.state.address}
+                                                required={true}
+                                                disabled={this.state.isCurrentUser === false}
+                                                initialValue={this.state.address}
+                                            />
+                                        </div>
                                         <br/>
 
-                                        <TextField
-                                            error
-                                            className="input-field"
-                                            onChange={this.handleCity}
-                                            name="city"
-                                            value={this.state.city}
-                                            required
-                                            error={this.state.errors.city}
-                                            disabled={this.state.isCurrentUser === false}
-                                            helperText={this.state.errors.city}
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <LocationCityIcon/>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                            label="City"/>
-                                        <br/>
-                                        <br/>
-
-                                        <TextField
-                                            error
-                                            className="input-field"
-                                            onChange={this.handleState}
-                                            name="state"
-                                            value={this.state.state}
-                                            required
-                                            error={this.state.errors.state}
-                                            disabled={this.state.isCurrentUser === false}
-                                            helperText={this.state.errors.state}
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <LocationOnIcon/>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                            label="State"/>
-                                        <br/>
-                                        <br/>
-
-                                        <TextField
-                                            error
-                                            className="input-field"
-                                            onChange={this.handleCountry}
-                                            name="country"
-                                            value={this.state.country}
-                                            required
-                                            error={this.state.errors.country}
-                                            disabled={this.state.isCurrentUser === false}
-                                            helperText={this.state.errors.country}
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <PublicIcon/>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                            label="Country"/>
-                                        <br/>
-                                        <br/>
-
-                                        <TextField
-                                            error
-                                            className="input-field"
-                                            onChange={this.handleZipcode}
-                                            name="zipcode"
-                                            value={this.state.zipcode}
-                                            required
-                                            error={this.state.errors.zipcode}
-                                            disabled={this.state.isCurrentUser === false}
-                                            helperText={this.state.errors.zipcode}
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <ExploreIcon/>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                            label="Zipcode"/>
-                                        <br/>
-                                        <br/>
+                                        <If condition={this.state.role === userRoles.INFLUENCER}>
+                                            <div>
+                                                <TextField
+                                                    error
+                                                    className="input-field"
+                                                    onChange={this.handleFollowersCount}
+                                                    name="followersCount"
+                                                    value={this.state.followersCount}
+                                                    required
+                                                    error={this.state.errors.followersCount}
+                                                    disabled={this.state.isCurrentUser === false}
+                                                    helperText={this.state.errors.followersCount}
+                                                    InputProps={{
+                                                        startAdornment: (
+                                                            <InputAdornment position="start">
+                                                                <PeopleIcon/>
+                                                            </InputAdornment>
+                                                        ),
+                                                        inputComponent: NumberFormatCustom,
+                                                    }}
+                                                    label="Number of Followers"/>
+                                                <br/>
+                                                <br/>
+                                            </div>
+                                        </If>
 
                                         <FormControl className="classes.formControl input-field" required>
                                             <InputLabel id="demo-simple-select-label">Gender</InputLabel>
@@ -479,6 +411,25 @@ class UserProfile extends UserProfileFormEventHandlers {
                                         <br/>
                                         <br/>
 
+                                        <TextField
+                                            error
+                                            className="input-field"
+                                            onChange={this.handleAboutMe}
+                                            name="aboutMe"
+                                            value={this.state.aboutMe}
+                                            required
+                                            error={this.state.errors.aboutMe}
+                                            disabled={this.state.isCurrentUser === false}
+                                            helperText={this.state.errors.aboutMe}
+                                            multiline
+                                            rows={7}
+                                            variant="outlined"
+                                            label="About Me"/>
+                                        <br/>
+                                        <br/>
+                                    </div>
+
+                                    <div className="profile_information_right">
                                         <FormControl className="classes.formControl input-field" required>
                                             <InputLabel>Contact Number</InputLabel>
                                             <Input
@@ -492,25 +443,6 @@ class UserProfile extends UserProfileFormEventHandlers {
                                             <FormHelperText><span
                                                 className="error"> {this.state.errors.phone}</span></FormHelperText>
                                         </FormControl>
-                                        <br/>
-                                        <br/>
-                                    </div>
-
-                                    <div className="profile_information_right">
-                                        <TextField
-                                            error
-                                            className="input-field"
-                                            onChange={this.handleAboutMe}
-                                            name="aboutMe"
-                                            value={this.state.aboutMe}
-                                            required
-                                            error={this.state.errors.aboutMe}
-                                            disabled={this.state.isCurrentUser === false}
-                                            helperText={this.state.errors.aboutMe}
-                                            multiline
-                                            rows={8}
-                                            variant="outlined"
-                                            label="About Me"/>
                                         <br/>
                                         <br/>
 
@@ -560,8 +492,8 @@ class UserProfile extends UserProfileFormEventHandlers {
                                         <If condition={this.state.role === userRoles.INFLUENCER}>
                                             <div className="form-group">
 
-                                                <label className="task-categories">
-                                                    <small>Task Categories</small>
+                                                <label className="small-label">
+                                                    <small>Task Categories*</small>
                                                 </label>
 
                                                 <div className="form-check">

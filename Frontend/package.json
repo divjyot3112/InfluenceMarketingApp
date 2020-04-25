@@ -15,9 +15,18 @@
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
     "date-fns": "latest",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "firebase": "^7.14.2",
     "globalize": "^1.5.0",
+    "jest": "^24.9.0",
     "joi-browser": "^13.4.0",
+<<<<<<< HEAD
     "mdbreact": "^4.25.6",
+=======
+    "material-ui-image": "^3.2.3",
+    "mdbreact": "latest",
+>>>>>>> 5184ba1bd0b54fb81d44183301f43696a57a7b03
     "moment": "^2.24.0",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.0",
@@ -25,6 +34,7 @@
     "react-cookies": "^0.1.1",
     "react-datepicker": "^2.14.1",
     "react-dom": "^16.13.0",
+    "react-google-places-autocomplete": "^2.0.4",
     "react-icons": "^3.9.0",
     "react-if": "^3.4.3",
     "react-infinite-scroll-component": "^5.0.4",
@@ -32,11 +42,16 @@
     "react-md": "latest",
     "react-number-format": "^4.4.1",
     "react-redux": "^7.2.0",
+    "react-rounded-image": "^2.0.2",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "react-star-ratings": "^2.3.0",
+<<<<<<< HEAD
     "react-switch": "^5.0.1",
+=======
+    "react-test-renderer": "^16.13.1",
+>>>>>>> 5184ba1bd0b54fb81d44183301f43696a57a7b03
     "react-transition-group": "^4.3.0",
     "react-widgets": "^4.5.0",
     "react-widgets-globalize": "^5.0.21",
@@ -72,6 +87,7 @@
     ]
   },
   "devDependencies": {
-    "eslint-plugin-react-hooks": "^3.0.0"
+    "eslint-plugin-react-hooks": "^3.0.0",
+    "redux-mock-store": "^1.5.4"
   }
 }

@@ -16,7 +16,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { fetchUnratedInfluencers, addRating } from "../../actions/dashboardActions";
-import {MY_USER_ID} from "../../utils/Constants"
+import { MY_USER_ID } from "../../utils/Constants"
+import StarsIcon from '@material-ui/icons/Stars';
+import Tooltip from '@material-ui/core/Tooltip';
+
 const styles = (theme) => ({
     root: {
         margin: 0,
@@ -145,6 +148,57 @@ class AddRatingModal extends Component {
         this.addRating();
         this.setOpen(false);
     }
+
+    renderDialogContent = () => {
+        const { classes } = this.props;
+        if (this.state.unratedInfluencers.length === 0) {
+            return <DialogContent dividers><p style={{margin:"5%"}}>All Influencers for this task have been rated!</p></DialogContent>
+        }
+        return <><DialogContent dividers>
+            <Typography gutterBottom>
+                <FormControl className={classes.formControl}>
+                    <InputLabel id="demo-controlled-open-select-label">Influencer</InputLabel>
+                    <Select
+                        labelId="demo-controlled-open-select-label"
+                        id="demo-controlled-open-select"
+                        open={this.state.openSelect}
+                        onClose={this.handleCloseSelect}
+                        onOpen={this.handleOpenSelect}
+                        value={this.state.influencer}
+                        onChange={this.handleChangeSelect}
+                    >
+                        {this.renderInfluencers()}
+                    </Select>
+                </FormControl>
+            </Typography>
+            <Typography gutterBottom>
+                <FormControl className={classes.formControl}>
+                    <Typography component="legend"></Typography>
+                    <Rating
+                        name="simple-controlled"
+                        value={this.state.value}
+                        onChange={(event, newValue) => {
+                            this.setValue(newValue);
+                        }}
+                    />
+                </FormControl>
+            </Typography>
+            <Typography gutterBottom>
+                <FormControl className={classes.formControl}>
+                    <textarea style={{ overflow: "hidden" }} rows={3} placeholder="Feedback" id="comment" />
+                </FormControl>
+            </Typography>
+        </DialogContent>
+            <DialogActions>
+                <Button autoFocus onClick={this.rateAndContinue} color="primary">
+                    Rate and Continue
+        </Button>
+                <Button autoFocus onClick={this.rateAndClose} color="primary">
+                    Rate and Close
+        </Button>
+            </DialogActions>
+        </>
+            }
     render() {
         //const [open, setOpen] = useState(false);
         const handleClickOpen = () => {
@@ -153,60 +207,21 @@ class AddRatingModal extends Component {
         const handleClose = () => {
             this.setOpen(false);
         };
-        const { classes } = this.props;
         return (
             <div>
-                <Button size="small" color="primary" onClick={handleClickOpen}>
-                            Rate
-                </Button>
+                <Tooltip title="Rate the influencers">
+                <IconButton aria-label="rate" onClick={handleClickOpen} style={{outline:"none"}}>
+                <StarsIcon size="small" color="primary">
+                </StarsIcon>
+                </IconButton>
+                </Tooltip>
                 <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={this.state.open}>
                     <DialogTitle id="customized-dialog-title" onClose={handleClose}>
                         {this.props.taskData.title}
                     </DialogTitle>
-                    <DialogContent dividers>
-                        <Typography gutterBottom>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel id="demo-controlled-open-select-label">Influencer</InputLabel>
-                                <Select
-                                labelId="demo-controlled-open-select-label"
-                                id="demo-controlled-open-select"
-                                open={this.state.openSelect}
-                                onClose={this.handleCloseSelect}
-                                onOpen={this.handleOpenSelect}
-                                value={this.state.influencer}
-                                onChange={this.handleChangeSelect}
-                                >
-                                {this.renderInfluencers()}
-                                </Select>
-                            </FormControl>
-                        </Typography>
-                        <Typography gutterBottom>
-                            <FormControl className={classes.formControl}>
-                                <Typography component="legend"></Typography>
-                                <Rating
-                                name="simple-controlled"
-                                value={this.state.value}
-                                onChange={(event, newValue) => {
-                                    this.setValue(newValue);
-                                }}
-                                />
-                                </FormControl>
-                        </Typography>
-                        <Typography gutterBottom>
-                                <FormControl className={classes.formControl}>
-                                <textarea style={{overflow:"hidden"}} rows={3} placeholder="Feedback" id ="comment"/>
-                                </FormControl>
-                         </Typography>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button autoFocus onClick={this.rateAndContinue} color="primary">
-                            Rate and Continue
-                        </Button>
-                        <Button autoFocus onClick={this.rateAndClose} color="primary">
-                            Rate and Close
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                    {this.renderDialogContent()}
+                </Dialog >
+                   
             </div>
         )
     }

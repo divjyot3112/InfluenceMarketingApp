@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 // const AddressSchema = require("../models/Address").schema
 
 var SponsorProfileSchema = new Schema({
-    email: { type: String, unique: true },
+    email: {type: String, unique: true},
     company: String,
     tasksPosted: [String], // task id array
     ratings: [String], // rating id array
@@ -16,19 +16,13 @@ var SponsorProfileSchema = new Schema({
         firstName: String,
         lastName: String
     },
-    profilePic: String,
+    image: String,
     phone: String,
     tasksCancelled: [String], // task id array
-    address: {
-        streetAddress: String,
-        city: String,
-        state: String,
-        country: String,
-        zipcode: String
-    },
+    address: String,
     aboutMe: String,
     gender: String,
-    dateOfBirth: { type: Date, default: Date.now }
+    dateOfBirth: {type: Date, default: Date.now}
 });
 
 module.exports = SponsorProfile = mongoose.model('SponsorProfile', SponsorProfileSchema); 

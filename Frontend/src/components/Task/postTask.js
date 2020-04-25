@@ -25,8 +25,10 @@ import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
 import NumberFormat from 'react-number-format';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
+import Image from 'material-ui-image';
 
 const TaskCategories = require("../../utils/Constants").TaskCategories;
+const NoImageFoundForTask = require("../../utils/Constants").NoImageFoundForTask;
 
 // for material-ui
 const useStyles = makeStyles((theme) => ({
@@ -82,7 +84,9 @@ class PostTask extends PostTaskFormEventHandlers {
             startDate: "",
             endDate: "",
             errors: {},
-            photos: []
+            //firebase
+            image: "",
+            url: ""
         };
 
         this.handleTitle = this.handleTitle.bind(this);
@@ -92,6 +96,7 @@ class PostTask extends PostTaskFormEventHandlers {
         this.handleVacancyCount = this.handleVacancyCount.bind(this);
         this.handleStartDate = this.handleStartDate.bind(this);
         this.handleEndDate = this.handleEndDate.bind(this);
+        this.handleUpload = this.handleUpload.bind(this);
     }
 
     schema = {
@@ -106,10 +111,6 @@ class PostTask extends PostTaskFormEventHandlers {
             .required()
             .label("Description")
     };
-
-    onCancel = (e) => {
-        window.location.reload();
-    }
 
     onSubmit = (e) => {
         e.preventDefault();
@@ -126,6 +127,7 @@ class PostTask extends PostTaskFormEventHandlers {
             vacancyCount: this.state.vacancyCount,
             startDate: this.state.startDate,
             endDate: this.state.endDate,
+            image: this.state.url === "" ? NoImageFoundForTask : this.state.url
         };
 
         this.props.saveTask(data).then(() => {
@@ -276,7 +278,7 @@ class PostTask extends PostTaskFormEventHandlers {
                                             error={this.state.errors.vacancyCount}
                                             helperText={this.state.errors.vacancyCount}
                                             name="vacancyCount"
-                                            inputProps={{ min: "1", max: "5", step: "1" }} />
+                                            inputProps={{min: "1", max: "5", step: "1"}}/>
                                         <br/>
                                         <br/>
 
@@ -310,18 +312,24 @@ class PostTask extends PostTaskFormEventHandlers {
                                             <span className="input-group-text" id="inputGroupFileAddon01">Upload</span>
                                         </div>
                                         <div className="custom-file">
-                                            // TODO: Add Photos
                                             <input
                                                 type="file"
                                                 className="custom-file-input"
-                                                id="photos"
-                                                name="photos"
+                                                id="image"
+                                                name="image"
                                                 multiple={false}
+                                                onChange={this.handleUpload}
                                                 aria-describedby="inputGroupFileAddon01"/>
                                             <label className="custom-file-label" htmlFor="inputGroupFile01">Choose
-                                                file</label>
+                                                File</label>
                                         </div>
                                     </div>
+
+                                    <Image
+                                        src={this.state.url}
+                                        aspectRatio={(16/9)}
+                                        disableSpinner
+                                    />
                                 </div>
 
                                 <div className="buttons">

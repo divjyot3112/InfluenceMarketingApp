@@ -8,8 +8,8 @@ const Schema = mongoose.Schema;
 // const AddressSchema = require("../models/Address").schema
 
 var InfluencerProfileSchema = new Schema({
-    email: { type: String, unique: true },
-    profilePic: String,
+    email: {type: String, unique: true},
+    image: String,
     gender: String,
     followersCount: Number,
     aboutMe: String,
@@ -23,15 +23,8 @@ var InfluencerProfileSchema = new Schema({
         lastName: String
     },
     tasksCompleted: [String], // Task id Array
-    profileViewCount: Number,
-    dateOfBirth: { type: Date, default: Date.now },
-    address: {
-        streetAddress: String,
-        city: String,
-        state: String,
-        country: String,
-        zipcode: String
-    }
+    dateOfBirth: {type: Date, default: Date.now},
+    address: String
 });
 
 module.exports = InfluencerProfile = mongoose.model('InfluencerProfile', InfluencerProfileSchema); 
