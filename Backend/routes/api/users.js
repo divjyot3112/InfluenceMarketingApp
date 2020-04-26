@@ -186,7 +186,7 @@ router.get("/profile", (req, res) => {
 router.put("/profile", (req, res) => {
     console.log("Inside Update Profile put request");
     console.log("Profile to be updated: ", req.query.email);
-    User.findOne({email: req.query.email, cc})
+    User.findOne({email: req.query.email, isActive: true})
         .then((user) => {
             console.log("User: ", user);
             // check if user exists
