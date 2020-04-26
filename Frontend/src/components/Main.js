@@ -20,6 +20,7 @@ import TaskDescription from "./Task/TaskDescription";
 import Landing from "./LandingPage/LandingPage";
 import SponsorHome from "./Home/SponsorHome";
 import About from "./About/About";
+import ContactUs from "./ContactUs/ContactUs";
 
 class Main extends Component {
   render() {
@@ -35,12 +36,11 @@ class Main extends Component {
         <Route path="/inbox" exact component={Messenger} />
         <Route path="/ratings/sponsor" exact component={SponsorRating} />
         <Route path="/ratings/influencer" exact component={InfluencerRating} />
-
         <Route exact path="/" component={Landing} />
-
         <Route path="/home" component={Landing} />
         <Route path="/home/sponsor" component={SponsorHome} />
         <Route path="/about" component={About} />
+        <Route path="/contactus" component={ContactUs} />
       </div>
     );
   }

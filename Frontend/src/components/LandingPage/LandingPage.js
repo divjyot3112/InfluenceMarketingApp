@@ -4,7 +4,7 @@ import "./LandingPage.css";
 import WOW from "wow.js";
 import smallcard from "./Images/social15.jpg";
 import { MY_ROLE, UserRoles } from "../../utils/Constants";
-
+import Footer from "../Common/Footer";
 //import {initpage} from "./scripts";
 
 class Landing extends Component {
@@ -68,36 +68,6 @@ class Landing extends Component {
                   </a>
                 </li>
               </ul>
-
-              <ul class="navbar-nav nav-flex-icons">
-                <li class="nav-item">
-                  <a
-                    href="https://www.facebook.com/mdbootstrap"
-                    class="nav-link"
-                    target="_blank"
-                  >
-                    <i class="fab fa-facebook-f"></i>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a
-                    href="https://twitter.com/MDBootstrap"
-                    class="nav-link"
-                    target="_blank"
-                  >
-                    <i class="fab fa-twitter"></i>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a
-                    href="https://github.com/mdbootstrap/bootstrap-material-design"
-                    class="nav-link border border-light rounded"
-                    target="_blank"
-                  >
-                    <i class="fab fa-linkedin mr-2"></i>Linkedin
-                  </a>
-                </li>
-              </ul>
             </div>
           </div>
         </nav>
@@ -105,7 +75,6 @@ class Landing extends Component {
         <header class="">
           <div class="container">
             <div class="row">
-              <div class="col-sm-6 "></div>
               <div class="col-sm-6 hidden-xs">
                 <div class="row">
                   <div class="col-sm-5">
@@ -129,6 +98,38 @@ class Landing extends Component {
                   </div>
                 </div>
               </div>
+              {/* <div class="col-sm-8">
+                <ul>
+                  <li>
+                    <a
+                      href="https://www.facebook.com/mdbootstrap"
+                      class="nav-link"
+                      target="_blank"
+                    >
+                      <i class="fab fa-facebook-f"></i>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a
+                      href="https://twitter.com/MDBootstrap"
+                      class="nav-link"
+                      target="_blank"
+                    >
+                      <i class="fab fa-twitter"></i>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://github.com/mdbootstrap/bootstrap-material-design"
+                      class="nav-link border border-light rounded"
+                      target="_blank"
+                    >
+                      <i class="fab fa-linkedin mr-2"></i>Linkedin
+                    </a>
+                  </li>
+                </ul>
+              </div> */}
             </div>
           </div>
         </header>
@@ -146,27 +147,28 @@ class Landing extends Component {
             <div class="container">
               <div class="row wow fadeIn">
                 <div class="col-md-6 mb-4 white-text text-center text-md-left">
+                  <br />
+                  <br />
+                  <br />
                   <h1 class="display-4 font-weight-bold">
-                    A platform for Sponsors and Influencers to find each other
-                    and grow!
+                    <p>
+                      <strong>
+                        Helping small Businesses grow and connect!
+                      </strong>
+                    </p>
                   </h1>
 
                   <hr class="hr-light" />
-                  <h4>
-                    {" "}
-                    It's where your interests connect you with your people.{" "}
-                  </h4>
-                  <p>
-                    <strong>Helping small Businesses grow and connect!</strong>
-                  </p>
 
                   <p class="mb-4 d-none d-md-block">
                     <strong>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Tenetur, qui ducimus! Ratione veritatis sequi
-                      necessitatibus, odit impedit, quaerat nam vero accusamus
-                      ducimus suscipit earum obcaecati itaque aliquam, eligendi
-                      porro animi.
+                      Our application is mainly for social media influencers,
+                      which allows them to connect to different sponsors. People
+                      who are well-established in their career already have a
+                      good number of fan-following. Our application targets the
+                      people who are still in the process of increasing their
+                      popularity through social media. We help the smallscale
+                      brands to find the right influencers that they can afford.
                     </strong>
                   </p>
 
@@ -224,7 +226,7 @@ class Landing extends Component {
                         </div>
 
                         <div class="md-form">
-                          <i class="fas fa-pencil-alt prefix grey-text"></i>
+                          <i class="fas fa-phone prefix grey-text"></i>
                           <input
                             type="text"
                             id="form8"
@@ -253,7 +255,7 @@ class Landing extends Component {
                             </label>
                           </div>
 
-                          <input
+                          {/* <input
                             type="checkbox"
                             checked
                             id="checkbox1"
@@ -264,7 +266,7 @@ class Landing extends Component {
                             data-offstyle="danger"
                             data-width="150"
                             data-height="30"
-                          />
+                          /> */}
                         </div>
                       </form>
                     </div>
@@ -302,28 +304,6 @@ class Landing extends Component {
                   </p>
 
                   <hr />
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.wh
-                    Autem exercitationem totam dignissimos necessitatibus
-                    eveniet, numquam porro vitae repudiandae praesentium maiores
-                    nihil amet ex, fugit adipisci doloremque voluptate unde quas
-                    facere.
-                  </p>
-                  <a
-                    target="_blank"
-                    href="https://mdbootstrap.com/docs/jquery/getting-started/download/"
-                    class="btn btn-success btn-md"
-                  >
-                    ABC
-                    <i class="fas fa-download ml-1"></i>
-                  </a>
-                  <a
-                    target="_blank"
-                    href="https://mdbootstrap.com/docs/jquery/components/"
-                    class="btn btn-success btn-md"
-                  >
-                    ABC <i class="far fa-image ml-1"></i>
-                  </a>
                 </div>
               </div>
             </section>
@@ -331,7 +311,7 @@ class Landing extends Component {
             <hr class="my-5" />
 
             <section>
-              <h3 class="h3 text-center mb-5">About Influence Marketing App</h3>
+              <h3 class="h3 text-center mb-5">About Influence Marketing </h3>
 
               <div class="row wow fadeIn">
                 <div class="col-lg-6 col-md-12 px-4">
@@ -340,7 +320,9 @@ class Landing extends Component {
                       <i class="fas fa-code fa-2x indigo-text"></i>
                     </div>
                     <div class="col-10">
-                      <h5 class="feature-title">ABCD</h5>
+                      <h5 class="feature-title">
+                        What is Influence Marketing?
+                      </h5>
                       <p class="grey-text">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.
                         Consequatur expedita dignissimos ad eum iusto! Dolores
@@ -358,7 +340,7 @@ class Landing extends Component {
                       <i class="fas fa-book fa-2x blue-text"></i>
                     </div>
                     <div class="col-10">
-                      <h5 class="feature-title">ABCD</h5>
+                      <h5 class="feature-title">How it works?</h5>
                       <p class="grey-text">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.
                         Quasi voluptas ex maiores hic repellat enim quaerat
@@ -376,7 +358,9 @@ class Landing extends Component {
                       <i class="fas fa-graduation-cap fa-2x cyan-text"></i>
                     </div>
                     <div class="col-10">
-                      <h5 class="feature-title">ABCD</h5>
+                      <h5 class="feature-title">
+                        Can anyone become an Influencer?
+                      </h5>
                       <p class="grey-text">
                         Lorem ipsum, dolor sit amet consectetur adipisicing
                         elit. Rerum laborum optio non repellendus officiis nemo
@@ -390,9 +374,9 @@ class Landing extends Component {
 
                 <div class="col-lg-6 col-md-12">
                   <p class="h5 text-center mb-4">
-                    New to Influence Marketing? Watch our "5 min Quick Start"
-                    tutorial
-                  </p>
+                    New to Influence Marketing?{" "}
+                  </p>{" "}
+                  <p>Watch our "5 min Quick Start" tutorial</p>
                   <div class="embed-responsive embed-responsive-16by9">
                     {/* <iframe
                       class="embed-responsive-item"
@@ -420,12 +404,17 @@ class Landing extends Component {
 
               <div class="row features-small mb-5 mt-3 wow fadeIn">
                 <div class="col-md-4">
+                  <h2>
+                    {" "}
+                    <strong> Influencer </strong>{" "}
+                  </h2>
+                  <br />
                   <div class="row">
                     <div class="col-2">
                       <i class="fas fa-check-circle fa-2x indigo-text"></i>
                     </div>
                     <div class="col-10">
-                      <h6 class="feature-title">ABCD</h6>
+                      <h6 class="feature-title">Dashboard for Task History</h6>
                       <p class="grey-text">
                         Lorem ipsum dolor, sit amet consectetur adipisicing
                         elit. Delectus sit laborum dicta cum repudiandae magnam,
@@ -442,7 +431,9 @@ class Landing extends Component {
                       <i class="fas fa-check-circle fa-2x indigo-text"></i>
                     </div>
                     <div class="col-10">
-                      <h6 class="feature-title">ABCD</h6>
+                      <h6 class="feature-title">
+                        Create and manage own profile
+                      </h6>
                       <p class="grey-text">
                         Lorem ipsum dolor sit, amet consectetur adipisicing
                         elit. Ut error est dolores numquam exercitationem? Ipsum
@@ -458,7 +449,9 @@ class Landing extends Component {
                       <i class="fas fa-check-circle fa-2x indigo-text"></i>
                     </div>
                     <div class="col-10">
-                      <h6 class="feature-title">ABCD</h6>
+                      <h6 class="feature-title">
+                        Search available tasks posted in real time
+                      </h6>
                       <p class="grey-text">
                         Lorem ipsum dolor, sit amet consectetur adipisicing
                         elit. Porro provident quia consequatur id ex itaque
@@ -474,7 +467,7 @@ class Landing extends Component {
                       <i class="fas fa-check-circle fa-2x indigo-text"></i>
                     </div>
                     <div class="col-10">
-                      <h6 class="feature-title">ABCD</h6>
+                      <h6 class="feature-title">Get Task Recommendations</h6>
                       <p class="grey-text">
                         Lorem ipsum dolor sit amet, consectetur adipisicing
                         elit. Fuga sint accusamus pariatur laudantium,
@@ -496,12 +489,17 @@ class Landing extends Component {
                 </div>
 
                 <div class="col-md-4 mt-2">
+                  <h2>
+                    {" "}
+                    <strong> Sponsor </strong>{" "}
+                  </h2>
+                  <br />
                   <div class="row">
                     <div class="col-2">
                       <i class="fas fa-check-circle fa-2x indigo-text"></i>
                     </div>
                     <div class="col-10">
-                      <h6 class="feature-title">ABCD</h6>
+                      <h6 class="feature-title">Post a Task</h6>
                       <p class="grey-text">
                         Lorem ipsum dolor, sit amet consectetur adipisicing
                         elit. Perspiciatis nemo numquam velit. Harum ex labore
@@ -518,7 +516,9 @@ class Landing extends Component {
                       <i class="fas fa-check-circle fa-2x indigo-text"></i>
                     </div>
                     <div class="col-10">
-                      <h6 class="feature-title">ABCD</h6>
+                      <h6 class="feature-title">
+                        Dashboard for all tasks offered
+                      </h6>
                       <p class="grey-text">
                         Lorem ipsum dolor sit amet, consectetur adipisicing
                         elit. Sed dolorem consectetur est nobis. Debitis nostrum
@@ -535,7 +535,7 @@ class Landing extends Component {
                       <i class="fas fa-check-circle fa-2x indigo-text"></i>
                     </div>
                     <div class="col-10">
-                      <h6 class="feature-title">ABCD</h6>
+                      <h6 class="feature-title">Task Analysis</h6>
                       <p class="grey-text">
                         Lorem ipsum dolor sit amet consectetur, adipisicing
                         elit. Placeat excepturi voluptatum accusantium assumenda
@@ -552,7 +552,7 @@ class Landing extends Component {
                       <i class="fas fa-check-circle fa-2x indigo-text"></i>
                     </div>
                     <div class="col-10">
-                      <h6 class="feature-title">ABCD</h6>
+                      <h6 class="feature-title">List of Applied Applicants</h6>
                       <p class="grey-text">
                         Lorem ipsum, dolor sit amet consectetur adipisicing
                         elit. Quidem maiores consequatur deserunt omnis pariatur
@@ -743,64 +743,7 @@ class Landing extends Component {
             </section>
           </div>
         </main>
-
-        <footer class="page-footer text-center font-small mt-4 wow fadeIn">
-          <hr class="my-4" />
-
-          <div class="pb-4">
-            <a href="https://www.facebook.com/mdbootstrap" target="_blank">
-              <i class="fab fa-facebook-f mr-3"></i>
-            </a>
-
-            <a href="https://twitter.com/MDBootstrap" target="_blank">
-              <i class="fab fa-twitter mr-3"></i>
-            </a>
-
-            <a
-              href="https://www.youtube.com/watch?v=7MUISDJ5ZZ4"
-              target="_blank"
-            >
-              <i class="fab fa-youtube mr-3"></i>
-            </a>
-
-            <a
-              href="https://plus.google.com/u/0/b/107863090883699620484"
-              target="_blank"
-            >
-              <i class="fab fa-google-plus-g mr-3"></i>
-            </a>
-
-            <a href="https://dribbble.com/mdbootstrap" target="_blank">
-              <i class="fab fa-dribbble mr-3"></i>
-            </a>
-
-            <a href="https://pinterest.com/mdbootstrap" target="_blank">
-              <i class="fab fa-pinterest mr-3"></i>
-            </a>
-
-            <a
-              href="https://github.com/mdbootstrap/bootstrap-material-design"
-              target="_blank"
-            >
-              <i class="fab fa-github mr-3"></i>
-            </a>
-
-            <a href="http://codepen.io/mdbootstrap/" target="_blank">
-              <i class="fab fa-codepen mr-3"></i>
-            </a>
-          </div>
-
-          <div class="footer-copyright py-3">
-            © 2020 Copyright:
-            <a
-              href="https://mdbootstrap.com/education/bootstrap/"
-              target="_blank"
-            >
-              {" "}
-              Influence Marketing App{" "}
-            </a>
-          </div>
-        </footer>
+        <Footer />
       </div>
     );
   }
