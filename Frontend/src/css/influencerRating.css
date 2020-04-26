@@ -2,27 +2,15 @@
     text-align: center;
     color: red;
     font-size: 300%;
-    margin: 40% 30% 60% 30%;
-}
-
-.ratings-not-found-main {
-    height: 100%;
-    background-color: var(--main-bg-color);
+    margin: 20% 30% 60% 30%;
 }
 
 .main-ratings-influencer {
-    height: 100vh;
-    background-color: var(--main-bg-color);
-}
-
-.main-background {
-    margin: 0% 20% 0% 20%;
-    padding-bottom: 1%;
     height: 100%;
 }
 
 .sorting-options {
-    margin: 0% 0% 0% 75%;
+    margin: 0% 20% 0% 65%;
     height:auto;
 }
 
@@ -32,13 +20,8 @@
 
 .main-background-top {
     padding-top: 3%;
-    position: relative;
-    height:30%;
-
 }
 .main-background-bottom {
-    height:70%;
-    overflow: scroll;
     margin-top:2%;
 }
 
@@ -69,7 +52,6 @@
 
 .rating-card-right Link:hover {
     text-decoration: none;
-
 }
 
 .general-pagination {

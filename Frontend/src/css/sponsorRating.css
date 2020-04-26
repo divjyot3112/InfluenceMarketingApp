@@ -5,21 +5,9 @@
     margin: 40% 30% 60% 30%;
 }
 
-.ratings-not-found-main {
-    height: 100%;
-    background-color: var(--main-bg-color);
-}
-
 .main-ratings-sponsor {
-    height: 100vh;
-    background-color: var(--main-bg-color);
-}
-
-.main-background {
-    margin: 0% 20% 0% 20%;
-    padding-bottom: 1%;
     height: 100%;
-    padding-top: 3%;
+    padding-top: 2%;
 }
 
 .sorting-options {
@@ -33,8 +21,6 @@
 
 .ratings-cards-main {
     margin: 0% 3% 0% 3%;
-    overflow: scroll;
-    height: 85%;
 }
 
 .rating-card {
@@ -59,7 +45,6 @@
 
 .rating-card-right Link:hover {
     text-decoration: none;
-
 }
 
 .general-pagination {

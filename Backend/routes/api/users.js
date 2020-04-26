@@ -144,7 +144,7 @@ router.post("/login", (req, res) => {
 
 router.get("/profile", (req, res) => {
     console.log("Inside Get Profile Request", req.query.email);
-    User.findOne({email: req.query.email})
+    User.findOne({email: req.query.email, isActive: true})
         .then(user => {
             // check if user exists
             if (user) {
@@ -186,7 +186,7 @@ router.get("/profile", (req, res) => {
 router.put("/profile", (req, res) => {
     console.log("Inside Update Profile put request");
     console.log("Profile to be updated: ", req.query.email);
-    User.findOne({email: req.query.email})
+    User.findOne({email: req.query.email, cc})
         .then((user) => {
             console.log("User: ", user);
             // check if user exists
@@ -266,7 +266,7 @@ router.patch("/profile/deactivate", (req, res) => {
         console.log("Inside User Deactivate Patch Request");
         console.log(req.query.email, req.body.password);
 
-        User.findOne({email: req.query.email})
+        User.findOne({email: req.query.email, isActive: true})
             .then((user) => {
 
                 // check if user exists
