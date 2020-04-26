@@ -17,7 +17,6 @@ import {
     InputGroup,
 } from 'reactstrap';
 import {Button} from 'react-bootstrap'
-import {Redirect} from "react-router";
 import Switch from "react-switch";
 import {FaSignOutAlt, FaSearch} from 'react-icons/fa'
 // Redux imports
@@ -250,6 +249,15 @@ export class Appbar extends Component {
                                     <React.Fragment>
                                         <NavItem className="nav-item-box">
                                             <NavLink href="/task/new"><p>Create</p></NavLink>
+                                        </NavItem>
+                                        <div className="vertical"></div>
+                                    </React.Fragment>
+                                </If>
+
+                                <If condition={this.state.role === UserRoles.INFLUENCER}>
+                                    <React.Fragment>
+                                        <NavItem className="nav-item-box">
+                                            <NavLink href="/ratings/influencer"><p>Ratings</p></NavLink>
                                         </NavItem>
                                         <div className="vertical"></div>
                                     </React.Fragment>
