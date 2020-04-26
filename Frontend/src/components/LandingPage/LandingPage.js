@@ -3,6 +3,8 @@ import axios from "axios";
 import "./LandingPage.css";
 import WOW from "wow.js";
 import smallcard from "./Images/social15.jpg";
+import { MY_ROLE, UserRoles } from "../../utils/Constants";
+
 //import {initpage} from "./scripts";
 
 class Landing extends Component {
@@ -24,17 +26,13 @@ class Landing extends Component {
           style={{ backgroundColor: "aliceblue" }}
         >
           <div class="container">
-            <a
-              class="navbar-brand"
-              href="https://mdbootstrap.com/docs/jquery/"
-              target="_blank"
-            >
+            <a class="navbar-brand" href="/" target="_blank">
               <strong
                 class="wow fadeInLeftBig"
                 data-wow-duration="10s"
                 style={{ color: "black" }}
               >
-                TOGETHER APP
+                TOGETHER
               </strong>
             </a>
 
@@ -59,30 +57,14 @@ class Landing extends Component {
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    href="https://mdbootstrap.com/docs/jquery/"
-                    target="_blank"
-                  >
-                    About Us
+                  <a class="nav-link" href="#" target="_blank">
+                    About
                   </a>
                 </li>
+
                 <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    href="https://mdbootstrap.com/docs/jquery/getting-started/download/"
-                    target="_blank"
-                  >
-                    Profile
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    href="https://mdbootstrap.com/education/bootstrap/"
-                    target="_blank"
-                  >
-                    Contact us
+                  <a class="nav-link" href="#" target="_blank">
+                    Contact Us
                   </a>
                 </li>
               </ul>
@@ -188,14 +170,14 @@ class Landing extends Component {
                     </strong>
                   </p>
 
-                  <a
+                  {/* <a
                     target="_blank"
                     href="https://mdbootstrap.com/education/bootstrap/"
                     class="btn btn-success btn-lg"
                   >
                     Already have an Account? Login!
                     <i class="fas fa-graduation-cap ml-2"></i>
-                  </a>
+                  </a> */}
                 </div>
 
                 <div class="col-md-6 col-xl-5 mb-4">
@@ -243,30 +225,46 @@ class Landing extends Component {
 
                         <div class="md-form">
                           <i class="fas fa-pencil-alt prefix grey-text"></i>
-                          <textarea
+                          <input
                             type="text"
                             id="form8"
-                            class="md-textarea"
-                          ></textarea>
+                            class="form-control"
+                          ></input>
                           <label for="form8">Phone Number</label>
                         </div>
 
                         <div class="text-center">
-                          <button class="btn btn-success">Sign Up</button>
+                          <button class="btn btn-success">
+                            Create Account
+                          </button>
                           <hr />
-                          <fieldset class="form-check">
+
+                          <div class="custom-control custom-switch">
                             <input
                               type="checkbox"
-                              class="form-check-input"
-                              id="checkbox1"
+                              class="custom-control-input"
+                              id="customSwitch1"
                             />
                             <label
-                              for="checkbox1"
-                              class="form-check-label text-center dark-grey-text"
+                              class="custom-control-label"
+                              for="customSwitch1"
                             >
-                              I am a sponsor
+                              Sponsor
                             </label>
-                          </fieldset>
+                          </div>
+
+                          <input
+                            type="checkbox"
+                            checked
+                            id="checkbox1"
+                            data-toggle="toggle"
+                            data-on="Sponsor"
+                            data-off="Influencer"
+                            data-onstyle="default"
+                            data-offstyle="danger"
+                            data-width="150"
+                            data-height="30"
+                          />
                         </div>
                       </form>
                     </div>
