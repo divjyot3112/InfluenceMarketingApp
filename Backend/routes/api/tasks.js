@@ -323,13 +323,28 @@ router.put("/complete/:taskId", (req, res) => {
         });
 });
 
-// @route   GET api/tasks/search?title
-// @desc    Fetch all tasks by title
+// @route   GET api/tasks/search?title&&status
+// @desc    Fetch all tasks by title and filter by status
 // @access  Public
 router.get("/search", (req, res) => {
-    console.log("Inside GET request to fetch all tasks by title: " + req.query.title);
-
-    Task.find({title: {$regex: new RegExp(req.query.title, "i")}})
+    console.log("Inside GET request to fetch all tasks by title: " + req.query.title + " " + req.query.status);
+    if(req.query.staus=="All") {
+        Task.find({title: {$regex: new RegExp(req.query.title, "i")}})
+            .then(tasks => {
+                if (tasks.length != 0) {
+                    console.log("tasks fetched successfully for title: " + req.query.title);
+                    res.status(200).json({message: tasks});
+                } else {
+                    console.log("No tasks found");
+                    res.status(404).json({message: "No tasks found"});
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(400).json({message: "Tasks could not be fetched"});
+            })
+    } else {
+        Task.find({title: {$regex: new RegExp(req.query.title, "i")}, status: req.query.status})
         .then(tasks => {
             if (tasks.length != 0) {
                 console.log("tasks fetched successfully for title: " + req.query.title);
@@ -343,6 +358,7 @@ router.get("/search", (req, res) => {
             console.log(err);
             res.status(400).json({message: "Tasks could not be fetched"});
         })
+    }
 });
 
 // @route   PUT api/tasks/:taskId/apply
@@ -442,7 +458,6 @@ router.put("/:taskId/apply", (req, res) => {
         });
 });
 
-<<<<<<< HEAD
 // @route   GET /task/:taskId
 // @desc    Fetch a task by Task ID
 // @access  Public
@@ -462,9 +477,6 @@ router.get("/:taskId", (req, res) => {
   });
 
   
-=======
-
->>>>>>> 5184ba1bd0b54fb81d44183301f43696a57a7b03
 router.get("/unrated", (req, res) => {
     console.log("Inside get all unrated influencers");
 
