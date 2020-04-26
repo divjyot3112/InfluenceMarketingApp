@@ -11,6 +11,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "animate.css": "^3.7.2",
     "antd": "^4.1.4",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
@@ -21,13 +22,12 @@
     "globalize": "^1.5.0",
     "jest": "^24.9.0",
     "joi-browser": "^13.4.0",
-<<<<<<< HEAD
-    "mdbreact": "^4.25.6",
-=======
+    "jquery": "^3.5.0",
     "material-ui-image": "^3.2.3",
+    "mdbootstrap": "^4.16.0",
     "mdbreact": "latest",
->>>>>>> 5184ba1bd0b54fb81d44183301f43696a57a7b03
     "moment": "^2.24.0",
+    "nan": "^2.14.0",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.0",
     "react-burger-menu": "^2.6.13",
@@ -47,11 +47,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "react-star-ratings": "^2.3.0",
-<<<<<<< HEAD
     "react-switch": "^5.0.1",
-=======
     "react-test-renderer": "^16.13.1",
->>>>>>> 5184ba1bd0b54fb81d44183301f43696a57a7b03
     "react-transition-group": "^4.3.0",
     "react-widgets": "^4.5.0",
     "react-widgets-globalize": "^5.0.21",
@@ -62,7 +59,8 @@
     "redux-form": "^8.3.5",
     "redux-thunk": "^2.3.0",
     "universal-cookie": "^4.0.3",
-    "uuid": "^7.0.2"
+    "uuid": "^7.0.2",
+    "wow.js": "^1.2.2"
   },
   "scripts": {
     "start": "react-scripts start",

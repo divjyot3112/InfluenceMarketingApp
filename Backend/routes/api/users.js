@@ -6,6 +6,7 @@ const passport = require("passport");
 const path = require("path");
 const jwt = require("jsonwebtoken");
 const userRoles = require("../../utils/Constants").UserRoles;
+const taskStatus = require('../../utils/Constants').TaskStatus;
 // Set up passport middleware
 var requireAuth = passport.authenticate("jwt", {session: false});
 
@@ -28,6 +29,7 @@ router.post("/login", (req, res) => {
 
     User.findOne({email: req.body.email})
         .then((user) => {
+            // check if user exists
             if (user) {
                 user.comparePassword(req.body.password, function (err, isMatch) {
                     if (isMatch && !err) {
@@ -35,21 +37,24 @@ router.post("/login", (req, res) => {
                         var token = jwt.sign({user}, config.secret, {
                             expiresIn: 10080, // In seconds
                         });
+                        console.log("Login Successful")
                         res.status(200).json({
                             message: "Login Successful",
                             token: "Bearer " + token,
                         });
                     } else {
-                        res.status(401).json({message: "Incorrect Password"});
+                        console.log("Password is incorrect")
+                        res.status(401).json({message: "Password is incorrect"});
                     }
                 });
             } else {
-                res.status(404).json({message: "User not found"});
+                console.log("User does not exist")
+                res.status(404).json({message: "User does not exist"});
             }
         })
         .catch((err) => {
             console.log(err);
-            res.status(404).json({message: "Something went wrong"});
+            res.status(400).json({message: "Something went wrong"});
         });
 });
 
@@ -136,29 +141,32 @@ router.post("/login", (req, res) => {
 // @route   GET api/users/profile?email
 // @desc    Get Profile
 // @access  Public
+
 router.get("/profile", (req, res) => {
     console.log("Inside Get Profile Request", req.query.email);
-    User.findOne({email: req.query.email})
+    User.findOne({email: req.query.email, isActive: true})
         .then(user => {
+            // check if user exists
             if (user) {
                 if (user.role == userRoles.INFLUENCER) {
                     console.log("Getting influencer profile")
                     InfluencerProfile.findOne({email: req.query.email})
-                        .then(infProfile => {
-                            res.status(200).json({message: infProfile, role: userRoles.INFLUENCER})
+                        .then(influencerProfile => {
+                            res.status(200).json({message: influencerProfile, role: userRoles.INFLUENCER})
                         })
                         .catch(err => {
-                            console.log(err);
-                            res.status(400).json({message: "Could not fetch profile"});
+                            console.log("Something went wrong");
+                            res.status(400).json({message: "Something went wrong"});
                         })
                 } else {
+                    // user is sponsor
                     SponsorProfile.findOne({email: req.query.email})
-                        .then(sponProfile => {
-                            res.status(200).json({message: sponProfile, role: userRoles.SPONSOR})
+                        .then(sponsorProfile => {
+                            res.status(200).json({message: sponsorProfile, role: userRoles.SPONSOR})
                         })
                         .catch(err => {
-                            console.log(err);
-                            res.status(400).json({message: "Could not fetch profile"});
+                            console.log("Something went wrong");
+                            res.status(400).json({message: "Something went wrong"});
                         })
                 }
             } else {
@@ -167,19 +175,21 @@ router.get("/profile", (req, res) => {
             }
         })
         .catch((err) => {
-            console.log(err);
-            res.status(400).json({message: "Something went wrong!"});
+            console.log("Something went wrong");
+            res.status(400).json({message: "Something went wrong"});
         });
 });
+
 // @route   PUT api/users/profile?email
 // @desc    User profile update
 // @access  Public
 router.put("/profile", (req, res) => {
     console.log("Inside Update Profile put request");
     console.log("Profile to be updated: ", req.query.email);
-    User.findOne({email: req.query.email})
+    User.findOne({email: req.query.email, cc})
         .then((user) => {
             console.log("User: ", user);
+            // check if user exists
             if (user) {
                 if (user.role == userRoles.SPONSOR) {
                     SponsorProfile.findOneAndUpdate(
@@ -201,7 +211,7 @@ router.put("/profile", (req, res) => {
                         .then((result) =>
                             res.status(200).json({
                                 success: true,
-                                message: "Sponsor Profile updated successfully!",
+                                message: "Sponsor Profile updated successfully",
                             })
                         )
                         .catch((err) => {
@@ -209,6 +219,7 @@ router.put("/profile", (req, res) => {
                             res.status(400).json({success: false, message: err});
                         });
                 } else {
+                    // user is influencer
                     InfluencerProfile.findOneAndUpdate(
                         {email: req.query.email},
                         {
@@ -229,7 +240,7 @@ router.put("/profile", (req, res) => {
                         .then((result) =>
                             res.status(200).json({
                                 success: true,
-                                message: "Influencer Profile updated successfully!",
+                                message: "Influencer Profile updated successfully",
                             })
                         )
                         .catch((err) => {
@@ -238,7 +249,8 @@ router.put("/profile", (req, res) => {
                         });
                 }
             } else {
-                res.status(400).json({success: false, message: "User not found"});
+                console.log("User does not exist")
+                res.status(404).json({success: false, message: "User does not exist"});
             }
         })
         .catch((err) => {
@@ -251,42 +263,255 @@ router.put("/profile", (req, res) => {
 // @desc    Deactivate User
 // @access  Private
 router.patch("/profile/deactivate", (req, res) => {
-    console.log("Inside User Deactivate Patch Request");
-    console.log(req.query.email, req.body.password);
+        console.log("Inside User Deactivate Patch Request");
+        console.log(req.query.email, req.body.password);
 
-    User.findOne({email: req.query.email})
-        .then((user) => {
-            if (user) {
-                user.comparePassword(req.body.password, function (err, isMatch) {
-                    if (isMatch && !err) {
-                        // updating isActive to false
-                        User.update(
-                            {email: req.query.email},
-                            {
-                                $set: {
-                                    isActive: false,
-                                },
-                            },
-                            function (err, result) {
-                                if (err) {
-                                    res.status(401).json({message: "Something went wrong"});
+        User.findOne({email: req.query.email, isActive: true})
+            .then((user) => {
+
+                // check if user exists
+                if (user) {
+                    user.comparePassword(req.body.password, function (err, isMatch) {
+                            //check if password matches
+                            if (isMatch && !err) {
+                                // check if user is influencer
+                                if (user.role == userRoles.INFLUENCER) {
+                                    // if user is in selectedCandidate of any active task and status is
+                                    // Created, Pending, InProgress then cannot deactivate
+                                    Task.find({
+                                        $and: [
+                                            {isActive: true},
+                                            {selectedCandidates: {$elemMatch: {$eq: req.query.email}}},
+                                            {
+                                                $or: [
+                                                    {status: taskStatus.CREATED},
+                                                    {status: taskStatus.PENDING},
+                                                    {status: taskStatus.INPROGRESS}
+                                                ]
+                                            }
+                                        ]
+
+                                    })
+                                        .then(tasks => {
+                                            if (tasks.length > 0) {
+                                                console.log("Cannot Deactivate Account");
+                                                res.status(401).json({message: "Cannot Deactivate Account"});
+                                            } else {
+                                                // 1. set isActive to false
+                                                User.update(
+                                                    {email: req.query.email},
+                                                    {
+                                                        $set: {
+                                                            isActive: false,
+                                                        },
+                                                    },
+                                                    function (err, result) {
+                                                        if (err) {
+                                                            console.log("Something went wrong")
+                                                            res.status(400).json({message: "Something went wrong"});
+                                                        } else {
+                                                            // 2. remove all tasks from appliedTasks in influencer for which status is:
+                                                            // Created, Pending or In Progress
+                                                            Task.find({
+                                                                $and: [
+                                                                    {isActive: true},
+                                                                    {appliedCandidates: {$elemMatch: {$eq: req.query.email}}},
+                                                                    {
+                                                                        $or: [
+                                                                            {status: taskStatus.CREATED},
+                                                                            {status: taskStatus.PENDING},
+                                                                            {status: taskStatus.INPROGRESS}
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }).then((tasks) => {
+                                                                if (tasks.length > 0) {
+                                                                    // get all taskIds in an array
+                                                                    var taskIds = []
+                                                                    for (var i = 0; i < tasks.length; i++) {
+                                                                        taskIds.push(tasks[i]._id)
+                                                                    }
+
+                                                                    InfluencerProfile.update(
+                                                                        {email: req.query.email},
+                                                                        {
+                                                                            $pull: {
+                                                                                tasksApplied: {$in: taskIds}
+                                                                            }
+                                                                        },
+                                                                        function (err, result) {
+                                                                            if (err) {
+                                                                                // make user active again
+                                                                                User.update(
+                                                                                    {email: req.query.email},
+                                                                                    {
+                                                                                        $set: {
+                                                                                            isActive: true,
+                                                                                        }
+                                                                                    })
+                                                                                console.log("Something went wrong")
+                                                                                res.status(400).json({message: "Something went wrong"});
+                                                                            } else {
+                                                                                // 3. remove email from appliedCandidates of task where status is Created, Pending, InProgress
+                                                                                Task.updateMany(
+                                                                                    {
+                                                                                        $and: [
+                                                                                            {isActive: true},
+                                                                                            {appliedCandidates: {$elemMatch: {$eq: req.query.email}}},
+                                                                                            {
+                                                                                                $or: [
+                                                                                                    {status: taskStatus.CREATED},
+                                                                                                    {status: taskStatus.PENDING},
+                                                                                                    {status: taskStatus.INPROGRESS}
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        $pull: {
+                                                                                            appliedCandidates: req.query.email
+                                                                                        }
+                                                                                    },
+                                                                                    function (err, result) {
+                                                                                        if (err) {
+                                                                                            // make user active again
+                                                                                            User.update(
+                                                                                                {email: req.query.email},
+                                                                                                {
+                                                                                                    $set: {
+                                                                                                        isActive: true,
+                                                                                                    }
+                                                                                                })
+                                                                                            // add taskIds to influencer's tasksApplied again
+                                                                                            InfluencerProfile.update(
+                                                                                                {email: req.query.email},
+                                                                                                {
+                                                                                                    $push: {
+                                                                                                        tasksApplied: {$in: taskIds}
+                                                                                                    }
+                                                                                                })
+                                                                                            console.log("Something went wrong")
+                                                                                            res.status(400).json({message: "Something went wrong"});
+                                                                                        } else {
+                                                                                            console.log("Account Deactivated successfully");
+                                                                                            res.status(200).json({message: "Account Deactivated successfully"});
+                                                                                        }
+                                                                                    });
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                } else {
+                                                                    console.log("Account Deactivated successfully");
+                                                                    res.status(200).json({message: "Account Deactivated successfully"});
+                                                                }
+
+                                                            }).catch(err => {
+                                                                console.log(err);
+                                                                res.status(400).json({message: err})
+                                                            })
+
+
+                                                        }
+                                                    })
+                                            }
+                                        })
+                                        .catch(err => {
+                                            console.log("Something went wrong")
+                                            res.status(400).json({message: "Something went wrong"})
+                                        })
                                 } else {
-                                    res.status(200).json({message: "Deactivate Success"});
+                                    // user is a sponsor
+                                    // if any influencer is present in selectedCandidates, task is posted by sponsor and status is
+                                    // Created, Pending, InProgress then cannot deactivate
+                                    Task.find({
+                                        $and: [
+                                            {isActive: true},
+                                            {postedBy: req.query.email},
+                                            {selectedCandidates: {$exists: true, $not: {$size: 0}}},
+                                            {
+                                                $or: [
+                                                    {status: taskStatus.CREATED},
+                                                    {status: taskStatus.PENDING},
+                                                    {status: taskStatus.INPROGRESS}
+                                                ]
+                                            }
+                                        ]
+                                    })
+                                        .then(tasks => {
+                                            if (tasks.length > 0) {
+                                                console.log("Cannot Deactivate Account");
+                                                res.status(401).json({message: "Cannot Deactivate Account"});
+                                            } else {
+                                                // set isActive to false
+                                                User.update(
+                                                    {email: req.query.email},
+                                                    {
+                                                        $set: {
+                                                            isActive: false,
+                                                        },
+                                                    },
+                                                    function (err, result) {
+                                                        if (err) {
+                                                            console.log("Something went wrong")
+                                                            res.status(400).json({message: "Something went wrong"});
+                                                        } else {
+                                                            // mark as cancelled - all tasks which are created and has no selected candidates
+                                                            Task.updateMany(
+                                                                {
+                                                                    isActive: true,
+                                                                    postedBy: req.query.email,
+                                                                    status: taskStatus.CREATED,
+                                                                    selectedCandidates: {$size: 0},
+                                                                },
+                                                                {
+                                                                    $set: {
+                                                                        status: taskStatus.CANCELLED,
+                                                                        isActive: false
+                                                                    },
+                                                                },
+                                                                function (err, result) {
+                                                                    if (err) {
+                                                                        console.log("Something went wrong");
+                                                                        User.update(
+                                                                            {email: req.query.email},
+                                                                            {
+                                                                                $set: {
+                                                                                    isActive: true,
+                                                                                },
+                                                                            });
+                                                                        res.status(400).json({message: "Something went wrong"});
+                                                                    } else {
+                                                                        console.log("Account Deactivated successfully");
+                                                                        res.status(200).json({message: "Account Deactivated successfully"});
+                                                                    }
+                                                                }
+                                                            );
+                                                        }
+                                                    }
+                                                );
+                                            }
+                                        })
+                                        .catch(err => {
+                                            console.log("Something went wrong")
+                                            res.status(400).json({message: "Something went wrong"})
+                                        })
                                 }
+                            } else {
+                                console.log("Incorrect Password")
+                                res.status(402).json({message: "Incorrect Password"});
                             }
-                        );
-                    } else {
-                        res.status(401).json({message: "Incorrect Password"});
-                    }
-                });
-            } else {
-                res.status(404).json({message: "User not found"});
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(404).json({message: "Something went wrong"});
-        });
-});
+                        }
+                    );
+                } else {
+                    console.log("User does not exist");
+                    res.status(404).json({message: "User does not exist"});
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(400).json({message: "Something went wrong"});
+            });
+    }
+);
 
 module.exports = router;

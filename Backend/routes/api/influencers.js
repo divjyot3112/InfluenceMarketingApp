@@ -23,7 +23,7 @@ router.put('/rate', (req, res) => {
             console.log(err1);
             res.status(400).json({success: false, message: "Rating  could not be added"});
         }
-        console.log(req.query.email)
+
         InfluencerProfile.findOneAndUpdate({
             email: req.query.email
         }, {
@@ -40,7 +40,8 @@ router.put('/rate', (req, res) => {
                         ratings: rating._id
                     }
                 }, {returnOriginal: false, useFindAndModify: false}).then(result2 => {
-                    res.status(200).json({success: true, message: "Rating added successfully!"})
+                    console.log("Rating added successfully")
+                    res.status(200).json({success: true, message: "Rating added successfully"})
                 }).catch((err2) => {
                     //delete the rating
                     Rating.findOneAndDelete({_id: ObjectID(rating._id)});
@@ -51,7 +52,8 @@ router.put('/rate', (req, res) => {
             } else {
                 //delete the rating
                 Rating.findOneAndDelete({_id: ObjectID(rating._id)});
-                res.status(400).json({success: false, message: "Influencer not found!"})
+                console.log("Influencer does not exist")
+                res.status(404).json({success: false, message: "Influencer does not exist"})
             }
         }).catch((err3) => {
             //delete the rating and influencer
@@ -60,7 +62,6 @@ router.put('/rate', (req, res) => {
             res.status(400).json({success: false, message: err3})
         })
     })
-
 });
 
 // @route   GET api/influencers/profile?address
@@ -74,6 +75,7 @@ router.get("/profile", (req, res) => {
         "address": {$regex: new RegExp(req.query.address, "i")}
     })
         .then(profile => {
+            // check if influencer profiles exists for given address
             if (profile.length != 0) {
                 console.log("Influencer Profiles fetched successfully for " +
                     "address: " + req.query.address);
