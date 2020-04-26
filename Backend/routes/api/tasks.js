@@ -333,7 +333,7 @@ router.put("/:taskId/select", (req, res) => {
 // @access  Public
 router.put("/complete/:taskId", (req, res) => {
     console.log("Inside Mark a task as complete for Task ID:", req.params.taskId);
-
+    console.log(req.params.taskId)
     Task.findOne({_id: ObjectID(req.params.taskId)})
         .then(task => {
             // check if task exists
@@ -495,34 +495,17 @@ router.put("/:taskId/apply", (req, res) => {
         });
 });
 
-// @route   GET /task/:taskId
-// @desc    Fetch a task by Task ID
-// @access  Public
-
-router.get("/:taskId", (req, res) => {
-    console.log("Inside fetch task by ID", req.params.taskId);
-
-    Task.findOne({_id: ObjectID(req.params.taskId)})
-        .then((task) => {
-            console.log("Task found successfully");
-            res.status(200).json({message: task});
-        })
-        .catch((err) => {
-            console.log("Task not found");
-            res.status(400).json({message: "Task does not exists"});
-        });
-});
 
 // @route   GET api/tasks/unrated?taskId
 // @desc    Fetch all unrated influencers for the given taskId
 // @access  Public
 router.get("/unrated", (req, res) => {
-    console.log("Inside get all unrated influencers");
+    console.log("Inside get all unrated influencers"+req.query.taskId);
 
     Task.findOne({_id: ObjectID(req.query.taskId)})
         .then(async task => {
             let selectedCandidates = task.selectedCandidates
-            let unratedCandidates = await Promise.all(selectedCandidates.map(candidate => {
+            let unratedCandidates = await Promise.all(selectedCandidates.map(async candidate => {
                 return Rating.findOne({
                     task: req.query.taskId,
                     influencer: candidate
@@ -548,6 +531,25 @@ router.get("/unrated", (req, res) => {
             res.status(400).json({message: "Influencers could not be fetched"});
         })
 });
+
+// @route   GET /task/:taskId
+// @desc    Fetch a task by Task ID
+// @access  Public
+
+router.get("/:taskId", (req, res) => {
+    console.log("Inside fetch task by ID", req.params.taskId);
+
+    Task.findOne({_id: ObjectID(req.params.taskId)})
+        .then((task) => {
+            console.log("Task found successfully");
+            res.status(200).json({message: task});
+        })
+        .catch((err) => {
+            console.log("Task not found");
+            res.status(400).json({message: "Task does not exists"});
+        });
+});
+
 
 
 module.exports = router;

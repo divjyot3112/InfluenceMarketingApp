@@ -9,7 +9,6 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -47,7 +46,7 @@ const DialogTitle = withStyles(styles)((props) => {
         <MuiDialogTitle disableTypography className={classes.root} {...other}>
             <Typography variant="h6">{children}</Typography>
             {onClose ? (
-                <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={onClose} style={{outline:"none"}}>
                     <CloseIcon />
                 </IconButton>
             ) : null}
@@ -190,10 +189,10 @@ class AddRatingModal extends Component {
             </Typography>
         </DialogContent>
             <DialogActions>
-                <Button autoFocus onClick={this.rateAndContinue} color="primary">
+                <Button autoFocus onClick={this.rateAndContinue} color="primary" style={{outline:"none"}}>
                     Rate and Continue
         </Button>
-                <Button autoFocus onClick={this.rateAndClose} color="primary">
+                <Button autoFocus onClick={this.rateAndClose} color="primary" style={{outline:"none"}}>
                     Rate and Close
         </Button>
             </DialogActions>
