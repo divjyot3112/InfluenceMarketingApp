@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Route} from 'react-router-dom';
+import React, { Component } from "react";
+import { Route } from "react-router-dom";
 // Routes
 // Common
 import Appbar from "./Common/Appbar"
@@ -9,7 +9,7 @@ import Search from "./Search/Search";
 // User Profile
 import UserProfile from "./UserProfile/userProfile";
 // Dashboard
-import Dashboard from './Dashboard/Dashboard';
+import Dashboard from "./Dashboard/Dashboard";
 // Task
 import PostTask from "./Task/postTask";
 // Inbox
@@ -20,6 +20,7 @@ import InfluencerRating from "./Rating/influencerRating";
 import TaskDescription from "./Task/TaskDescription";
 import Landing from "./LandingPage/LandingPage";
 import SponsorHome from "./Home/SponsorHome";
+import About from "./About/About";
 
 class Main extends Component {
   render() {
@@ -27,7 +28,7 @@ class Main extends Component {
       <div>
         <Route path="/" component={Appbar} />
         <Route path="/" component={Sidebar} />
-        <Route path="/search" exact component={Search}/>
+        <Route path="/search" exact component={Search} />
         <Route path="/dashboard" exact component={Dashboard} />
         <Route path="/profile" exact component={UserProfile} />
         <Route path="/task/new" exact component={PostTask} />
@@ -37,8 +38,10 @@ class Main extends Component {
         <Route path="/ratings/influencer" exact component={InfluencerRating} />
 
         <Route exact path="/" component={Landing} />
-        <Route exact path="/home" exact component={Landing} />
-        <Route exact path="/home/sponsor" exact component={SponsorHome} />
+
+        <Route path="/home" component={Landing} />
+        <Route path="/home/sponsor" component={SponsorHome} />
+        <Route path="/about" component={About} />
       </div>
     );
   }
