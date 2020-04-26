@@ -380,8 +380,9 @@ router.put("/complete/:taskId", (req, res) => {
 // @desc    Fetch all tasks by title and filter by status
 // @access  Public
 router.get("/search", (req, res) => {
-    console.log("Inside GET request to fetch all tasks by title: " + req.query.title + " " + req.query.status);
-    if(req.query.staus=="All") {
+    console.log("Inside GET request to fetch all tasks by title: " + req.query.title);
+    if(req.query.status===taskStatus.ALL) {
+        console.log("Finding tasks for status: " + req.query.status)
         Task.find({title: {$regex: new RegExp(req.query.title, "i")}})
             .then(tasks => {
                 if (tasks.length != 0) {
@@ -397,6 +398,7 @@ router.get("/search", (req, res) => {
                 res.status(400).json({message: "Tasks could not be fetched"});
             })
     } else {
+        console.log("Finding tasks for status: " + req.query.status)
         Task.find({title: {$regex: new RegExp(req.query.title, "i")}, status: req.query.status})
         .then(tasks => {
             if (tasks.length != 0) {
