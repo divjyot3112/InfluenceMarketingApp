@@ -15,13 +15,13 @@ class ConversationList extends Component {
     this.state = {
       allConversations: [],
       visibleConversations: [],
-      currentConverstation: []
+      currentConverstation: [],
+      chatWith: this.props.chatWith
     }
   }
 
   componentDidMount = () => {
     this.getConversations();
-    
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -29,6 +29,7 @@ class ConversationList extends Component {
     
     return true;
   }
+
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.conversations!==this.props.conversations){
@@ -47,7 +48,18 @@ class ConversationList extends Component {
        this.setState({
          allConversations: newConversations,
          visibleConversations: newConversations
-       })
+       }, () => {
+        if (this.state.chatWith !== null) {
+          if (this.state.allConversations.filter(c => c.email === this.state.chatWith.email).length > 0) {
+            this.selectConversation(this.state.chatWith.email)
+          }
+          else {
+            this.addNewConversation(this.state.chatWith)
+          }
+        } else {
+          this.selectConversation(newConversations[0].email)
+        }
+      })
     }
   }
 
@@ -56,20 +68,34 @@ class ConversationList extends Component {
     this.props.fetchConversations(MY_USER_ID, () => {
       console.log(this.props.conversations)
       let newConversations = this.props.conversations.map(c => {
-        let unreadCount = c.conversation.filter(f => f.author!== MY_USER_ID && f.read === false).length
+        let unreadCount = c.conversation.filter(f => f.author !== MY_USER_ID && f.read === false).length
         return {
           photo: c.photo, //TODO: add profile image
           name: c.name,
-          email:c.email,
+          email: c.email,
           unreadCount: unreadCount
         };
       });
-
-       this.setState({
-         allConversations: newConversations,
-         visibleConversations: newConversations
-       })
+      
+      this.setState({
+        allConversations: newConversations,
+        visibleConversations: newConversations
+      }, () => {
+        if (this.state.chatWith !== null) {
+          if (this.state.allConversations.filter(c => c.email === this.state.chatWith.email).length > 0) {
+            this.selectConversation(this.state.chatWith.email)
+          }
+          else {
+            this.addNewConversation(this.state.chatWith)
+          }
+        } else {
+          this.selectConversation(newConversations[0].email)
+        }
+      }
+      )
+       
     })
+    
   }
   
   searchConversation = (str) => {
@@ -91,10 +117,11 @@ class ConversationList extends Component {
 
   selectConversation = (key) => {
     this.setState({
-      currentConverstation:key
+      currentConverstation: key,
+      chatWith: this.state.allConversations.filter(c=>c.email === key)[0]
     })
     this.props.selectConversation(key)
-    if (this.state.allConversations.filter(c => c.email === key).unreadCount != 0) {
+    if (this.state.allConversations.filter(c => c.email === key)[0].unreadCount !== 0) {
       this.props.markRead({ current: MY_USER_ID, other: key }, () => { this.getConversations() })
     }
   }
@@ -110,7 +137,7 @@ class ConversationList extends Component {
       this.setState({
         allConversations: [newConversation, ...this.state.allConversations],
         visibleConversations: [newConversation, ...this.state.visibleConversations],
-        currentConverstation:userData.email
+        currentConverstation: userData.email
       },this.props.selectConversation(userData.email))
     }
     else {
