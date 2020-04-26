@@ -29,7 +29,6 @@ import NoData from './NoData'
 import "../../css/dashboard.css";
 import { MY_USER_ID } from "../../utils/Constants";
 import { Link } from "react-router-dom";
-
 //create the Navbar Component
 
 const useStyles = (theme) => ({
@@ -68,7 +67,8 @@ class SponsorDashboard extends Component {
             numPages: 0,
             openSelect: false,
             sortBy: 0,
-            currPage:1
+            currPage: 1,
+            status:TaskStatus.ALL
         }
     }
 
@@ -109,17 +109,28 @@ class SponsorDashboard extends Component {
 
     handleOnStatusChange = (event) => {
         console.log(event)
+        let status = event.target.value
         this.props.fetchDashboardTasks(MY_USER_ID, event.target.value, () => { this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks);this.setState({
-            sortBy: 0
+            sortBy: 0,
+            status: status
         })});
     }
 
     deleteTask = (taskId) => {
-        alert(taskId)
+        this.props.cancelTask(taskId,()=>{
+            this.props.fetchDashboardTasks(MY_USER_ID, this.state.status, () => {
+                this.props.sortTasks(this.state.sortBy, () => { this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks) })
+            });
+    })
+
     }
 
     markComplete = (taskId) => {
-        alert(taskId)
+        this.props.markComplete(taskId, () => {
+            this.props.fetchDashboardTasks(MY_USER_ID, this.state.status, () => {
+                this.props.sortTasks(this.state.sortBy, () => { this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks) })
+            });
+        })
     }
 
     renderTasks() {

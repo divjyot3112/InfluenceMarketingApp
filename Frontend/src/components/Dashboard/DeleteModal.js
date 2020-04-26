@@ -76,6 +76,7 @@ class DeleteModal extends Component {
 
     handleYesClick = () => {
         this.props.deleteTask();
+        this.setOpen(false)
     }
 
     handleClickOpen = () => {

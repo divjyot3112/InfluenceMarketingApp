@@ -83,26 +83,28 @@ export const addRating = (data, email) => dispatch => {
         })
 }
 
-export const cancelTask = (data, email) => dispatch => {
+export const cancelTask = (taskId, nextFun) => dispatch => {
     axios.defaults.withCredentials = true;
-    axios.put(`${ROOT_URL}/tasks/delete`,data, {params:{email:email}})
+    axios.put(`${ROOT_URL}/tasks/delete`, {params:{taskId:taskId}})
         .then((response) => { //Action dispatched
             console.log("Response", response);
             dispatch({
                 type: CANCEL_DASHBOARD_TASK,
                 payload: response
             })
+            nextFun()
         })
 }
 
-export const markComplete = (taskId) => dispatch => {
+export const markComplete = (taskId,nextFun) => dispatch => {
     axios.defaults.withCredentials = true;
-    axios.put(`${ROOT_URL}/tasks/complete`, {params:{taskId:taskId}})
+    axios.put(`${ROOT_URL}/tasks/complete/${taskId}`)
         .then((response) => { //Action dispatched
             console.log("Response", response);
             dispatch({
                 type: MARK_DASHBOARD_TASK_COMPLETE,
                 payload: response
             })
+            nextFun()
         })
 }

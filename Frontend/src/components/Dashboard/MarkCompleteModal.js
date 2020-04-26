@@ -77,6 +77,7 @@ class MarkCompleteModal extends Component {
 
     handleYesClick = () => {
         this.props.markComplete();
+        this.setOpen(false)
     }
 
     handleClickOpen = () => {
