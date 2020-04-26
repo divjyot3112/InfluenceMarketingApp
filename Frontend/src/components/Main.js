@@ -4,7 +4,8 @@ import {Route} from 'react-router-dom';
 // Common
 import Appbar from "./Common/Appbar"
 import Sidebar from "./Common/Sidebar"
-import Search from "./Common/Search";
+//Search
+import Search from "./Search/Search";
 // User Profile
 import UserProfile from "./UserProfile/userProfile";
 // Dashboard

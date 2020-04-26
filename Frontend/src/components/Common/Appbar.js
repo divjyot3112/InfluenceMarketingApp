@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import { TaskStatus } from '../../utils/Constants';
 // UI component imports
 import {
     Collapse,
@@ -28,6 +29,7 @@ import PropTypes from "prop-types";
 import {getProfile} from "../../actions/userProfileActions";
 // CSS
 import "../../css/appbar.css";
+
 
 // Beginning of class
 export class Appbar extends Component {
@@ -86,7 +88,8 @@ export class Appbar extends Component {
                 pathname:"/search",
                 state: {
                     searchString: this.state.searchString,
-                    searchParameter: this.state.search ? "P" : "T"
+                    searchParameter: this.state.search ? "P" : "T",
+                    status: TaskStatus.ALL
                 }
             })
         }
