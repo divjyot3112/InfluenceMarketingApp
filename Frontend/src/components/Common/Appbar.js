@@ -23,7 +23,7 @@ import {FaSignOutAlt, FaSearch} from 'react-icons/fa'
 // Redux imports
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import {getProfile} from "../../actions/userProfileActions";
+import {getProfile, deactivateProfile} from "../../actions/userProfileActions";
 // CSS
 import "../../css/appbar.css";
 import {If} from "react-if";
@@ -102,11 +102,36 @@ export class Appbar extends Component {
     };
 
     handleLogout = () => {
-        console.log("logout")
         localStorage.removeItem("email");
         localStorage.removeItem("role");
-        return <Redirect to="/home"/>;
+        window.location.href = "/home";
+        ;
     };
+
+    handleDeactivateAccount = () => {
+        const password = prompt("Please enter your password to deactivate your account:");
+
+        // TODO: get email from local storage
+        // const email = localStorage.getItem("email");
+        const email = "divjyot@gmail.com";
+
+        if (password !== "") {
+            const data = {
+                password: password
+            }
+            this.props.deactivateProfile(data, email).then((res) => {
+                if (res) {
+                    window.alert("Cannot deactivate your account now. Please try again later.")
+                } else {
+                    console.log(this.props.deactivateProfile)
+                    window.alert("Your account has been deactivated successfully.")
+                    this.handleLogout();
+                }
+            });
+        } else {
+            window.alert("Password cannot be empty")
+        }
+    }
 
     render() {
         let username = null;
@@ -206,7 +231,7 @@ export class Appbar extends Component {
                                             </DropdownItem>
                                             <DropdownItem divider/>
                                             <DropdownItem className="drop-down-item">
-                                                <NavLink href="/profile">
+                                                <NavLink onClick={this.handleDeactivateAccount}>
                                                     Deactivate Account
                                                 </NavLink>
                                             </DropdownItem>
@@ -236,10 +261,7 @@ export class Appbar extends Component {
                                 <div className="vertical"></div>
 
                                 <NavItem className="nav-item-box">
-                                    <NavLink
-                                        className="link-icon"
-                                        onClick={this.handleLogout}
-                                        href="/home">
+                                    <NavLink className="link-icon" onClick={this.handleLogout}>
                                         <span>Log Out &nbsp; <FaSignOutAlt/></span>
                                     </NavLink>
                                 </NavItem>
@@ -257,13 +279,15 @@ export class Appbar extends Component {
 // Defining proptypes
 Appbar.protoTypes = {
     getProfile: PropTypes.func.isRequired,
-    profile: PropTypes.object.isRequired
+    profile: PropTypes.object.isRequired,
+    deactivateProfile: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state) {
     return {
-        profile: state.userProfile.profile
+        profile: state.userProfile.profile,
+        deactivateProfile: state.userProfile.deactivateProfile
     };
 }
 
-export default connect(mapStateToProps, {getProfile})(Appbar);
+export default connect(mapStateToProps, {getProfile, deactivateProfile})(Appbar);
