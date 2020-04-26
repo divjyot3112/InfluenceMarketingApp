@@ -8,42 +8,48 @@ import {
     Nav,
     NavItem,
     NavLink,
-    // UncontrolledDropdown,
-    // DropdownToggle,
-    // DropdownMenu,
-    // DropdownItem,
-    NavbarText,
+    UncontrolledDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
     Input,
-    // Button,
     InputGroupAddon,
     InputGroup,
-    // InputGroupText,
 } from 'reactstrap';
-import {Image, Button} from 'react-bootstrap'
+import {Button} from 'react-bootstrap'
+import {Redirect} from "react-router";
 import Switch from "react-switch";
-import {FaUserAlt, FaSignOutAlt, FaSearch} from 'react-icons/fa'
+import {FaSignOutAlt, FaSearch} from 'react-icons/fa'
 // Redux imports
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import {getProfile} from "../../actions/userProfileActions";
+import {getProfile, deactivateProfile} from "../../actions/userProfileActions";
 // CSS
 import "../../css/appbar.css";
+import {If} from "react-if";
+import Avatar from '@material-ui/core/Avatar';
 
-// Beginning of class
+const UserRoles = require("../../utils/Constants").UserRoles;
+
 export class Appbar extends Component {
     state = {
         isOpen: false,
         userExists: false,
         firstName: null,
+        image: "",
         search: true,
-        placeholder: "Search People",
-        searchString: ""
+        placeholder: "Search Tasks",
+        searchString: "",
+        role: null
     }
 
     componentWillMount() {
         // TODO: get email from local storage
         // const email = localStorage.getItem("email");
         const email = "divjyot@gmail.com";
+        const role = UserRoles.SPONSOR;
+
+        this.setState({role: role});
 
         if (email != null) {
             this.props.getProfile(email).then((response) => {
@@ -51,6 +57,9 @@ export class Appbar extends Component {
                     this.setState({
                         firstName: this.props.profile.data.message.name
                             ? this.props.profile.data.message.name.firstName
+                            : "",
+                        image: this.props.profile.data.message
+                            ? this.props.profile.data.message.image
                             : "",
                         userExists: true
                     })
@@ -68,7 +77,7 @@ export class Appbar extends Component {
 
     handleChange = () => {
         this.setState({
-            placeholder: this.state.placeholder=="Search People"?"Search Tasks":"Search People",
+            placeholder: this.state.placeholder == "Search Tasks" ? "Search People" : "Search Tasks",
             search: !this.state.search
         })
     }
@@ -80,80 +89,111 @@ export class Appbar extends Component {
     }
 
     onSearch = (e) => {
-        if(this.state.searchString.length>0) {
+        if (this.state.searchString.length > 0) {
             console.log(this.state.searchString)
             this.props.history.push({
-                pathname:"/search",
+                pathname: "/search",
                 state: {
                     searchString: this.state.searchString,
                     searchParameter: this.state.search ? "P" : "T"
                 }
             })
         }
+    };
+
+    handleLogout = () => {
+        localStorage.removeItem("email");
+        localStorage.removeItem("role");
+        window.location.href = "/home";
+        ;
+    };
+
+    handleDeactivateAccount = () => {
+        const password = prompt("Please enter your password to deactivate your account:");
+
+        // TODO: get email from local storage
+        // const email = localStorage.getItem("email");
+        const email = "divjyot@gmail.com";
+
+        if (password !== "") {
+            const data = {
+                password: password
+            }
+            this.props.deactivateProfile(data, email).then((res) => {
+                if (res) {
+                    window.alert("Cannot deactivate your account now. Please try again later.")
+                } else {
+                    console.log(this.props.deactivateProfile)
+                    window.alert("Your account has been deactivated successfully.")
+                    this.handleLogout();
+                }
+            });
+        } else {
+            window.alert("Password cannot be empty")
+        }
     }
 
     render() {
         let username = null;
 
-        if (this.state.userExists) {
-            username = <NavLink href="/profile">{this.state.firstName ? this.state.firstName : ""}</NavLink>
-        }
-
         return (
             <React.Fragment>
                 <div>
-                    <Navbar color="light" light expand="md">
+                    <Navbar color="dark" expand="md" className="navbar-main">
                         <NavbarBrand href="/" className="navbar-brand">Together</NavbarBrand>
                         <NavbarToggler onClick={this.toggle}/>
                         <Collapse isOpen={this.state.isOpen} navbar>
-                            <Nav className="mr-auto" navbar>
-                                <NavItem style={{width: 250, marginLeft: 25}}>
+                            <Nav className="mr-auto" navbar className="navbar-search-main">
+                                <NavItem className="search">
+
                                     <InputGroup>
                                         <Input
                                             type="text"
-                                            className="form-control"
+                                            className="form-control search-text"
                                             placeholder={this.state.placeholder}
                                             value={this.state.searchString}
                                             onChange={this.onChange}
                                         />
                                         <InputGroupAddon addonType="append">
                                             <Button
+                                                className="search-button"
                                                 onClick={this.onSearch}
                                                 variant="outline-success"
                                             >
-                                                <FaSearch style={{height: "1em", width:"1.5em"}} />
+                                                <FaSearch/>
                                             </Button>
                                         </InputGroupAddon>
                                     </InputGroup>
+
                                 </NavItem>
-                                <NavItem style={{marginLeft: "2%"}}>
+                                <NavItem className="toggle-button">
                                     <Switch
                                         checked={this.state.search}
                                         onChange={this.handleChange}
                                         handleDiameter={28}
-                                        offColor="#08f"
-                                        onColor="#0ff"
-                                        offHandleColor="#0ff"
-                                        offHandle = {
+                                        offColor="#5AC560"
+                                        onColor="#fff"
+                                        offHandleColor="#fff"
+                                        offHandle={
                                             <div>P</div>
                                         }
-                                        onHandleColor="#08f"
+                                        onHandleColor="#5AC560"
                                         height={40}
                                         width={90}
                                         uncheckedIcon={
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                alignItems: "center",
-                                                height: "100%",
-                                                fontSize: 15,
-                                                color: "#577284",
-                                                paddingRight: 2
-                                            }}
-                                        >
-                                            <b>People</b>
-                                        </div>
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    height: "100%",
+                                                    fontSize: 15,
+                                                    color: "#fff",
+                                                    paddingRight: 2
+                                                }}
+                                            >
+                                                <b>People</b>
+                                            </div>
                                         }
                                         checkedIcon={
                                             <div
@@ -163,7 +203,7 @@ export class Appbar extends Component {
                                                     alignItems: "center",
                                                     height: "100%",
                                                     fontSize: 15,
-                                                    color: "#577284",
+                                                    color: "#000",
                                                     paddingRight: 2
                                                 }}
                                             >
@@ -175,17 +215,58 @@ export class Appbar extends Component {
                                     />
                                 </NavItem>
                             </Nav>
-                            <Nav navbar>
-                                <NavItem style={{marginLeft: 25}}>
-                                    <FaUserAlt style={{height: 40}}/> {/* To do -> add profile picture of user */}
+
+                            <Nav navbar className="navbar-profile-main">
+                                <NavItem className="nav-item-box">
+
+                                    <UncontrolledDropdown nav inNavbar>
+                                        <DropdownToggle nav caret style={{color: "white"}}>
+                                            <Avatar src={this.state.image} className="profile-image"/>
+                                        </DropdownToggle>
+                                        <DropdownMenu right>
+                                            <DropdownItem className="drop-down-item">
+                                                <NavLink href="/profile">
+                                                    My Profile
+                                                </NavLink>
+                                            </DropdownItem>
+                                            <DropdownItem divider/>
+                                            <DropdownItem className="drop-down-item">
+                                                <NavLink onClick={this.handleDeactivateAccount}>
+                                                    Deactivate Account
+                                                </NavLink>
+                                            </DropdownItem>
+                                        </DropdownMenu>
+                                    </UncontrolledDropdown>
+
                                 </NavItem>
-                                <NavItem style={{marginLeft: 25, background: "#dadee3"}}>
-                                    {username}
+                                <div className="vertical"></div>
+
+                                <NavItem className="nav-item-box nav-home">
+                                    <NavLink href="/"><p>Home</p></NavLink>
                                 </NavItem>
-                                <NavItem style={{marginLeft: 25, color: "#ff9191"}}>
-                                    <NavLink>Sign Out <FaSignOutAlt style={{}}/></NavLink> {/*Redirect to signout*/}
+                                <div className="vertical"></div>
+
+                                <If condition={this.state.role === UserRoles.SPONSOR}>
+                                    <React.Fragment>
+                                        <NavItem className="nav-item-box">
+                                            <NavLink href="/task/new"><p>Create</p></NavLink>
+                                        </NavItem>
+                                        <div className="vertical"></div>
+                                    </React.Fragment>
+                                </If>
+
+                                <NavItem className="nav-item-box">
+                                    <NavLink href="/inbox"><p>Inbox</p></NavLink>
+                                </NavItem>
+                                <div className="vertical"></div>
+
+                                <NavItem className="nav-item-box">
+                                    <NavLink className="link-icon" onClick={this.handleLogout}>
+                                        <span>Log Out &nbsp; <FaSignOutAlt/></span>
+                                    </NavLink>
                                 </NavItem>
                             </Nav>
+
                         </Collapse>
                     </Navbar>
                     {/* <Sidebar /> */}
@@ -198,13 +279,15 @@ export class Appbar extends Component {
 // Defining proptypes
 Appbar.protoTypes = {
     getProfile: PropTypes.func.isRequired,
-    profile: PropTypes.object.isRequired
+    profile: PropTypes.object.isRequired,
+    deactivateProfile: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state) {
     return {
-        profile: state.userProfile.profile
+        profile: state.userProfile.profile,
+        deactivateProfile: state.userProfile.deactivateProfile
     };
 }
 
-export default connect(mapStateToProps, {getProfile})(Appbar);
+export default connect(mapStateToProps, {getProfile, deactivateProfile})(Appbar);

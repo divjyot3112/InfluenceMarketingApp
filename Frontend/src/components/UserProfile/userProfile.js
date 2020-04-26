@@ -161,7 +161,7 @@ class UserProfile extends UserProfileFormEventHandlers {
             this.setState({isCurrentUser: false})
 
         // TODO: Get username from local storage
-        const username = this.props.location.state ? this.props.location.state.email : "sheena@gmail.com";
+        const username = this.props.location.state ? this.props.location.state.email : "divjyot@gmail.com";
 
         this.props.getProfile(username).then((response) => {
             if (response === undefined && this.props.profile.status === 200) {
@@ -201,7 +201,7 @@ class UserProfile extends UserProfileFormEventHandlers {
     handleProfile = (e) => {
         e.preventDefault();
         // TODO: Get username from local storage
-        const email = "sheena@gmail.com";
+        const email = "divjyot@gmail.com";
 
         const data = {
             name: {
