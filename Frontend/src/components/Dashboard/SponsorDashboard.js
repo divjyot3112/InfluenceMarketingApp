@@ -146,8 +146,8 @@ class SponsorDashboard extends Component {
                         <Card className={classes.card}>
                             <CardMedia
                                 className={classes.cardMedia}
-                                image="https://source.unsplash.com/random"
-                                title="Image title"
+                                image={(task.image === null || task.image === undefined) ? window.location.origin + '/no_image.jpg' : task.image}
+                                title={task.title}
                             />
                             <CardContent className={classes.cardContent}>
                                 <Typography gutterBottom variant="h6" component="h2">

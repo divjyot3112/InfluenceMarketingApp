@@ -19,11 +19,15 @@ class Messenger extends Component {
   }
 
   render() {
+    console.log(this.props)
+    let chatWith = null
+    if (this.props.location && this.props.location.state) chatWith = this.props.location.state.chatWith
+    window.history.pushState(null,'')
     return (
       <div className="messenger">
 
         <div className="scrollable sidebar">
-          <ConversationList selectConversation={(key) => this.selectConversation(key)} />
+          <ConversationList selectConversation={(key) => this.selectConversation(key)} chatWith={chatWith}/>
         </div>
 
         <div className="scrollable content">

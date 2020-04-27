@@ -120,7 +120,7 @@ class InfluencerDashboard extends Component {
                     <Card className={classes.card}>
                         <CardMedia
                             className={classes.cardMedia}
-                            image="https://source.unsplash.com/random"
+                            image={(task.image === null || task.image === undefined) ? window.location.origin + '/no_image.jpg' : task.image}
                             title="Image title"
                         />
                         <CardContent className={classes.cardContent}>
