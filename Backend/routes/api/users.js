@@ -18,8 +18,6 @@ const User = require("../../models/User");
 const InfluencerProfile = require("../../models/InfluencerProfile");
 const SponsorProfile = require("../../models/SponsorProfile");
 const Rating = require('../../models/Rating');
-const Name = require("../../models/Name");
-const Address = require("../../models/Address");
 
 // @route   POST api/users/login
 // @desc    Login User

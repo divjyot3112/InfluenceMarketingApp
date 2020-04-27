@@ -13,6 +13,15 @@ const Task = require('../../models/Task');
 const SponsorProfile = require('../../models/SponsorProfile');
 const InfluencerProfile = require('../../models/InfluencerProfile');
 const Rating = require('../../models/Rating');
+const nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'influencemarketing.contact@gmail.com',
+        pass: 'cmpe295Project'
+    }
+});
 
 // @route   POST api/task/create
 // @desc    Create a task
@@ -291,7 +300,26 @@ router.put("/:taskId/select", (req, res) => {
                                 )
                                     .then(task => {
                                         console.log("Status updated to Pending successfully")
-                                        // TODO: email all rejected candidates
+                                        // email all rejected candidates
+                                        var rejectedCandidates = task.appliedCandidates.filter(function (email) {
+                                            return !task.selectedCandidates.includes(email);
+                                        });
+                                        // rejectedCandidates.push("sheena.gupta.in@gmail.com")
+                                        var mailOptions = {
+                                            from: "influencemarketing.contact@gmail.com",
+                                            to: rejectedCandidates,
+                                            subject: 'Update on Application for ' + task.title,
+                                            text: 'We regret to inform you that your application has been rejected.'
+                                        };
+
+                                        transporter.sendMail(mailOptions, function (error, info) {
+                                            if (error) {
+                                                console.log(error);
+                                            } else {
+                                                console.log('Email sent: ' + info.response);
+                                            }
+                                        });
+
                                         res.status(200).json({message: "Candidate selected successfully"})
                                     })
                                     .catch(err => {
@@ -381,7 +409,7 @@ router.put("/complete/:taskId", (req, res) => {
 // @access  Public
 router.get("/search", (req, res) => {
     console.log("Inside GET request to fetch all tasks by title: " + req.query.title);
-    if(req.query.status===taskStatus.ALL) {
+    if (req.query.status === taskStatus.ALL) {
         console.log("Finding tasks for status: " + req.query.status)
         Task.find({title: {$regex: new RegExp(req.query.title, "i")}})
             .then(tasks => {
@@ -400,19 +428,19 @@ router.get("/search", (req, res) => {
     } else {
         console.log("Finding tasks for status: " + req.query.status)
         Task.find({title: {$regex: new RegExp(req.query.title, "i")}, status: req.query.status})
-        .then(tasks => {
-            if (tasks.length != 0) {
-                console.log("tasks fetched successfully for title: " + req.query.title);
-                res.status(200).json({message: tasks});
-            } else {
-                console.log("No tasks found");
-                res.status(404).json({message: "No tasks found"});
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(400).json({message: err});
-        })
+            .then(tasks => {
+                if (tasks.length != 0) {
+                    console.log("tasks fetched successfully for title: " + req.query.title);
+                    res.status(200).json({message: tasks});
+                } else {
+                    console.log("No tasks found");
+                    res.status(404).json({message: "No tasks found"});
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(400).json({message: err});
+            })
     }
 });
 
@@ -518,7 +546,7 @@ router.put("/:taskId/apply", (req, res) => {
 // @desc    Fetch all unrated influencers for the given taskId
 // @access  Public
 router.get("/unrated", (req, res) => {
-    console.log("Inside get all unrated influencers"+req.query.taskId);
+    console.log("Inside get all unrated influencers" + req.query.taskId);
 
     Task.findOne({_id: ObjectID(req.query.taskId)})
         .then(async task => {
@@ -567,7 +595,6 @@ router.get("/:taskId", (req, res) => {
             res.status(400).json({message: "Task does not exists"});
         });
 });
-
 
 
 module.exports = router;
