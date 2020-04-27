@@ -1,9 +1,11 @@
 import { 
     SEARCH_TASKS, 
+    SEARCH_PEOPLE,
 } from '../actions/types';
 
 const initialState = {
     tasks: [],
+    people: []
 }
 
 export default function(state = initialState, action) {
@@ -12,6 +14,11 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 tasks: action.payload.message,
+            };
+        case SEARCH_PEOPLE:
+            return {
+                ...state,
+                people: action.payload.message,
             };
             default:
             return state;

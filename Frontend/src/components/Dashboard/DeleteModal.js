@@ -105,7 +105,7 @@ class DeleteModal extends Component {
         
         return (
             <div>
-                <Tooltip title="Delete the Task">
+                <Tooltip title="Delete">
                 <IconButton aria-label="delete" onClick={this.handleClickOpen} style={{outline:"none"}}>
                 <DeleteIcon size="small" color="primary">
                 </DeleteIcon>
