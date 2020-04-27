@@ -5,7 +5,8 @@ import { Route } from "react-router-dom";
 import Appbar from "./Common/Appbar"
 import Sidebar from "./Common/Sidebar"
 //Search
-import Search from "./Search/Search";
+import SearchTasks from "./Search/SearchTasks";
+import SearchPeople from "./Search/SearchPeople";
 // User Profile
 import UserProfile from "./UserProfile/userProfile";
 // Dashboard
@@ -28,7 +29,8 @@ class Main extends Component {
       <div>
         <Route path="/" component={Appbar} />
         <Route path="/" component={Sidebar} />
-        <Route path="/search" exact component={Search} />
+        <Route path="/search/tasks" exact component={SearchTasks} />
+        <Route path="/search/people" exact component={SearchPeople} />
         <Route path="/dashboard" exact component={Dashboard} />
         <Route path="/profile" exact component={UserProfile} />
         <Route path="/task/new" exact component={PostTask} />

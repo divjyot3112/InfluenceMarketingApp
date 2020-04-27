@@ -12,7 +12,9 @@ export const DEACTIVATE_PROFILE = "DEACTIVATE_PROFILE";
 
 export const SAVE_TASK = "SAVE_TASK";
 export const GET_TASK = "GET_TASK";
+
 export const SEARCH_TASKS = "SEARCH_TASKS";
+export const SEARCH_PEOPLE = "SEARCH_PEOPLE";
 
 export const FETCH_CONVERSATIONS = "FETCH_CONVERSATIONS";
 export const SEND_MESSAGE = "SEND_MESSAGE";

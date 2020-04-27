@@ -39,7 +39,7 @@ export class Appbar extends Component {
         firstName: null,
         image: "",
         search: true,
-        placeholder: "Search Tasks",
+        placeholder: "Search People",
         searchString: "",
         role: null
     }
@@ -92,14 +92,25 @@ export class Appbar extends Component {
     onSearch = (e) => {
         if (this.state.searchString.length > 0) {
             console.log(this.state.searchString)
-            this.props.history.push({
-                pathname: "/search",
-                state: {
-                    searchString: this.state.searchString,
-                    searchParameter: this.state.search ? "P" : "T",
-                    status: TaskStatus.ALL
-                }
-            })
+            this.state.search ? (
+                this.props.history.push({
+                    pathname: "/search/people",
+                    state: {
+                        searchString: this.state.searchString,
+                        // status: TaskStatus.ALL
+                    }
+                })
+            ) : (
+                this.props.history.push({
+                    pathname: "/search/tasks",
+                    state: {
+                        searchString: this.state.searchString,
+                        status: TaskStatus.ALL
+                    }
+                })
+            )
+                
+            
         }
     };
 
@@ -194,7 +205,7 @@ export class Appbar extends Component {
                                                     paddingRight: 2
                                                 }}
                                             >
-                                                <b>People</b>
+                                                <b>Tasks</b>
                                             </div>
                                         }
                                         checkedIcon={
@@ -209,7 +220,7 @@ export class Appbar extends Component {
                                                     paddingRight: 2
                                                 }}
                                             >
-                                                <b>Tasks</b>
+                                                <b>People</b>
                                             </div>
                                         }
                                         className="react-switch"
