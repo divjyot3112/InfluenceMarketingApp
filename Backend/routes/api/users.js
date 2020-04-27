@@ -17,6 +17,7 @@ require("../../config/passport")(passport);
 const User = require("../../models/User");
 const InfluencerProfile = require("../../models/InfluencerProfile");
 const SponsorProfile = require("../../models/SponsorProfile");
+const Rating = require('../../models/Rating');
 const Name = require("../../models/Name");
 const Address = require("../../models/Address");
 
@@ -513,5 +514,75 @@ router.patch("/profile/deactivate", (req, res) => {
             });
     }
 );
+
+//arman
+  // @route   GET api/profile/firstName&&LastName
+  // @desc    Search user profiles by name
+  // @access  Public
+  router.get("/searchProfile", (req, res) => {
+    console.log("Inside search profile by name API" + req.query.firstName + req.query.lastName);
+
+    //   const name = {
+    //     firstName: req.params.firstName,
+    //     lastName: req.params.lastName,
+    //   };
+
+    // function find influencer profile
+    // if not find sponsor profile
+    // return profiles
+    let ratingsMap = {}
+    InfluencerProfile.find({
+      $or: [
+        { "name.firstName": { $regex: new RegExp(req.query.firstName, "i") } },
+        { "name.lastName": { $regex: new RegExp(req.query.lastName, "i") } },
+      ],
+    })
+      .then((profiles) => {
+        if (profiles.length > 0) {
+          console.log(
+            "Profiles searched successfully for name " +
+              "First name: " +
+              req.query.firstName +
+              " and Last name" +
+              req.query.lastName +
+              "Getting Ratings:"
+          );
+          
+          profiles.map(profile => (
+            Rating.find({
+                influencer: profile.email
+            })
+            .sort({ratedOn: -1})
+            .then(r => {
+                if (r.length != 0) {
+                    console.log("Ratings fetched successfully for influencer: " + profile.email);
+                    // console.log(r[0])
+                    const email = profile.email
+                    console.log(profile.email)
+                    // console.log(ratingsMap)
+                    ratingsMap.email = r
+                } else {
+                    console.log("No Ratings found for influencer: " + profile.email);
+                    // res.status(404).json({message: "No Ratings found"});
+                }
+            })
+            .catch(err => {console.log(err)})
+          ))
+          console.log("Ratings Map" + ratingsMap)
+          res.status(200).json({message: profiles, ratings: ratingsMap})
+        } else {
+          console.log("No  Profiles found");
+          res
+            .status(404)
+            .json({ message: "No Profile with matching name found" });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res
+          .status(500)
+          .json({ message: "Profile could not be fetched. Error: " + err });
+      });
+  });
 
 module.exports = router;
