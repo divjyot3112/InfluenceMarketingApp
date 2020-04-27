@@ -87,8 +87,8 @@ class MessageList extends Component {
         read: false
     }
     let data = {
-      sender:MY_USER_ID,//localStorage.getItem("email"),
-      receiver: this.props.conversationId,//this.props.conversationId,
+      sender:MY_USER_ID,
+      receiver: this.props.conversationId,
       message: message
     }
     this.props.sendMessage(data, () => {
@@ -181,14 +181,6 @@ class MessageList extends Component {
     return (
       <div className="message-list">
         <Toolbar
-          //title="Conversation Title"
-          title={this.props.conversationId}
-       /* rightItems={[
-          
-          <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
-          <ToolbarButton key="video" icon="ion-ios-videocam" />,
-          <ToolbarButton key="phone" icon="ion-ios-call" />
-        ]}*/
         />
 
         <div className="message-list-container">{this.renderMessages()}</div>

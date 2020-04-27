@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { TaskStatus } from '../../utils/Constants';
+import {TaskStatus} from '../../utils/Constants';
 // UI component imports
 import {
     Collapse,
@@ -110,8 +110,8 @@ export class Appbar extends Component {
                     }
                 })
             )
-                
-            
+
+
         }
     };
 
@@ -129,21 +129,23 @@ export class Appbar extends Component {
         // const email = localStorage.getItem("email");
         const email = "divjyot@gmail.com";
 
-        if (password !== "") {
-            const data = {
-                password: password
-            }
-            this.props.deactivateProfile(data, email).then((res) => {
-                if (res) {
-                    window.alert("Cannot deactivate your account now. Please try again later.")
-                } else {
-                    console.log(this.props.deactivateProfile)
-                    window.alert("Your account has been deactivated successfully.")
-                    this.handleLogout();
+        if (password != null) {
+            if (password !== "") {
+                const data = {
+                    password: password
                 }
-            });
-        } else {
-            window.alert("Password cannot be empty")
+                this.props.deactivateProfile(data, email).then((res) => {
+                    if (res) {
+                        window.alert("Cannot deactivate your account now. Please try again later.")
+                    } else {
+                        console.log(this.props.deactivateProfile)
+                        window.alert("Your account has been deactivated successfully.")
+                        this.handleLogout();
+                    }
+                });
+            } else {
+                window.alert("Password cannot be empty")
+            }
         }
     }
 

@@ -106,7 +106,7 @@ class MarkCompleteModal extends Component {
         
         return (
             <div>
-                <Tooltip title="Mark Task Complete">
+                <Tooltip title="Mark Complete">
                 <IconButton aria-label="complete" onClick={this.handleClickOpen} style={{outline:"none"}}>
                 <CheckCircleIcon size="small" color="primary">
                 </CheckCircleIcon>
