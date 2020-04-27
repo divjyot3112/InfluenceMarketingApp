@@ -100,21 +100,17 @@ router.get("/:taskId/applicants", (req, res) => {
             })
             .catch((err) => {
               console.log(err);
-              res
-                .status(400)
-                .json({
-                  success: false,
-                  message: "Unable to fetch candidates!",
-                });
+              res.status(400).json({
+                success: false,
+                message: "Unable to fetch candidates!",
+              });
             });
         } else {
           console.log("No candidates have applied for this task");
-          res
-            .status(400)
-            .json({
-              success: false,
-              message: "No candidates have applied for this task",
-            });
+          res.status(400).json({
+            success: false,
+            message: "No candidates have applied for this task",
+          });
         }
       } else {
         console.log("Task does not exist");
@@ -609,14 +605,43 @@ router.get("/unrated", (req, res) => {
   router.put("/delete/:taskId", (req, res) => {
     console.log("Inside delete task", req.params.taskId);
 
-    Task.findOneAndRemove({ _id: ObjectID(req.params.taskId) })
+    Task.findOne({ _id: ObjectID(req.params.taskId) })
       .then((task) => {
-        console.log("Task deleted successfully");
-        res.status(200).json(task);
+        console.log("Task found successfully");
+
+        //Cannot delete if task has any selected candidate
+
+        if (task.selectedCandidates.length > 0) {
+          res.status(200).json({
+            message: "Cannot delete task since it has selected candidates.",
+          });
+        } else {
+          // Mark isActive as false and status as “cancelled”
+
+          Task.findOneAndUpdate(
+            { _id: ObjectID(req.params.taskId) },
+            {
+              $set: {
+                status: taskStatus.CANCELLED,
+                isActive: false,
+              },
+            },
+            { returnOriginal: false, useFindAndModify: false }
+          )
+            .then((task) => {
+              console.log(
+                "Task Status cancelled successfully and marked isActive as false"
+              );
+            })
+            .catch((err) => {
+              console.log("Inside catch for delete");
+              res.status(400).json({ message: "Task could not be cancelled" });
+            });
+        }
       })
       .catch((err) => {
-        console.log("Inside catch");
-        res.status(400).json({ message: "Task could not be deleted" });
+        console.log("Inside catch for find task");
+        res.status(400).json({ message: "Error finding tasks successfully" });
       });
   });
 
@@ -647,24 +672,43 @@ router.get("/unrated", (req, res) => {
   router.get(":taskId/selected", (req, res) => {
     console.log("Inside find selected candidates for task", req.params.taskId);
 
-    // get all tasks
-    //get selected array of those tasks
-    // get profiles of those people
-    //return result
-
+    //find the task
     Task.findOne({ _id: ObjectID(req.params.taskId) })
       .then((task) => {
         console.log("Task found successfully");
 
-        res.status(200).json(task);
+        let result = [];
+
+        //get selected candidates list from task
+        let selectedCandidates = task.selectedCandidates;
+
+        //check if selected candidates array is empty
+        if (selectedCandidates.length == 0) {
+          res
+            .status(200)
+            .json({ message: "No selected candidates for the task" });
+        }
+
+        //get selected candidates profiles
+        selectedCandidates.map((candidate) => {
+          InfluencerProfile.findOne({
+            _id: candidate._id,
+          })
+            .then((influencer) => {
+              result.push(influencer);
+            })
+            .catch((err) => {
+              res
+                .status(400)
+                .json({ message: "Error in finding Influencer profiles" });
+            });
+        });
+
+        res.status(200).json(result);
       })
       .catch((err) => {
-        console.log("Task not found");
-        res
-          .status(400)
-          .json({ message: "Selected candidates for task not found" });
-      })
-      .then();
+        res.status(400).json({ message: "Task not found" });
+      });
   });
 });
 

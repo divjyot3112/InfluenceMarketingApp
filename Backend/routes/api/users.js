@@ -488,43 +488,69 @@ router.patch("/profile/deactivate", (req, res) => {
 // @desc    Sign Up a new user
 // @access  Public
 router.post("/signup", (req, res) => {
-  console.log("Inside signup post request", req.body.email);
+  console.log("Inside signup post request", req.body);
 
+  //check for already existing user
   User.findOne({ email: req.body.email })
     .then((user) => {
       if (user) {
-        console.log("User found, already exists");
-        res.status(400).send({ msg: "User already exists!" });
-      } else {
-        console.log("Creating new user");
-
-        const name = new Name({
-          firstName: req.body.name.firstName,
-          lastName: req.body.name.lastName,
-        }).save();
-
-        const newUser = new User({
-          email: req.body.email,
-          password: req.body.password,
-          role: req.body.role,
-          phone: req.body.phone,
-        });
-        newUser
-          .save()
-          .then((user) => {
-            res.write("Created new User");
-          })
-          .catch((err) => {
-            res
-              .write(
-                "Something went wrong while creating new user. Please Try again"
-              )
-              .end();
-          });
+        console.log("Found user but User already exists!!");
+        res.status(400).json({ msg: "User already exists!" });
       }
+
+      // Otherwise create new user
+
+      console.log("Creating new user");
+      const newUser = new User({
+        email: req.body.email,
+        password: req.body.password,
+        role: req.body.role,
+        isActive: true,
+      });
+      //save the user details
+      newUser
+        .save()
+        .then((user) => {
+          let newProfile;
+
+          //check role to create appropriate profile
+          if (req.body.role == userRoles.INFLUENCER) {
+            newProfile = new InfluencerProfile({
+              name: req.body.name,
+              image: req.body.image,
+              phone: req.body.phone,
+              email: req.body.email,
+            });
+          } else {
+            newProfile = new SponsorProfile({
+              name: req.body.name,
+              image: req.body.image,
+              phone: req.body.phone,
+              email: req.body.email,
+            });
+          }
+          //save profile details
+          newProfile
+            .save()
+            .then((profile) => {
+              console.log("User created", profile);
+              console.log(user);
+              res.status(200).json({ message: { profile, user } });
+            })
+            .catch((err) => {
+              res.status(400).json({
+                message: "Something went wrong while creating user profile",
+              });
+            });
+        })
+        .catch((err) => {
+          res
+            .status(400)
+            .json({ msg: "Something went wrong while creating user" });
+        });
     })
     .catch((err) => {
-      console.log(err);
+      console.log("Checking already existing user failed");
       res.status(500).json({ error: err });
     });
 
@@ -532,46 +558,53 @@ router.post("/signup", (req, res) => {
   // @route   GET api/profile/firstName&&LastName
   // @desc    Search user profiles by name
   // @access  Public
-  router.get("/profile/:firstName&:lastName", (req, res) => {
+  router.get("/profile", (req, res) => {
     console.log("Inside search profile by name API");
 
-    //   const name = {
-    //     firstName: req.params.firstName,
-    //     lastName: req.params.lastName,
-    //   };
+    let conditions;
 
-    // function find influencer profile
-    // if not find sponsor profile
-    // return profiles
+    if (req.query.firstName && req.query.lastName == null) {
+      conditions = {
+        // match firstname
+        "name.firstName": { $regex: new RegExp(req.query.firstName, "i") },
+      };
+    } else if (req.query.lastName && req.query.firstName == null) {
+      //match lastname
 
-    InfluencerProfile.find({
-      $or: [
-        { "name.firstName": { $regex: new RegExp(req.query.firstName, "i") } },
-        { "name.lastName": { $regex: new RegExp(req.query.lastName, "i") } },
-      ],
-    })
-      .then((profiles) => {
-        if (profiles.length > 0) {
+      conditions = {
+        "name.lastName": { $regex: new RegExp(req.query.lastName, "i") },
+      };
+    } else {
+      //match entire name
+      conditions = {
+        $and: [
+          {
+            "name.firstName": { $regex: new RegExp(req.query.firstName, "i") },
+          },
+          { "name.lastName": { $regex: new RegExp(req.query.lastName, "i") } },
+        ],
+      };
+    }
+
+    InfluencerProfile.find(conditions)
+      .then((influencerprofiles) => {
+        if (influencerprofiles.length > 0) {
           console.log(
             "Profiles searched successfully for name " +
               "First name: " +
-              req.params.firstName +
+              req.query.firstName +
               " and Last name" +
-              req.params.lastName
+              req.query.lastName
           );
-          res.status(200).json(profiles);
-        } else {
-          console.log("No  Profiles found");
-          res
-            .status(404)
-            .json({ message: "No Profile with matching name found" });
+
+          res.status(200).json(influencerprofiles);
         }
       })
       .catch((err) => {
         console.log(err);
         res
           .status(500)
-          .json({ message: "Profile could not be fetched. Error: " + err });
+          .json({ message: "Influencer could not be fetched. Error: " + err });
       });
   });
 });
