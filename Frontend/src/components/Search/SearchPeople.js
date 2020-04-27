@@ -154,8 +154,8 @@ export class SearchPeople extends Component {
                                         pathname: "/inbox",
                                         state: {
                                             chatWith: { 
-                                                email:"vandana@gmail.com", 
-                                                name:"Vandana Shenoy", 
+                                                email:profile.email, 
+                                                name:profile.firstName + " " + profile.lastName, 
                                                 photo:profile.image
                                             }
                                         }
