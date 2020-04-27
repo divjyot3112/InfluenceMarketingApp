@@ -5,6 +5,7 @@ import WOW from "wow.js";
 import smallcard from "./Images/social15.jpg";
 import { MY_ROLE, UserRoles } from "../../utils/Constants";
 import Footer from "../Common/Footer";
+import PropTypes from "prop-types";
 //import {initpage} from "./scripts";
 
 class Landing extends Component {
@@ -80,15 +81,25 @@ class Landing extends Component {
                   <div class="col-sm-5">
                     <div class="md-form">
                       <i class="fas fa-envelope prefix grey-text"></i>
-                      <input type="text" id="form2" class="form-control" />
-                      <label for="form2"> Email</label>
+                      <input
+                        type="text"
+                        id="form2"
+                        class="form-control"
+                        placeholder="Email"
+                      />
+                      {/* <label for="form2"> Email</label> */}
                     </div>
                   </div>
                   <div class="col-sm-5">
                     <div class="md-form">
                       <i class="fas fa-key prefix grey-text"></i>
-                      <input type="password" id="form2" class="form-control" />
-                      <label for="form2"> Password</label>
+                      <input
+                        type="password"
+                        id="form2"
+                        class="form-control"
+                        placeholder="Password"
+                      />
+                      {/* <label for="form2"> Password</label> */}
                     </div>
                   </div>
                   <div class="col-sm-2">
@@ -206,13 +217,24 @@ class Landing extends Component {
 
                         <div class="md-form">
                           <i class="fas fa-user prefix grey-text"></i>
-                          <input type="text" id="form3" class="form-control" />
-                          <label for="form3">Your name</label>
+                          <input
+                            type="text"
+                            id="form3"
+                            class="form-control"
+                            placeholder="Name"
+                          />
+
+                          {/* <label for="form3">Your name</label> */}
                         </div>
                         <div class="md-form">
                           <i class="fas fa-envelope prefix grey-text"></i>
-                          <input type="text" id="form2" class="form-control" />
-                          <label for="form2">Your email</label>
+                          <input
+                            type="text"
+                            id="form2"
+                            class="form-control"
+                            placeholder="Email"
+                          />
+                          {/* <label for="form2">Your email</label> */}
                         </div>
 
                         <div class="md-form">
@@ -221,8 +243,9 @@ class Landing extends Component {
                             type="password"
                             id="form2"
                             class="form-control"
+                            placeholder="Password"
                           />
-                          <label for="form2">Your Password</label>
+                          {/* <label for="form2">Your Password</label> */}
                         </div>
 
                         <div class="md-form">
@@ -231,8 +254,9 @@ class Landing extends Component {
                             type="text"
                             id="form8"
                             class="form-control"
+                            placeholder="Phone Number"
                           ></input>
-                          <label for="form8">Phone Number</label>
+                          {/* <label for="form8">Phone Number</label> */}
                         </div>
 
                         <div class="text-center">
@@ -251,7 +275,7 @@ class Landing extends Component {
                               class="custom-control-label"
                               for="customSwitch1"
                             >
-                              Sponsor
+                              <b> I am a Sponsor </b>
                             </label>
                           </div>
 
@@ -416,11 +440,8 @@ class Landing extends Component {
                     <div class="col-10">
                       <h6 class="feature-title">Dashboard for Task History</h6>
                       <p class="grey-text">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing
-                        elit. Delectus sit laborum dicta cum repudiandae magnam,
-                        quaerat reprehenderit iusto voluptas accusamus ullam
-                        quod, dolorum voluptatum quo similique dignissimos nulla
-                        unde eos?
+                        We offer a full fledged dashboard which contains history
+                        of tasks
                       </p>
                       <div style={{ height: "15px" }}></div>
                     </div>
@@ -435,10 +456,9 @@ class Landing extends Component {
                         Create and manage own profile
                       </h6>
                       <p class="grey-text">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing
-                        elit. Ut error est dolores numquam exercitationem? Ipsum
-                        minus amet eveniet reprehenderit nihil ea voluptas
-                        provident maxime cum dolorem! Officiis minus libero id!
+                        Get your own profile page and advertise your interests
+                        and level of marketing expertise. Get noticed by your
+                        favorite sponsors.
                       </p>
                       <div style={{ height: "15px" }}></div>
                     </div>
@@ -537,11 +557,9 @@ class Landing extends Component {
                     <div class="col-10">
                       <h6 class="feature-title">Task Analysis</h6>
                       <p class="grey-text">
-                        Lorem ipsum dolor sit amet consectetur, adipisicing
-                        elit. Placeat excepturi voluptatum accusantium assumenda
-                        natus modi soluta qui, deleniti, dolor velit error eaque
-                        veniam libero possimus. Modi deleniti quo itaque.
-                        Suscipit.
+                        Get a detailed analysis summary of all the tasks in
+                        progress and if the tasks are being completed
+                        appropriately.
                       </p>
                       <div style={{ height: "15px" }}></div>
                     </div>
@@ -554,11 +572,8 @@ class Landing extends Component {
                     <div class="col-10">
                       <h6 class="feature-title">List of Applied Applicants</h6>
                       <p class="grey-text">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing
-                        elit. Quidem maiores consequatur deserunt omnis pariatur
-                        blanditiis sequi deleniti, recusandae ipsum est tenetur,
-                        exercitationem ullam atque earum quo quae maxime eaque
-                        veniam?
+                        See all the applicants that have applied to the task and
+                        select the most qualified person for the job.
                       </p>
                       <div style={{ height: "15px" }}></div>
                     </div>

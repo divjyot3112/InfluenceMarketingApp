@@ -53,7 +53,7 @@ const Footer = () => {
             target="_blank"
           >
             {" "}
-            Together App{" "}
+            Together{" "}
           </a>
         </div>
       </footer>
