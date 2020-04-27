@@ -179,6 +179,7 @@ class AddRatingModal extends Component {
                         onChange={(event, newValue) => {
                             this.setValue(newValue);
                         }}
+                        precision={0.5}
                     />
                 </FormControl>
             </Typography>
