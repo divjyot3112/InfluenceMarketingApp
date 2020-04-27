@@ -22,3 +22,8 @@
     background: url(/Frontend/public/no_tasks.png) center no-repeat;
     background-size: cover;
 }
+
+.dashboard-pagination {
+    margin-top: 3%;
+    margin-left: 40%;
+}
