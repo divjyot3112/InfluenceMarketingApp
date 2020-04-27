@@ -272,7 +272,7 @@ export class Appbar extends Component {
                                 <If condition={this.state.role === UserRoles.INFLUENCER}>
                                     <React.Fragment>
                                         <NavItem className="nav-item-box">
-                                            <NavLink href="/ratings/influencer"><p>Ratings</p></NavLink>
+                                            <NavLink href="/ratings"><p>Ratings</p></NavLink>
                                         </NavItem>
                                         <div className="vertical"></div>
                                     </React.Fragment>
