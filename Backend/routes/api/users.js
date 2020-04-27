@@ -548,7 +548,7 @@ router.patch("/profile/deactivate", (req, res) => {
               "Getting Ratings:"
           );
           
-          profiles.map(profile => (
+          profiles.map((profile, profileIndex) => (
             Rating.find({
                 influencer: profile.email
             })
@@ -559,17 +559,26 @@ router.patch("/profile/deactivate", (req, res) => {
                     // console.log(r[0])
                     const email = profile.email
                     console.log(profile.email)
-                    // console.log(ratingsMap)
-                    ratingsMap.email = r
+                    let avgRating = 0
+                    r.map(x => {
+                        avgRating += x.rating/r.length
+                    })
+                    console.log(avgRating)
+                    ratingsMap[email] = JSON.stringify(avgRating)
+                    console.log(ratingsMap)
+
                 } else {
                     console.log("No Ratings found for influencer: " + profile.email);
+                    ratingsMap[profile.email] = null
                     // res.status(404).json({message: "No Ratings found"});
+                }
+                if(profileIndex===profiles.length-1) {
+                    // console.log("Ratings Map" + ratingsMap)
+                    res.status(200).json({message: profiles, ratings: ratingsMap})
                 }
             })
             .catch(err => {console.log(err)})
           ))
-          console.log("Ratings Map" + ratingsMap)
-          res.status(200).json({message: profiles, ratings: ratingsMap})
         } else {
           console.log("No  Profiles found");
           res

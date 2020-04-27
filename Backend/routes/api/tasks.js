@@ -263,7 +263,7 @@ router.put("/:taskId/select", (req, res) => {
     Task.findOne({_id: ObjectID(req.params.taskId)})
         .then(task => {
             // check if task exists
-            if (task) {
+            if (task && task.postedBy===req.query.email) {
                 // task should be in CREATED state
                 if (task.status == taskStatus.CREATED) {
                     Task.findOneAndUpdate(

@@ -6,26 +6,24 @@ import {
     // MDBAvatar,
     MDBBtn,
     MDBCard,
-    MDBCardImage,
-    MDBCardTitle,
-    MDBCardText,
     MDBCol,
     MDBRow,
     MDBContainer,
     MDBCardBody,
     MDBProgress,
-    // MDBCardUp
-    // MDBInput,
-    // MDBFormInline
+    MDBIcon,
 } from 'mdbreact';
 import Avatar from '@material-ui/core/Avatar';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 // import {Form} from 'react-bootstrap'
 import { withStyles } from '@material-ui/core/styles';
 import { MdStars } from "react-icons/md";
 // Redux Imports
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import { searchPeople } from "../../actions/searchActions";
+import { searchPeople, searchPeopleWithAddress, searchPeopleSortedZA, searchPeopleSortedAZ } from "../../actions/searchActions";
 import { getInfluencerRatings } from '../../actions/ratingActions'
 // CSS
 import '../../css/search.css'
@@ -69,7 +67,8 @@ export class SearchPeople extends Component {
         totalPeople: null,
         loadedPeople: null,
         status: null,
-        avgRatings: null
+        ratingsMap: null,
+        filter: ""
     }
     componentDidMount() {
         
@@ -81,9 +80,6 @@ export class SearchPeople extends Component {
                 lastName: str[1] ? str[1] : ""
             })
         }
-        this.props.people.map(person => (
-            this.props.getInfluencerRatings(person.email)
-        ))
     }
     componentWillReceiveProps(props) {
         let { classes } = this.props;
@@ -91,16 +87,19 @@ export class SearchPeople extends Component {
         if(props.location.state.searchString!==this.state.searchString){
             const str = props.location.state.searchString.split(" ", 2)
             this.setState({ searchString: props.location.state.searchString })
-            props.searchPeople({ 
+            props.searchPeople({
                 firstName: str[0],
-                lastName: str[1] ? str[1] : ""
+                lastName: str[1] ? str[1] : "a"
             })
         }
+        let address = props.location.state.address
+        let ratingsMap = props.ratingsMap
         let people = props.people
-        let avgRatings = {}
         
         this.setState({
-            people: props.people
+            people: people,
+            ratingsMap: ratingsMap,
+            address: address
         })
         
         let totalPeople = props.people.length>9 ? (
@@ -135,18 +134,40 @@ export class SearchPeople extends Component {
                                     {/* <MDBAvatar className='mx-auto white'> */}
                                     <Avatar src={profile.image} className={classes.large} />
                                 </Link>
-                                <span style={{alignSelf:"center"}}>
+                                <div style={{alignSelf:"center"}}>
                                     <MdStars/>
-                                    {avgRatings[profile.email]}
-                                </span>
+                                    {console.log(ratingsMap[profile.email])}
+                                    {
+                                        ratingsMap[profile.email]===null || ratingsMap[profile.email]===undefined ? 
+                                        null :
+                                        (
+                                            ratingsMap[profile.email]%1===0 ? ratingsMap[profile.email] :
+                                            (Math.round(ratingsMap[profile.email]*100)/100).toFixed(2)
+                                        )
+                                    }
+                                </div>
                                 <hr/>
                                 <MDBCardBody style={{textAlign:"left"}}>
                                     {profile.name.firstName + " " + profile.name.lastName}<br/>
-                                    
-                                    <hr />
-                                    <p style={{textAlign:"left"}}>
+                                    <div>
+                                    <Link to={{
+                                        pathname: "/inbox",
+                                        state: {
+                                            chatWith: { 
+                                                email:"vandana@gmail.com", 
+                                                name:"Vandana Shenoy", 
+                                                photo:profile.image
+                                            }
+                                        }
+                                    }}
+                                    style={{display: 
+                                        profile.email===localStorage.getItem("email") ? "none" : "block"
+                                    , textDecoration: 'none', textAlign:"right" }}><MDBBtn>Chat
+                                        <MDBIcon icon="comment" className="ml-1" /></MDBBtn></Link> 
+                                    <span style={{textAlign:"left"}}>
                                         {profile.aboutMe}
-                                    </p>
+                                    </span>
+                                    </div>
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>
@@ -168,17 +189,50 @@ export class SearchPeople extends Component {
         })
     }
 
-    filterClick = (status) => () => {
+    filterClick = (e) => {
         this.setState({
-            status: status
+            filter: e.target.value
         })
-        const data = {
-            title: this.state.searchString,
-            status: status
+        if(e.target.value==="alphaza") {
+            const str = this.state.searchString.split(" ", 2)
+            const data = {
+                firstName: str[0],
+                lastName: str[1] ? str[1] : "a",
+                // address: this.state.address
+            }
+            this.props.searchPeopleSortedZA(data)
+            this.componentWillReceiveProps(this.props)
         }
-        // this.props.searchTasks(data)
-        console.log("Onclick")
-        this.componentWillReceiveProps(this.props)
+        if(e.target.value==="alphaaz") {
+            const str = this.state.searchString.split(" ", 2)
+            const data = {
+                firstName: str[0],
+                lastName: str[1] ? str[1] : "a",
+                // address: this.state.address
+            }
+            this.props.searchPeopleSortedAZ(data)
+            this.componentWillReceiveProps(this.props)
+        }
+        if(e.target.value==="address") {
+            const str = this.state.searchString.split(" ", 2)
+            const data = {
+                firstName: str[0],
+                lastName: str[1] ? str[1] : "a",
+                address: this.state.address
+            }
+            this.props.searchPeopleWithAddress(data)
+            this.componentWillReceiveProps(this.props)
+        }
+        if(e.target.value==="") {
+            const str = this.state.searchString.split(" ", 2)
+            const data = {
+                firstName: str[0],
+                lastName: str[1] ? str[1] : "a",
+                // address: this.state.address
+            }
+            this.props.searchPeople(data)
+            this.componentWillReceiveProps(this.props)
+        }
     }
 
     loadMore = () => {
@@ -186,6 +240,7 @@ export class SearchPeople extends Component {
         if(this.state.hasMore) {
             const sliceSize = 2
             let renderPeople = this.state.renderPeople
+            let ratingsMap = this.state.ratingsMap
             let splicedPeople = this.state.splicedPeople
             let sliced = splicedPeople.splice(0,sliceSize)
             console.log("Spliced People: " + splicedPeople.length)
@@ -212,18 +267,34 @@ export class SearchPeople extends Component {
                                     {/* <MDBAvatar className='mx-auto white'> */}
                                     <Avatar src={profile.image} className={classes.large} />
                                 </Link>
-                                <span style={{alignSelf:"center"}}>
+                                <div style={{alignSelf:"center"}}>
                                     <MdStars/>
-                                    {this.state.avgRatings[profile.email]}
-                                </span>
+                                    {
+                                        ratingsMap[profile.email]===null ? null :
+                                        (
+                                            ratingsMap[profile.email]%1===0 ? ratingsMap[profile.email] :
+                                            (Math.round(ratingsMap[profile.email]*100)/100).toFixed(2)
+                                        )
+                                    }
+                                </div>
                                 <hr/>
                                 <MDBCardBody style={{textAlign:"left"}}>
                                     {profile.name.firstName + " " + profile.name.lastName}<br/>
-                                    
-                                    <hr />
-                                    <p style={{textAlign:"left"}}>
+                                    <div>
+                                    <Link to={{
+                                        pathname: "/inbox",
+                                        state: {
+                                            chatWith: { email: "vandana2@gmail.com", name: "Vandana2 ABC",photo:"url"}
+                                        }
+                                    }}
+                                    style={{display: 
+                                        profile.email===localStorage.getItem("email") ? "none" : "block"
+                                    , textDecoration: 'none', textAlign:"right" }}><MDBBtn>Chat
+                                        <MDBIcon icon="comment" className="ml-1" /></MDBBtn></Link> 
+                                    <span style={{textAlign:"left"}}>
                                         {profile.aboutMe}
-                                    </p>
+                                    </span>
+                                    </div>
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>
@@ -257,57 +328,31 @@ export class SearchPeople extends Component {
     }
 
     render() {
+        const { classes } = this.props;
         console.log(this.state)
         return (
             <div>
-                {/* <MDBContainer>
+                <MDBContainer>
                 <FormControl className={classes.formControl}>
-                <RadioGroup row aria-label="position" name="position" defaultValue="end" 
-                // onChange={(event)=>this.filterClick(event)}
+                <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+                    Enhance your search
+                </InputLabel>
+                <Select
+                    labelId="demo-simple-select-placeholder-label-label"
+                    value={this.state.filter}
+                    onChange={(e) => this.filterClick(e)}
+                    displayEmpty
+                    className={classes.selectEmpty}
                 >
-                    <FormControlLabel
-                        value={TaskStatus.CREATED}
-                        control={<Radio color="primary" />}
-                        label={TaskStatus.CREATED}
-                        labelPlacement="end"
-                        checked={this.state.status===TaskStatus.CREATED ? true : false}
-                        onClick={this.filterClick(TaskStatus.CREATED)}
-                    />
-                    <FormControlLabel
-                        value={TaskStatus.PENDING}
-                        control={<Radio color="primary" />}
-                        label={TaskStatus.PENDING}
-                        labelPlacement="end"
-                        checked={this.state.status===TaskStatus.PENDING ? true : false}
-                        onClick={this.filterClick(TaskStatus.PENDING)}
-                    />
-                    <FormControlLabel
-                        value={TaskStatus.INPROGRESS}
-                        control={<Radio color="primary" />}
-                        label={TaskStatus.INPROGRESS}
-                        labelPlacement="end"
-                        checked={this.state.status===TaskStatus.INPROGRESS ? true : false}
-                        onClick={this.filterClick(TaskStatus.INPROGRESS)}
-                    />
-                    <FormControlLabel
-                        value={TaskStatus.COMPLETED}
-                        control={<Radio color="primary" />}
-                        label={TaskStatus.COMPLETED}
-                        labelPlacement="end"
-                        checked={this.state.status===TaskStatus.COMPLETED ? true : false}
-                        onClick={this.filterClick(TaskStatus.COMPLETED)}
-                    />
-                    <FormControlLabel
-                        value={TaskStatus.ALL}
-                        control={<Radio color="primary" />}
-                        label={TaskStatus.ALL}
-                        labelPlacement="end"
-                        checked={this.state.status===TaskStatus.ALL ? true : false}
-                        onClick={this.filterClick(TaskStatus.ALL)}
-                    />
-                </RadioGroup>
+                    <MenuItem value="">
+                        <em>None</em>
+                    </MenuItem>
+                    <MenuItem value="alphaaz">Sort Alphabetically (a-z)</MenuItem>
+                    <MenuItem value="alphaza">Sort Alphabetically (z-a)</MenuItem>
+                    <MenuItem value="address">Search Near Your Area</MenuItem>
+                </Select>
                 </FormControl>
-                </MDBContainer> */}
+                </MDBContainer>
                 <MDBContainer>
                     {this.state.items}
                     <MDBRow 
@@ -341,11 +386,15 @@ SearchPeople.propTypes = {
     searchPeople: PropTypes.func.isRequired,
     getInfluencerRatings: PropTypes.func.isRequired,
     people: PropTypes.object.isRequired,
+    ratingsMap: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
-    people: state.searchItems.people
+    people: state.searchItems.people,
+    ratingsMap: state.searchItems.ratingsMap
 });
 
-export default connect(mapStateToProps, { searchPeople, getInfluencerRatings })(withStyles(useStyles)(SearchPeople))
+export default connect(mapStateToProps, { 
+    searchPeople, getInfluencerRatings, searchPeopleWithAddress, searchPeopleSortedZA, searchPeopleSortedAZ
+})(withStyles(useStyles)(SearchPeople))
