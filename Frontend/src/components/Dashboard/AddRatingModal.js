@@ -208,7 +208,7 @@ class AddRatingModal extends Component {
         };
         return (
             <div>
-                <Tooltip title="Rate the influencers">
+                <Tooltip title="Rate">
                 <IconButton aria-label="rate" onClick={handleClickOpen} style={{outline:"none"}}>
                 <StarsIcon size="small" color="primary">
                 </StarsIcon>
