@@ -161,7 +161,7 @@ class UserProfile extends UserProfileFormEventHandlers {
             this.setState({isCurrentUser: false})
 
         // TODO: Get username from local storage
-        const username = this.props.location.state ? this.props.location.state.email : "sheena@gmail.com";
+        const username = this.props.location.state ? this.props.location.state.email : "divjyot@gmail.com";
 
         this.props.getProfile(username).then((response) => {
             if (response === undefined && this.props.profile.status === 200) {
@@ -201,7 +201,7 @@ class UserProfile extends UserProfileFormEventHandlers {
     handleProfile = (e) => {
         e.preventDefault();
         // TODO: Get username from local storage
-        const email = "sheena@gmail.com";
+        const email = "divjyot@gmail.com";
 
         const data = {
             name: {
@@ -247,21 +247,18 @@ class UserProfile extends UserProfileFormEventHandlers {
         if (!this.state.exists) {
             return (
                 <React.Fragment>
-                    <div className="profile-not-found-main">
-                        <div className="main-background">
-                            <If condition={this.state.loading}>
-                                <Then>
-                                    <p className="profile-not-found">
-                                        <CircularProgress/>
-                                        <CircularProgress color="secondary"/>
-                                    </p>
-                                </Then>
-                                <Else>
-                                    <p className="profile-not-found">Profile Not Found</p>
-                                </Else>
-                            </If>
-
-                        </div>
+                    <div className="profile-main">
+                        <If condition={this.state.loading}>
+                            <Then>
+                                <p className="profile-not-found">
+                                    <CircularProgress/>
+                                    <CircularProgress color="secondary"/>
+                                </p>
+                            </Then>
+                            <Else>
+                                <p className="profile-not-found">Profile Not Found</p>
+                            </Else>
+                        </If>
                     </div>
                 </React.Fragment>
             );
@@ -271,7 +268,6 @@ class UserProfile extends UserProfileFormEventHandlers {
                     <div className="profile-main">
                         <div className="main-background">
                             <div className="photo-main">
-
                                 <If condition={this.state.isCurrentUser === true}>
                                     <div className="edit-photo">
                                         <label htmlFor="image">
@@ -541,7 +537,6 @@ class UserProfile extends UserProfileFormEventHandlers {
                         </div>
                     </div>
                 </React.Fragment>
-
             );
         }
     }

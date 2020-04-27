@@ -1,10 +1,12 @@
-import React, { Component } from "react";
-import { Route } from "react-router-dom";
+import React, {Component} from "react";
+import {Route} from "react-router-dom";
 // Routes
 // Common
-import Appbar from "./Common/Appbar";
-import Sidebar from "./Common/Sidebar";
-import Search from "./Common/Search";
+import Appbar from "./Common/Appbar"
+import Sidebar from "./Common/Sidebar"
+//Search
+import SearchTasks from "./Search/SearchTasks";
+import SearchPeople from "./Search/SearchPeople";
 // User Profile
 import UserProfile from "./UserProfile/userProfile";
 // Dashboard
@@ -23,27 +25,31 @@ import About from "./About/About";
 import ContactUs from "./ContactUs/ContactUs";
 
 class Main extends Component {
-  render() {
-    return (
-      <div>
-        <Route path="/" component={Appbar} />
-        <Route path="/" component={Sidebar} />
-        <Route path="/search" exact component={Search} />
-        <Route path="/dashboard" exact component={Dashboard} />
-        <Route path="/profile" exact component={UserProfile} />
-        <Route path="/task/new" exact component={PostTask} />
-        <Route path="/task" exact component={TaskDescription} />
-        <Route path="/inbox" exact component={Messenger} />
-        <Route path="/ratings/sponsor" exact component={SponsorRating} />
-        <Route path="/ratings/influencer" exact component={InfluencerRating} />
-        <Route exact path="/" component={Landing} />
+
+    render() {
+        return (
+            <div>
+                <Route path="/" component={Appbar}/>
+                <Route path="/" component={Sidebar}/>
+                <Route path="/search/tasks" exact component={SearchTasks}/>
+                <Route path="/search/people" exact component={SearchPeople}/>
+                <Route path="/dashboard" exact component={Dashboard}/>
+                <Route path="/profile" exact component={UserProfile}/>
+                <Route path="/task/new" exact component={PostTask}/>
+                <Route path="/task" exact component={TaskDescription}/>
+                <Route path="/inbox" exact component={Messenger}/>
+                <Route path="/ratings/sponsor" exact component={SponsorRating}/>
+                <Route path="/ratings/influencer" exact component={InfluencerRating}/>
+                <Route path="/about" exact component={About}/>
+                <Route path="/home/sponsor" exact component={SponsorHome}/>
+            
         <Route path="/home" component={Landing} />
-        <Route path="/home/sponsor" component={SponsorHome} />
-        <Route path="/about" component={About} />
-        <Route path="/contactus" component={ContactUs} />
-      </div>
-    );
-  }
+<Route path="/contactus" component={ContactUs} />
+                <Route exact path="/" component={Landing}/>
+            </div>
+        );
+    }
+
 }
 
 export default Main;

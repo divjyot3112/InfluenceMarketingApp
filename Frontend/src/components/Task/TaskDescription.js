@@ -59,7 +59,7 @@ export class TaskDescription extends Component {
         }
         console.log(t)
         return (
-            <div style={{background: "#577284"}}>
+            <div>
                 <div className="wrapper">
                     <div className="nested">
                         <div className="imgdiv">

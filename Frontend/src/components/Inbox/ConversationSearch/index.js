@@ -14,7 +14,7 @@ class ConversationSearch extends Component {
         <input
           type="search"
           className="conversation-search-input"
-          placeholder="Search Messages"
+          placeholder="Search Conversations"
           onKeyUp = {(event) => this.onSearch(event)}
         />
       </div>

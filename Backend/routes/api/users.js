@@ -17,8 +17,7 @@ require("../../config/passport")(passport);
 const User = require("../../models/User");
 const InfluencerProfile = require("../../models/InfluencerProfile");
 const SponsorProfile = require("../../models/SponsorProfile");
-const Name = require("../../models/Name");
-const Address = require("../../models/Address");
+const Rating = require('../../models/Rating');
 
 // @route   POST api/users/login
 // @desc    Login User
@@ -63,127 +62,124 @@ router.post("/login", (req, res) => {
 // @access  Public
 
 router.get("/profile", (req, res) => {
-  console.log("Inside Get Profile Request", req.query.email);
-  User.findOne({ email: req.query.email })
-    .then((user) => {
-      // check if user exists
-      if (user) {
-        if (user.role == userRoles.INFLUENCER) {
-          console.log("Getting influencer profile");
-          InfluencerProfile.findOne({ email: req.query.email })
-            .then((influencerProfile) => {
-              res.status(200).json({
-                message: influencerProfile,
-                role: userRoles.INFLUENCER,
-              });
-            })
-            .catch((err) => {
-              console.log("Something went wrong");
-              res.status(400).json({ message: "Something went wrong" });
-            });
-        } else {
-          // user is sponsor
-          SponsorProfile.findOne({ email: req.query.email })
-            .then((sponsorProfile) => {
-              res
-                .status(200)
-                .json({ message: sponsorProfile, role: userRoles.SPONSOR });
-            })
-            .catch((err) => {
-              console.log("Something went wrong");
-              res.status(400).json({ message: "Something went wrong" });
-            });
-        }
-      } else {
-        console.log("User does not exist");
-        res.status(404).json({ message: "User does not exist" });
-      }
-    })
-    .catch((err) => {
-      console.log("Something went wrong");
-      res.status(400).json({ message: "Something went wrong" });
-    });
+
+    console.log("Inside Get Profile Request", req.query.email);
+    User.findOne({email: req.query.email, isActive: true})
+        .then(user => {
+            // check if user exists
+            if (user) {
+                if (user.role == userRoles.INFLUENCER) {
+                    console.log("Getting influencer profile")
+                    InfluencerProfile.findOne({email: req.query.email})
+                        .then(influencerProfile => {
+                            res.status(200).json({message: influencerProfile, role: userRoles.INFLUENCER})
+                        })
+                        .catch(err => {
+                            console.log("Something went wrong");
+                            res.status(400).json({message: "Something went wrong"});
+                        })
+                } else {
+                    // user is sponsor
+                    SponsorProfile.findOne({email: req.query.email})
+                        .then(sponsorProfile => {
+                            res.status(200).json({message: sponsorProfile, role: userRoles.SPONSOR})
+                        })
+                        .catch(err => {
+                            console.log("Something went wrong");
+                            res.status(400).json({message: "Something went wrong"});
+                        })
+                }
+            } else {
+                console.log("User does not exist");
+                res.status(404).json({message: "User does not exist"});
+            }
+        })
+        .catch((err) => {
+            console.log("Something went wrong");
+            res.status(400).json({message: "Something went wrong"});
+        });
+
 });
 
 // @route   PUT api/users/profile?email
 // @desc    User profile update
 // @access  Public
 router.put("/profile", (req, res) => {
-  console.log("Inside Update Profile put request");
-  console.log("Profile to be updated: ", req.query.email);
-  User.findOne({ email: req.query.email })
-    .then((user) => {
-      console.log("User: ", user);
-      // check if user exists
-      if (user) {
-        if (user.role == userRoles.SPONSOR) {
-          SponsorProfile.findOneAndUpdate(
-            { email: req.query.email },
-            {
-              $set: {
-                name: req.body.name,
-                company: req.body.company,
-                image: req.body.image,
-                phone: req.body.phone,
-                address: req.body.address,
-                aboutMe: req.body.aboutMe,
-                gender: req.body.gender,
-                dateOfBirth: req.body.dateOfBirth,
-              },
-            },
-            { returnOriginal: false, useFindAndModify: false }
-          )
-            .then((result) =>
-              res.status(200).json({
-                success: true,
-                message: "Sponsor Profile updated successfully",
-              })
-            )
-            .catch((err) => {
-              console.log(err);
-              res.status(400).json({ success: false, message: err });
-            });
-        } else {
-          // user is influencer
-          InfluencerProfile.findOneAndUpdate(
-            { email: req.query.email },
-            {
-              $set: {
-                name: req.body.name,
-                taskCategories: req.body.taskCategories,
-                image: req.body.image,
-                phone: req.body.phone,
-                address: req.body.address,
-                aboutMe: req.body.aboutMe,
-                gender: req.body.gender,
-                dateOfBirth: req.body.dateOfBirth,
-                followersCount: req.body.followersCount,
-              },
-            },
-            { returnOriginal: false, useFindAndModify: false }
-          )
-            .then((result) =>
-              res.status(200).json({
-                success: true,
-                message: "Influencer Profile updated successfully",
-              })
-            )
-            .catch((err) => {
-              console.log(err);
-              res.status(400).json({ success: false, message: err });
-            });
-        }
-      } else {
-        console.log("User does not exist");
-        res
-          .status(404)
-          .json({ success: false, message: "User does not exist" });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json({ success: false, message: err });
-    });
+
+    console.log("Inside Update Profile put request");
+    console.log("Profile to be updated: ", req.query.email);
+    User.findOne({email: req.query.email, isActive: true})
+        .then((user) => {
+            console.log("User: ", user);
+            // check if user exists
+            if (user) {
+                if (user.role == userRoles.SPONSOR) {
+                    SponsorProfile.findOneAndUpdate(
+                        {email: req.query.email},
+                        {
+                            $set: {
+                                name: req.body.name,
+                                company: req.body.company,
+                                image: req.body.image,
+                                phone: req.body.phone,
+                                address: req.body.address,
+                                aboutMe: req.body.aboutMe,
+                                gender: req.body.gender,
+                                dateOfBirth: req.body.dateOfBirth
+                            },
+                        },
+                        {returnOriginal: false, useFindAndModify: false}
+                    )
+                        .then((result) =>
+                            res.status(200).json({
+                                success: true,
+                                message: "Sponsor Profile updated successfully",
+                            })
+                        )
+                        .catch((err) => {
+                            console.log(err);
+                            res.status(400).json({success: false, message: err});
+                        });
+                } else {
+                    // user is influencer
+                    InfluencerProfile.findOneAndUpdate(
+                        {email: req.query.email},
+                        {
+                            $set: {
+                                name: req.body.name,
+                                taskCategories: req.body.taskCategories,
+                                image: req.body.image,
+                                phone: req.body.phone,
+                                address: req.body.address,
+                                aboutMe: req.body.aboutMe,
+                                gender: req.body.gender,
+                                dateOfBirth: req.body.dateOfBirth,
+                                followersCount: req.body.followersCount
+                            },
+                        },
+                        {returnOriginal: false, useFindAndModify: false}
+                    )
+                        .then((result) =>
+                            res.status(200).json({
+                                success: true,
+                                message: "Influencer Profile updated successfully",
+                            })
+                        )
+                        .catch((err) => {
+                            console.log(err);
+                            res.status(400).json({success: false, message: err});
+                        });
+                }
+            } else {
+                console.log("User does not exist")
+                res.status(404).json({success: false, message: "User does not exist"});
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(400).json({success: false, message: err});
+        });
+
 });
 
 // @route   PATCH api/users/profile/deactivate?email
@@ -193,82 +189,10 @@ router.patch("/profile/deactivate", (req, res) => {
   console.log("Inside User Deactivate Patch Request");
   console.log(req.query.email, req.body.password);
 
-  User.findOne({ email: req.query.email })
-    .then((user) => {
-      // check if user exists
-      if (user) {
-        user.comparePassword(req.body.password, function (err, isMatch) {
-          //check if password matches
-          if (isMatch && !err) {
-            // check if user is influencer
-            if (user.role == userRoles.INFLUENCER) {
-              // if user is in selectedCandidate of any active task and status is
-              // Created, Pending, InProgress then cannot deactivate
-              Task.find({
-                $and: [
-                  { isActive: true },
-                  {
-                    selectedCandidates: {
-                      $elemMatch: { $eq: req.query.email },
-                    },
-                  },
-                  {
-                    $or: [
-                      { status: taskStatus.CREATED },
-                      { status: taskStatus.PENDING },
-                      { status: taskStatus.INPROGRESS },
-                    ],
-                  },
-                ],
-              })
-                .then((tasks) => {
-                  if (tasks.length > 0) {
-                    console.log("Cannot Deactivate Account");
-                    res
-                      .status(401)
-                      .json({ message: "Cannot Deactivate Account" });
-                  } else {
-                    // 1. set isActive to false
-                    User.update(
-                      { email: req.query.email },
-                      {
-                        $set: {
-                          isActive: false,
-                        },
-                      },
-                      function (err, result) {
-                        if (err) {
-                          console.log("Something went wrong");
-                          res
-                            .status(400)
-                            .json({ message: "Something went wrong" });
-                        } else {
-                          // 2. remove all tasks from appliedTasks in influencer for which status is:
-                          // Created, Pending or In Progress
-                          Task.find({
-                            $and: [
-                              { isActive: true },
-                              {
-                                appliedCandidates: {
-                                  $elemMatch: { $eq: req.query.email },
-                                },
-                              },
-                              {
-                                $or: [
-                                  { status: taskStatus.CREATED },
-                                  { status: taskStatus.PENDING },
-                                  { status: taskStatus.INPROGRESS },
-                                ],
-                              },
-                            ],
-                          })
-                            .then((tasks) => {
-                              if (tasks.length > 0) {
-                                // get all taskIds in an array
-                                var taskIds = [];
-                                for (var i = 0; i < tasks.length; i++) {
-                                  taskIds.push(tasks[i]._id);
-                                }
+
+        User.findOne({email: req.query.email, isActive: true})
+            .then((user) => {
+
 
                                 InfluencerProfile.update(
                                   { email: req.query.email },
@@ -575,5 +499,75 @@ router.post("/signup", (req, res) => {
       });
   });
 });
+
+//arman
+  // @route   GET api/profile/firstName&&LastName
+  // @desc    Search user profiles by name
+  // @access  Public
+  router.get("/searchProfile", (req, res) => {
+    console.log("Inside search profile by name API" + req.query.firstName + req.query.lastName);
+
+    //   const name = {
+    //     firstName: req.params.firstName,
+    //     lastName: req.params.lastName,
+    //   };
+
+    // function find influencer profile
+    // if not find sponsor profile
+    // return profiles
+    let ratingsMap = {}
+    InfluencerProfile.find({
+      $or: [
+        { "name.firstName": { $regex: new RegExp(req.query.firstName, "i") } },
+        { "name.lastName": { $regex: new RegExp(req.query.lastName, "i") } },
+      ],
+    })
+      .then((profiles) => {
+        if (profiles.length > 0) {
+          console.log(
+            "Profiles searched successfully for name " +
+              "First name: " +
+              req.query.firstName +
+              " and Last name" +
+              req.query.lastName +
+              "Getting Ratings:"
+          );
+          
+          profiles.map(profile => (
+            Rating.find({
+                influencer: profile.email
+            })
+            .sort({ratedOn: -1})
+            .then(r => {
+                if (r.length != 0) {
+                    console.log("Ratings fetched successfully for influencer: " + profile.email);
+                    // console.log(r[0])
+                    const email = profile.email
+                    console.log(profile.email)
+                    // console.log(ratingsMap)
+                    ratingsMap.email = r
+                } else {
+                    console.log("No Ratings found for influencer: " + profile.email);
+                    // res.status(404).json({message: "No Ratings found"});
+                }
+            })
+            .catch(err => {console.log(err)})
+          ))
+          console.log("Ratings Map" + ratingsMap)
+          res.status(200).json({message: profiles, ratings: ratingsMap})
+        } else {
+          console.log("No  Profiles found");
+          res
+            .status(404)
+            .json({ message: "No Profile with matching name found" });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res
+          .status(500)
+          .json({ message: "Profile could not be fetched. Error: " + err });
+      });
+  });
 
 module.exports = router;

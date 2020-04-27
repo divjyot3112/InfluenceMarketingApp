@@ -5,26 +5,16 @@
     margin: 40% 30% 60% 30%;
 }
 
-.task-not-found-main {
-    height: 100%;
-    background-color: var(--main-bg-color);
-}
-
 .main-post-task {
     height: 100vh;
-    background-color: var(--main-bg-color);
-}
-
-.main-background{
-    height:100vh;
-    margin:0% 20% 0% 20%;
 }
 
 .form-body {
-    width:100%;
+    width: 100%;
     height: 100%;
     overflow: hidden;
     padding: 0% 0% 0% 10%;
+    margin-top: 2%;
 }
 
 .form_body_left {
@@ -42,32 +32,33 @@
 }
 
 .form_body_bottom {
-    margin:5% 30% 0% 30%;
-    height:100%;
+    margin: 2% 30% 0% 30%;
+    height: 100%;
 }
 
 .buttons {
     width: 100%;
     height: 100%;
-    margin-top: 5%;
+    margin-top: 2%;
+    margin-bottom: 2%;
 }
 
 .buttons .btn-save {
-   margin-left:35%;
+    margin-left: 38%;
 }
 
 .buttons .btn-cancel {
-    margin-left:10%;
+    margin-left: 10%;
 }
 
 .error {
     color: red;
 }
 
-.input-field{
+.input-field {
     width: 100%
 }
 
-.input-date{
+.input-date {
     width: 100%
 }

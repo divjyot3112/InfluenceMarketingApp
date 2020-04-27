@@ -9,10 +9,21 @@ let fetchUserDetails = require("../../utils/UserDetails");
 require("../../config/passport")(passport);
 
 // Task Model
-const Task = require("../../models/Task");
-const SponsorProfile = require("../../models/SponsorProfile");
-const InfluencerProfile = require("../../models/InfluencerProfile");
-const Rating = require("../../models/Rating");
+
+const Task = require('../../models/Task');
+const SponsorProfile = require('../../models/SponsorProfile');
+const InfluencerProfile = require('../../models/InfluencerProfile');
+const Rating = require('../../models/Rating');
+const nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'influencemarketing.contact@gmail.com',
+        pass: 'cmpe295Project'
+    }
+});
+
 
 // @route   POST api/task/create
 // @desc    Create a task
@@ -342,106 +353,171 @@ router.put("/:taskId/select", (req, res) => {
                         $pull: {
                           selectedCandidates: req.body.selectedCandidates,
                         },
-                      },
-                      { returnOriginal: false, useFindAndModify: false }
-                    );
-                    res.status(400).json({ message: err });
-                  });
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-              res.status(400).json({ message: err });
-            });
-        } else {
-          console.log("Candidate(s) cannot be selected at this time");
-          res
-            .status(401)
-            .json({ message: "Candidate(s) cannot be selected at this time" });
-        }
-      } else {
-        console.log("Task does not exist");
-        res.status(404).json({ message: "Task does not exist" });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json({ message: err });
-    });
-});
+
+                        {returnOriginal: false, useFindAndModify: false}
+                    )
+                        .then(task => {
+                            console.log("Candidate selected successfully")
+
+                            console.log("Checking if vacancy count is full" + task.vacancyCount)
+                            if (task.selectedCandidates.length == task.vacancyCount) {
+                                Task.findOneAndUpdate(
+                                    {_id: ObjectID(req.params.taskId)},
+                                    {
+                                        $set: {
+                                            status: taskStatus.PENDING
+                                        }
+                                    },
+                                    {returnOriginal: false, useFindAndModify: false}
+                                )
+                                    .then(task => {
+                                        console.log("Status updated to Pending successfully")
+                                        // email all rejected candidates
+                                        var rejectedCandidates = task.appliedCandidates.filter(function (email) {
+                                            return !task.selectedCandidates.includes(email);
+                                        });
+                                        // rejectedCandidates.push("sheena.gupta.in@gmail.com")
+                                        var mailOptions = {
+                                            from: "influencemarketing.contact@gmail.com",
+                                            to: rejectedCandidates,
+                                            subject: 'Update on Application for ' + task.title,
+                                            text: 'We regret to inform you that your application has been rejected.'
+                                        };
+
+                                        transporter.sendMail(mailOptions, function (error, info) {
+                                            if (error) {
+                                                console.log(error);
+                                            } else {
+                                                console.log('Email sent: ' + info.response);
+                                            }
+                                        });
+
+                                        res.status(200).json({message: "Candidate selected successfully"})
+                                    })
+                                    .catch(err => {
+                                        console.log(err)
+                                        Task.findOneAndUpdate(
+                                            {_id: ObjectID(req.params.taskId)},
+                                            {
+                                                $pull: {
+                                                    selectedCandidates: req.body.selectedCandidates
+                                                }
+                                            },
+                                            {returnOriginal: false, useFindAndModify: false}
+                                        )
+                                        res.status(400).json({message: err})
+                                    })
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err)
+                            res.status(400).json({message: err})
+                        });
+                } else {
+                    console.log("Candidate(s) cannot be selected at this time")
+                    res.status(401).json({message: "Candidate(s) cannot be selected at this time"})
+                }
+            } else {
+                console.log("Task does not exist")
+                res.status(404).json({message: "Task does not exist"})
+            }
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(400).json({message: err})
+        });
+})
 
 // @route   PUT api/tasks/complete/:taskId
 // @desc    Mark a task as complete
 // @access  Public
 router.put("/complete/:taskId", (req, res) => {
-  console.log("Inside Mark a task as complete for Task ID:", req.params.taskId);
 
-  Task.findOne({ _id: ObjectID(req.params.taskId) })
-    .then((task) => {
-      // check if task exists
-      if (task) {
-        // check if status is In Progress
-        if (task.status === taskStatus.INPROGRESS) {
-          // then mark status = Completed
-          // and set end date to current date
-          Task.findOneAndUpdate(
-            { _id: ObjectID(req.params.taskId) },
-            {
-              $set: {
-                status: taskStatus.COMPLETED,
-                endDate: new Date(),
-              },
-            },
-            { returnOriginal: false, useFindAndModify: false }
-          )
-            .then((task) => {
-              console.log("Task marked as completed successfully");
-              res
-                .status(200)
-                .json({ message: "Task marked as completed successfully" });
-            })
-            .catch((err) => {
-              console.log("Task could not be modified");
-              res.status(400).json({ message: "Task could not be modified" });
-            });
-        } else {
-          // cannot complete the task
-          console.log("Cannot complete the task");
-          res.status(401).json({ message: "Cannot complete the task" });
-        }
-      } else {
-        console.log("Task does not exist");
-        res.status(404).json({ message: "Task does not exist" });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json({ message: "Something went wrong" });
-    });
+    console.log("Inside Mark a task as complete for Task ID:", req.params.taskId);
+    console.log(req.params.taskId)
+    Task.findOne({_id: ObjectID(req.params.taskId)})
+        .then(task => {
+            // check if task exists
+            if (task) {
+                // check if status is In Progress
+                if (task.status === taskStatus.INPROGRESS) {
+                    // then mark status = Completed
+                    // and set end date to current date
+                    Task.findOneAndUpdate(
+                        {_id: ObjectID(req.params.taskId)},
+                        {
+                            $set: {
+                                status: taskStatus.COMPLETED,
+                                endDate: new Date()
+                            }
+                        },
+                        {returnOriginal: false, useFindAndModify: false}
+                    )
+                        .then(task => {
+                            console.log("Task marked as completed successfully");
+                            res.status(200).json({message: "Task marked as completed successfully"});
+                        })
+                        .catch(err => {
+                            console.log("Task could not be modified");
+                            res.status(400).json({message: "Task could not be modified"});
+                        })
+                } else {
+                    // cannot complete the task
+                    console.log("Cannot complete the task");
+                    res.status(401).json({message: "Cannot complete the task"});
+                }
+            } else {
+                console.log("Task does not exist");
+                res.status(404).json({message: "Task does not exist"});
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(400).json({message: "Something went wrong"});
+        });
+
 });
 
-// @route   GET api/tasks/search?title
-// @desc    Fetch all tasks by title
+// @route   GET api/tasks/search?title&&status
+// @desc    Fetch all tasks by title and filter by status
 // @access  Public
 router.get("/search", (req, res) => {
-  console.log(
-    "Inside GET request to fetch all tasks by title: " + req.query.title
-  );
 
-  Task.find({ title: { $regex: new RegExp(req.query.title, "i") } })
-    .then((tasks) => {
-      if (tasks.length != 0) {
-        console.log("tasks fetched successfully for title: " + req.query.title);
-        res.status(200).json({ message: tasks });
-      } else {
-        console.log("No tasks found");
-        res.status(404).json({ message: "No tasks found" });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json({ message: err });
-    });
+    console.log("Inside GET request to fetch all tasks by title: " + req.query.title);
+    if (req.query.status === taskStatus.ALL) {
+        console.log("Finding tasks for status: " + req.query.status)
+        Task.find({title: {$regex: new RegExp(req.query.title, "i")}})
+            .then(tasks => {
+                if (tasks.length != 0) {
+                    console.log("tasks fetched successfully for title: " + req.query.title);
+                    res.status(200).json({message: tasks});
+                } else {
+                    console.log("No tasks found");
+                    res.status(404).json({message: "No tasks found"});
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(400).json({message: "Tasks could not be fetched"});
+            })
+    } else {
+        console.log("Finding tasks for status: " + req.query.status)
+        Task.find({title: {$regex: new RegExp(req.query.title, "i")}, status: req.query.status})
+            .then(tasks => {
+                if (tasks.length != 0) {
+                    console.log("tasks fetched successfully for title: " + req.query.title);
+                    res.status(200).json({message: tasks});
+                } else {
+                    console.log("No tasks found");
+                    res.status(404).json({message: "No tasks found"});
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(400).json({message: err});
+            })
+    }
+
 });
 
 // @route   PUT api/tasks/:taskId/apply
@@ -544,6 +620,7 @@ router.put("/:taskId/apply", (req, res) => {
     });
 });
 
+
 // @route   GET /task/:taskId
 // @desc    Fetch a task by Task ID
 // @access  Public
@@ -562,36 +639,42 @@ router.get("/:taskId", (req, res) => {
     });
 });
 
+
 // @route   GET api/tasks/unrated?taskId
 // @desc    Fetch all unrated influencers for the given taskId
 // @access  Public
 router.get("/unrated", (req, res) => {
-  console.log("Inside get all unrated influencers");
 
-  Task.findOne({ _id: ObjectID(req.query.taskId) })
-    .then(async (task) => {
-      let selectedCandidates = task.selectedCandidates;
-      let unratedCandidates = await Promise.all(
-        selectedCandidates.map((candidate) => {
-          return Rating.findOne({
-            task: req.query.taskId,
-            influencer: candidate,
-          }).then(async (rating) => {
-            if (rating) {
-              return null;
-            } else {
-              let profileInfo = await fetchUserDetails(candidate);
-              if ((await profileInfo) != null) {
-                return {
-                  name:
-                    (await profileInfo.name.firstName) +
-                    " " +
-                    (await profileInfo.name.lastName),
-                  email: await profileInfo.email,
-                };
-              }
-            }
-          });
+    console.log("Inside get all unrated influencers" + req.query.taskId);
+
+    Task.findOne({_id: ObjectID(req.query.taskId)})
+        .then(async task => {
+            let selectedCandidates = task.selectedCandidates
+            let unratedCandidates = await Promise.all(selectedCandidates.map(async candidate => {
+                return Rating.findOne({
+                    task: req.query.taskId,
+                    influencer: candidate
+                }).then(async (rating) => {
+                    if (rating) {
+                        return null;
+                    } else {
+                        let profileInfo = await fetchUserDetails(candidate);
+                        if (await profileInfo != null) {
+                            return {
+                                name: await profileInfo.name.firstName + " " + await profileInfo.name.lastName,
+                                email: await profileInfo.email
+                            }
+                        }
+                    }
+                })
+            }))
+            unratedCandidates = unratedCandidates.filter(c => c != null)
+            res.status(200).json({success: true, message: unratedCandidates})
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400).json({message: "Influencers could not be fetched"});
+
         })
       );
       unratedCandidates = unratedCandidates.filter((c) => c != null);
@@ -608,6 +691,7 @@ router.get("/unrated", (req, res) => {
   // @access  Public
   router.put("/delete/:taskId", (req, res) => {
     console.log("Inside delete task", req.params.taskId);
+
 
     Task.findOneAndRemove({ _id: ObjectID(req.params.taskId) })
       .then((task) => {
@@ -667,5 +751,8 @@ router.get("/unrated", (req, res) => {
       .then();
   });
 });
+
+
+
 
 module.exports = router;

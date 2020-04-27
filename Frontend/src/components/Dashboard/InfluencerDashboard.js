@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 import _ from "lodash";
-import { fetchDashboardTasks, getCurrentPageTasks, sortTasks } from "../../actions/dashboardActions";
-import { TaskStatus } from '../../utils/Constants';
+import {fetchDashboardTasks, getCurrentPageTasks, sortTasks} from "../../actions/dashboardActions";
+import {TaskStatus} from '../../utils/Constants';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
@@ -19,12 +19,12 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button'
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Pagination from '@material-ui/lab/Pagination';
 import NoData from './NoData'
 import "../../css/dashboard.css";
-import { MY_USER_ID } from "../../utils/Constants";
+import {MY_USER_ID} from "../../utils/Constants";
 import {Link} from "react-router-dom";
 
 //create the Navbar Component
@@ -53,7 +53,7 @@ const useStyles = (theme) => ({
     formControl: {
         margin: theme.spacing(1),
         minWidth: 250,
-      }
+    }
 });
 
 class InfluencerDashboard extends Component {
@@ -65,7 +65,7 @@ class InfluencerDashboard extends Component {
             numPages: 0,
             openSelect: false,
             sortBy: 0,
-            currPage:1
+            currPage: 1
         }
     }
 
@@ -74,7 +74,7 @@ class InfluencerDashboard extends Component {
             openSelect: true
         })
     }
-    
+
     handleCloseSelect = () => {
         this.setState({
             openSelect: false
@@ -83,7 +83,9 @@ class InfluencerDashboard extends Component {
 
     handleChangeSelect = (event) => {
         let sortBy = event.target.value;
-        this.props.sortTasks(sortBy,()=>{this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks)})
+        this.props.sortTasks(sortBy, () => {
+            this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks)
+        })
         this.setState({
             sortBy: sortBy
         })
@@ -92,13 +94,15 @@ class InfluencerDashboard extends Component {
     //get the courses data from backend  
     componentDidMount() {
         //TODO: get all tasks instead
-        this.props.fetchDashboardTasks(MY_USER_ID, TaskStatus.ALL, ()=>{this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks)});
+        this.props.fetchDashboardTasks(MY_USER_ID, TaskStatus.ALL, () => {
+            this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks)
+        });
     }
 
     handlePaginationClick = (event, value) => {
         this.setState({
             currentPageTasks: this.props.getCurrentPageTasks(value, this.props.dashboardTasks),
-            currPage:value
+            currPage: value
         })
     }
 
@@ -106,47 +110,58 @@ class InfluencerDashboard extends Component {
 
     handleOnStatusChange = (event) => {
         console.log(event)
-        this.props.fetchDashboardTasks(MY_USER_ID, event.target.value, () => { this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks);this.setState({
-            sortBy: 0
-        })});
+        this.props.fetchDashboardTasks(MY_USER_ID, event.target.value, () => {
+            this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks);
+            this.setState({
+                sortBy: 0
+            })
+        });
     }
 
     renderTasks() {
-        const { classes } = this.props;
+        const {classes} = this.props;
         if (this.props.currentPageTasks.length > 0) {
             return _.map(this.props.currentPageTasks, (task) => (
-            
+
                 <Grid item key={task} xs={10} sm={6} md={3}> {/*md was 4*/}
                     <Card className={classes.card}>
                         <CardMedia
                             className={classes.cardMedia}
-                            image="https://source.unsplash.com/random"
+                            image={(task.image === null || task.image === undefined) ? window.location.origin + '/no_image.jpg' : task.image}
                             title="Image title"
                         />
                         <CardContent className={classes.cardContent}>
                             <Typography gutterBottom variant="h6" component="h2">
                                 {task.title}
                             </Typography>
+
                             <Typography>
-                                <div style={{ overflowWrap: "break-word" }}><b>Desc:</b> {this.truncate(task.description)}</div>
+                                <div style={{overflowWrap: "break-word"}}>
+                                    <i>"{this.truncate(task.description)}"</i></div>
                             </Typography><br></br>
+
                             <Typography>
-                                <b>Posted On:</b> {new Date(task.postedOn).toLocaleDateString()}
+                                <b>Posted On:</b> {new Date(task.postedOn).toLocaleDateString('default', {
+                                month: 'long',
+                                day: "numeric",
+                                year: "numeric"
+                            })}
                             </Typography>
+
                             <Typography>
                                 <b>Salary:</b> ${task.salary}
                             </Typography>
                         </CardContent>
-                
+
                         <CardActions>
                             <Link
-                            to={{
-                                pathname: "/task",
-                                state: {
-                                    taskId: task._id
-                                }
-                            }}
-                            style={{textDecoration: 'none'}}
+                                to={{
+                                    pathname: "/task",
+                                    state: {
+                                        taskId: task._id
+                                    }
+                                }}
+                                style={{textDecoration: 'none'}}
                             >
                                 <Button size="small" color="primary">View</Button>
                             </Link>
@@ -155,71 +170,78 @@ class InfluencerDashboard extends Component {
                 </Grid>
             ))
         } else {
-           return  <NoData image={window.location.origin + "/no_tasks.png"} description="No Matching Tasks Found"/>
-            
+            return <NoData image={window.location.origin + "/no_tasks.png"} description="No Matching Tasks Found"/>
+
         }
     }
 
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
         return (
             <React.Fragment>
-                
-                <CssBaseline />
+
+                <CssBaseline/>
                 <div className="filter">
-                    <div style={{float:"left"}}>
-                    <FormControl className={classes.formControl}>
-                    <RadioGroup row aria-label="position" name="position" defaultValue="end" onChange={(event)=>this.handleOnStatusChange(event)}>
-                        <FormControlLabel
-                        value={TaskStatus.COMPLETED}
-                        control={<Radio color="primary" />}
-                        label={TaskStatus.COMPLETED}
-                        labelPlacement="end"
-                        />
-                        <FormControlLabel
-                        value={TaskStatus.INPROGRESS}
-                        control={<Radio color="primary" />}
-                        label={TaskStatus.INPROGRESS}
-                        labelPlacement="end"
-                        />
-                                <FormControlLabel value={TaskStatus.PENDING} control={<Radio color="primary" />} label={TaskStatus.PENDING} />
-                                <FormControlLabel value={TaskStatus.APPLIED} control={<Radio color="primary" />} label={TaskStatus.APPLIED} />
-                        <FormControlLabel
-                        value={TaskStatus.ALL}
-                        control={<Radio color="primary" />}
-                        label={TaskStatus.ALL}
-                        labelPlacement="end"
-                        />
-                        </RadioGroup>
+                    <div style={{float: "left"}}>
+                        <FormControl className={classes.formControl}>
+                            <RadioGroup row aria-label="position" name="position" defaultValue="end"
+                                        onChange={(event) => this.handleOnStatusChange(event)}>
+                                <FormControlLabel
+                                    value={TaskStatus.COMPLETED}
+                                    control={<Radio color="primary"/>}
+                                    label={TaskStatus.COMPLETED}
+                                    labelPlacement="end"
+                                />
+                                <FormControlLabel
+                                    value={TaskStatus.INPROGRESS}
+                                    control={<Radio color="primary"/>}
+                                    label={TaskStatus.INPROGRESS}
+                                    labelPlacement="end"
+                                />
+                                <FormControlLabel value={TaskStatus.PENDING} control={<Radio color="primary"/>}
+                                                  label={TaskStatus.PENDING}/>
+                                <FormControlLabel value={TaskStatus.APPLIED} control={<Radio color="primary"/>}
+                                                  label={TaskStatus.APPLIED}/>
+                                <FormControlLabel
+                                    value={TaskStatus.ALL}
+                                    control={<Radio color="primary"/>}
+                                    label={TaskStatus.ALL}
+                                    labelPlacement="end"
+                                />
+                            </RadioGroup>
                         </FormControl>
                     </div>
-                    <div style={{ float: "right", display:"inline"}}>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel id="demo-controlled-open-select-label">Sort By</InputLabel>
-                        <Select
-                        labelId="demo-controlled-open-select-label"
-                        id="demo-controlled-open-select"
-                        open={this.state.openSelect}
-                        onClose={this.handleCloseSelect}
-                        onOpen={this.handleOpenSelect}
-                        value={this.state.sortBy}
-                        onChange={this.handleChangeSelect}
-                        >
-                        <MenuItem value={0}>Most Recent</MenuItem>
-                        <MenuItem value={1}>Salary: Low to High</MenuItem>
-                        <MenuItem value={2}>Salary: High to Low</MenuItem>
-                        </Select>
+                    <div style={{float: "right", display: "inline"}}>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel id="demo-controlled-open-select-label">Sort By</InputLabel>
+                            <Select
+                                labelId="demo-controlled-open-select-label"
+                                id="demo-controlled-open-select"
+                                open={this.state.openSelect}
+                                onClose={this.handleCloseSelect}
+                                onOpen={this.handleOpenSelect}
+                                value={this.state.sortBy}
+                                onChange={this.handleChangeSelect}
+                            >
+                                <MenuItem value={0}>Most Recent</MenuItem>
+                                <MenuItem value={1}>Salary: Low to High</MenuItem>
+                                <MenuItem value={2}>Salary: High to Low</MenuItem>
+                            </Select>
                         </FormControl>
-                        </div>
+                    </div>
                 </div>
                 <Container className={classes.cardGrid} maxWidth="md">
-                    
+                    <br/>
+                    <br/>
+                    <br/>
                     {/* End hero unit */}
                     <Grid container spacing={4}>
                         {this.renderTasks()}
                     </Grid>
-                    <div className={classes.root}>
-                         <Pagination count={this.props.numPages} variant="outlined" color="primary" onChange={this.handlePaginationClick} hidden={this.props.currentPageTasks.length<=0} />
+                    <div className="dashboard-pagination">
+                        <Pagination count={this.props.numPages} variant="outlined" color="primary"
+                                    onChange={this.handlePaginationClick}
+                                    hidden={this.props.currentPageTasks.length <= 0}/>
                     </div>
                 </Container>
             </React.Fragment>
@@ -240,4 +262,8 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, { fetchDashboardTasks, getCurrentPageTasks, sortTasks })(withStyles(useStyles)(InfluencerDashboard));
+export default connect(mapStateToProps, {
+    fetchDashboardTasks,
+    getCurrentPageTasks,
+    sortTasks
+})(withStyles(useStyles)(InfluencerDashboard));

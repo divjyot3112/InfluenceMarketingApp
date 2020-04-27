@@ -165,25 +165,25 @@ class UserProfileFormEventHandlers extends Component {
         const image = e.target.files[0];
         if (image) {
             this.setState({image: image});
+
+            // TODO: get email from local storage
+            const email = "sheena@gmail.com";
+            const fileName = email + "_" + image.name;
+
+            const uploadTask = storage.ref("users/" + fileName).put(image);
+            uploadTask.on("state_changed",
+                (snapshot) => {
+                },
+                (error) => {
+                    console.log("error in uploading user image= " + JSON.stringify(error));
+                },
+                () => {
+                    storage.ref("users")
+                        .child(fileName).getDownloadURL().then(url => {
+                        this.setState({url: url})
+                    })
+                });
         }
-
-        // TODO: get email from local storage
-        const email = "sheena@gmail.com";
-        const fileName = email + "_" + image.name;
-
-        const uploadTask = storage.ref("users/" + fileName).put(image);
-        uploadTask.on("state_changed",
-            (snapshot) => {
-            },
-            (error) => {
-                console.log("error in uploading user image= " + JSON.stringify(error));
-            },
-            () => {
-                storage.ref("users")
-                    .child(fileName).getDownloadURL().then(url => {
-                    this.setState({url: url})
-                })
-            });
     };
 }
 
