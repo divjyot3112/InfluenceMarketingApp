@@ -38,8 +38,10 @@ class Main extends Component {
         <Route path="/ratings" exact component={Rating} />
         <Route path="/about" exact component={About} />
         <Route path="/home/sponsor" exact component={SponsorHome} />
-        <Route path="/home" exact component={Landing} />
+        <Route path="/" exact component={Landing} />
         <Route path="/analytics" exact component={Analytics} />
+
+        <Route exact path="/" component={Landing} />
       </div>
     );
   }
