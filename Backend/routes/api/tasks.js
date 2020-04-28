@@ -264,7 +264,7 @@ router.get("/filter", (req, res) => {
         });
 });
 
-// @route   PUT api/tasks/:taskId/select 
+// @route   PUT api/tasks/:taskId/select?email
 // @desc    Select a candidate for a task by sponsor
 // @access  Public
 router.put("/:taskId/select", (req, res) => {
@@ -273,77 +273,83 @@ router.put("/:taskId/select", (req, res) => {
         .then(task => {
             // check if task exists
             if (task) {
-                // task should be in CREATED state
-                if (task.status == taskStatus.CREATED) {
-                    Task.findOneAndUpdate(
-                        {_id: ObjectID(req.params.taskId)},
-                        {
-                            $push: {
-                                selectedCandidates: req.body.selectedCandidates
-                            }
-                        },
-                        {returnOriginal: false, useFindAndModify: false}
-                    )
-                        .then(task => {
-                            console.log("Candidate selected successfully")
+                if( task.postedBy===req.query.email) {
+                    // task should be in CREATED state
+                    if (task.status == taskStatus.CREATED) {
+                        Task.findOneAndUpdate(
+                            {_id: ObjectID(req.params.taskId)},
+                            {
+                                $push: {
+                                    selectedCandidates: req.body.selectedCandidates
+                                }
+                            },
+                            {returnOriginal: false, useFindAndModify: false}
+                        )
+                            .then(task => {
+                                console.log("Candidate selected successfully")
 
-                            console.log("Checking if vacancy count is full" + task.vacancyCount)
-                            if (task.selectedCandidates.length == task.vacancyCount) {
-                                Task.findOneAndUpdate(
-                                    {_id: ObjectID(req.params.taskId)},
-                                    {
-                                        $set: {
-                                            status: taskStatus.PENDING
-                                        }
-                                    },
-                                    {returnOriginal: false, useFindAndModify: false}
-                                )
-                                    .then(task => {
-                                        console.log("Status updated to Pending successfully")
-                                        // email all rejected candidates
-                                        var rejectedCandidates = task.appliedCandidates.filter(function (email) {
-                                            return !task.selectedCandidates.includes(email);
-                                        });
-                                        // rejectedCandidates.push("sheena.gupta.in@gmail.com")
-                                        var mailOptions = {
-                                            from: "influencemarketing.contact@gmail.com",
-                                            to: rejectedCandidates,
-                                            subject: 'Update on Application for ' + task.title,
-                                            text: 'We regret to inform you that your application has been rejected.'
-                                        };
-
-                                        transporter.sendMail(mailOptions, function (error, info) {
-                                            if (error) {
-                                                console.log(error);
-                                            } else {
-                                                console.log('Email sent: ' + info.response);
+                                console.log("Checking if vacancy count is full" + task.vacancyCount)
+                                if (task.selectedCandidates.length === task.vacancyCount) {
+                                    Task.findOneAndUpdate(
+                                        {_id: ObjectID(req.params.taskId)},
+                                        {
+                                            $set: {
+                                                status: taskStatus.PENDING
                                             }
-                                        });
+                                        },
+                                        {returnOriginal: false, useFindAndModify: false}
+                                    )
+                                        .then(task => {
+                                            console.log("Status updated to Pending successfully")
+                                            // email all rejected candidates
+                                            var rejectedCandidates = task.appliedCandidates.filter(function (email) {
+                                                return !task.selectedCandidates.includes(email);
+                                            });
+                                            // rejectedCandidates.push("sheena.gupta.in@gmail.com")
+                                            var mailOptions = {
+                                                from: "influencemarketing.contact@gmail.com",
+                                                to: rejectedCandidates,
+                                                subject: 'Update on Application for ' + task.title,
+                                                text: 'We regret to inform you that your application has been rejected.'
+                                            };
 
-                                        res.status(200).json({message: "Candidate selected successfully"})
-                                    })
-                                    .catch(err => {
-                                        console.log(err)
-                                        Task.findOneAndUpdate(
-                                            {_id: ObjectID(req.params.taskId)},
-                                            {
-                                                $pull: {
-                                                    selectedCandidates: req.body.selectedCandidates
+                                            transporter.sendMail(mailOptions, function (error, info) {
+                                                if (error) {
+                                                    console.log(error);
+                                                } else {
+                                                    console.log('Email sent: ' + info.response);
                                                 }
-                                            },
-                                            {returnOriginal: false, useFindAndModify: false}
-                                        )
-                                        res.status(400).json({message: err})
-                                    })
-                            }
-                        })
-                        .catch(err => {
-                            console.log(err)
-                            res.status(400).json({message: err})
-                        });
+                                            });
+
+                                            res.status(200).json({message: "Candidate selected successfully"})
+                                        })
+                                        .catch(err => {
+                                            console.log(err)
+                                            Task.findOneAndUpdate(
+                                                {_id: ObjectID(req.params.taskId)},
+                                                {
+                                                    $pull: {
+                                                        selectedCandidates: req.body.selectedCandidates
+                                                    }
+                                                },
+                                                {returnOriginal: false, useFindAndModify: false}
+                                            )
+                                            res.status(400).json({message: err})
+                                        })
+                                } else {
+                                    res.status(200).json({message: "Candidate selected successfully"})
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err)
+                                res.status(400).json({message: err})
+                            });
+                    } else {
+                        res.status(401).json({message: "Task is already in progress"})
+                    }
                 } else {
-                    console.log("Candidate(s) cannot be selected at this time")
-                    res.status(401).json({message: "Candidate(s) cannot be selected at this time"})
+                    console.log("Task not found")
+                    res.status(401).json({message: "Permission not granted"})
                 }
             } else {
                 console.log("Task does not exist")
