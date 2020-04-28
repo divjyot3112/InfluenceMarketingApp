@@ -43,14 +43,13 @@ export class Appbar extends Component {
         role: null
     }
 
-    componentWillMount() {
+    componentDidMount() {
         // TODO: get email from local storage
         // const email = localStorage.getItem("email");
         const email = "divjyot@gmail.com";
         const role = UserRoles.SPONSOR;
 
         this.setState({role: role});
-
         if (email != null) {
             this.props.getProfile(email).then((response) => {
                 if (response === undefined && this.props.profile.status === 200) {
@@ -58,6 +57,9 @@ export class Appbar extends Component {
                         firstName: this.props.profile.data.message.name
                             ? this.props.profile.data.message.name.firstName
                             : "",
+                        address: this.props.profile.data.message.address
+                        ? this.props.profile.data.message.address
+                        : "",
                         image: this.props.profile.data.message
                             ? this.props.profile.data.message.image
                             : "",
@@ -96,7 +98,7 @@ export class Appbar extends Component {
                     pathname: "/search/people",
                     state: {
                         searchString: this.state.searchString,
-                        // status: TaskStatus.ALL
+                        address: this.state.address
                     }
                 })
             ) : (
@@ -104,7 +106,7 @@ export class Appbar extends Component {
                     pathname: "/search/tasks",
                     state: {
                         searchString: this.state.searchString,
-                        status: TaskStatus.ALL
+                        status: TaskStatus.ALL,
                     }
                 })
             )

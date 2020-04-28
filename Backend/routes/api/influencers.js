@@ -64,25 +64,60 @@ router.put('/rate', (req, res) => {
     })
 });
 
-// @route   GET api/influencers/profile?address
+// @route   GET api/influencers/profile?address&firstName&lastName
 // @desc    Fetch all Influencer profiles by address
 // @access  Public
 router.get("/profile", (req, res) => {
+    var ratingsMap = {}
     console.log("Inside GET request to fetch all Influencer Profiles by" +
         " address: " + req.query.address);
 
     InfluencerProfile.find({
-        "address": {$regex: new RegExp(req.query.address, "i")}
+        "address": {$regex: new RegExp(req.query.address, "i")},
+        $or: [
+            { "name.firstName": { $regex: new RegExp(req.query.firstName, "i") } },
+            { "name.lastName": { $regex: new RegExp(req.query.lastName, "i") } },
+        ],
     })
-        .then(profile => {
-            // check if influencer profiles exists for given address
-            if (profile.length != 0) {
-                console.log("Influencer Profiles fetched successfully for " +
-                    "address: " + req.query.address);
-                res.status(200).json({message: profile});
-            } else {
-                console.log("No Influencer Profiles found");
-                res.status(404).json({message: "No Influencer Profiles found"});
+    .then((profiles) => {
+        if (profiles.length > 0) {
+            console.log(
+                "Profiles searched successfully for name " + "First name: " + req.query.firstName + 
+                " and Last name" + req.query.lastName + " Getting Ratings:"
+            );
+          
+            profiles.map((profile, profileIndex) => (
+                Rating.find({
+                influencer: profile.email
+            })
+                .sort({ratedOn: -1})
+                .then(r => {
+                    if (r.length != 0) {
+                        console.log("Ratings fetched successfully for influencer: " + profile.email);
+                        // console.log(r[0])
+                        const email = profile.email
+                        console.log(profile.email)
+                        let avgRating = 0
+                        r.map(x => {
+                            avgRating += x.rating/r.length
+                        })
+                        console.log(avgRating)
+                        ratingsMap[email] = JSON.stringify(avgRating)
+                        console.log(ratingsMap)
+                    } else {
+                        console.log("No Ratings found for influencer: " + profile.email);
+                        ratingsMap[profile.email] = null
+                        // res.status(404).json({message: "No Ratings found"});
+                    }
+                    if(profileIndex===profiles.length-1) {
+                        // console.log("Ratings Map" + ratingsMap)
+                        res.status(200).json({message: profiles, ratings: ratingsMap})
+                    }
+                })
+                .catch(err => {console.log(err)})
+            ))} else {
+                console.log("No  Profiles found");
+                res.status(404).json({ message: "No Profile with matching name found" });
             }
         })
         .catch(err => {

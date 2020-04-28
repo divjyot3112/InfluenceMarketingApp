@@ -109,17 +109,21 @@ router.get("/:taskId/applicants", (req, res) => {
             })
             .catch((err) => {
               console.log(err);
-              res.status(400).json({
-                success: false,
-                message: "Unable to fetch candidates!",
-              });
+              res
+                .status(400)
+                .json({
+                  success: false,
+                  message: "Unable to fetch candidates!",
+                });
             });
         } else {
           console.log("No candidates have applied for this task");
-          res.status(400).json({
-            success: false,
-            message: "No candidates have applied for this task",
-          });
+          res
+            .status(400)
+            .json({
+              success: false,
+              message: "No candidates have applied for this task",
+            });
         }
       } else {
         console.log("Task does not exist");
@@ -288,6 +292,140 @@ router.get("/filter", (req, res) => {
       } else {
         console.log("User does not exist");
         res.status(404).json({ message: "User does not exist" });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json({ message: err });
+    });
+});
+
+// @route   PUT api/tasks/:taskId/select?email
+// @desc    Select a candidate for a task by sponsor
+// @access  Public
+router.put("/:taskId/select", (req, res) => {
+  console.log("Inside select candidate request");
+  Task.findOne({ _id: ObjectID(req.params.taskId) })
+    .then((task) => {
+      // check if task exists
+      if (task) {
+        if (task.postedBy === req.query.email) {
+          // task should be in CREATED state
+          if (task.status == taskStatus.CREATED) {
+            Task.findOneAndUpdate(
+              { _id: ObjectID(req.params.taskId) },
+              {
+                $push: {
+                  selectedCandidates: req.body.selectedCandidates,
+                },
+              },
+              { returnOriginal: false, useFindAndModify: false }
+            )
+              .then((task) => {
+                console.log("Candidate selected successfully");
+
+                console.log(
+                  "Checking if vacancy count is full" + task.vacancyCount
+                );
+                if (task.selectedCandidates.length === task.vacancyCount) {
+                  Task.findOneAndUpdate(
+                    { _id: ObjectID(req.params.taskId) },
+                    {
+                      $set: {
+                        status: taskStatus.PENDING,
+                      },
+                    },
+                    { returnOriginal: false, useFindAndModify: false }
+                  )
+                    .then((task) => {
+                      console.log("Status updated to Pending successfully");
+                      // email all rejected candidates
+                      var rejectedCandidates = task.appliedCandidates.filter(
+                        function (email) {
+                          return !task.selectedCandidates.includes(email);
+                        }
+                      );
+                      // rejectedCandidates.push("sheena.gupta.in@gmail.com")
+                      var mailOptions = {
+                        from: "influencemarketing.contact@gmail.com",
+                        to: rejectedCandidates,
+                        subject: "Update on Application for " + task.title,
+                        text:
+                          "We regret to inform you that your application has been rejected.",
+                      };
+
+                      transporter.sendMail(mailOptions, function (error, info) {
+                        if (error) {
+                          console.log(error);
+                        } else {
+                          console.log(
+                            "Email sent to rejected candidates: " +
+                              info.response
+                          );
+                        }
+                      });
+
+                      mailOptions = {
+                        from: "influencemarketing.contact@gmail.com",
+                        to: task.selectedCandidates,
+                        subject: "Update on Application for " + task.title,
+                        text:
+                          "Congratulations! You have been selected for the task: " +
+                          task.title,
+                      };
+
+                      transporter.sendMail(mailOptions, function (error, info) {
+                        if (error) {
+                          console.log(error);
+                        } else {
+                          console.log(
+                            "Email sent to selected candidates: " +
+                              info.response
+                          );
+                        }
+                      });
+
+                      res
+                        .status(200)
+                        .json({ message: "Candidate selected successfully" });
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                      Task.findOneAndUpdate(
+                        { _id: ObjectID(req.params.taskId) },
+                        {
+                          $pull: {
+                            selectedCandidates: req.body.selectedCandidates,
+                          },
+                        },
+                        { returnOriginal: false, useFindAndModify: false }
+                      );
+                      res.status(400).json({ message: err });
+                    });
+                } else {
+                  res
+                    .status(200)
+                    .json({ message: "Candidate selected successfully" });
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+                res.status(400).json({ message: err });
+              });
+          } else {
+            res.status(401).json({ message: "Task is already in progress" });
+          }
+        } else {
+          console.log("You don't have permission to select a candidate");
+          res
+            .status(401)
+            .json({
+              message: "You don't have permission to select a candidate",
+            });
+        }
+      } else {
+        console.log("Task does not exist");
+        res.status(404).json({ message: "Task does not exist" });
       }
     })
     .catch((err) => {
@@ -498,50 +636,43 @@ router.put("/:taskId/apply", (req, res) => {
 // @route   GET api/tasks/unrated?taskId
 // @desc    Fetch all unrated influencers for the given taskId
 // @access  Public
-router
-  .get("/unrated", (req, res) => {
-    console.log("Inside get all unrated influencers" + req.query.taskId);
+router.get("/unrated", (req, res) => {
+  console.log("Inside get all unrated influencers" + req.query.taskId);
 
-    Task.findOne({ _id: ObjectID(req.query.taskId) })
-      .then(async (task) => {
-        let selectedCandidates = task.selectedCandidates;
-        let unratedCandidates = await Promise.all(
-          selectedCandidates.map(async (candidate) => {
-            return Rating.findOne({
-              task: req.query.taskId,
-              influencer: candidate,
-            }).then(async (rating) => {
-              if (rating) {
-                return null;
-              } else {
-                let profileInfo = await fetchUserDetails(candidate);
-                if ((await profileInfo) != null) {
-                  return {
-                    name:
-                      (await profileInfo.name.firstName) +
-                      " " +
-                      (await profileInfo.name.lastName),
-                    email: await profileInfo.email,
-                  };
-                }
+  Task.findOne({ _id: ObjectID(req.query.taskId) })
+    .then(async (task) => {
+      let selectedCandidates = task.selectedCandidates;
+      let unratedCandidates = await Promise.all(
+        selectedCandidates.map(async (candidate) => {
+          return Rating.findOne({
+            task: req.query.taskId,
+            influencer: candidate,
+          }).then(async (rating) => {
+            if (rating) {
+              return null;
+            } else {
+              let profileInfo = await fetchUserDetails(candidate);
+              if ((await profileInfo) != null) {
+                return {
+                  name:
+                    (await profileInfo.name.firstName) +
+                    " " +
+                    (await profileInfo.name.lastName),
+                  email: await profileInfo.email,
+                };
               }
-            });
-          })
-        );
-        unratedCandidates = unratedCandidates.filter((c) => c != null);
-        res.status(200).json({ success: true, message: unratedCandidates });
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(400).json({ message: "Influencers could not be fetched" });
-      });
-    unratedCandidates = unratedCandidates.filter((c) => c != null);
-    res.status(200).json({ success: true, message: unratedCandidates });
-  })
-  .catch((err) => {
-    console.log(err);
-    res.status(400).json({ message: "Influencers could not be fetched" });
-  });
+            }
+          });
+        })
+      );
+      unratedCandidates = unratedCandidates.filter((c) => c != null);
+      res.status(200).json({ success: true, message: unratedCandidates });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json({ message: "Influencers could not be fetched" });
+    });
+});
 
 //arman
 // @route   PUT /task/delete/:taskId

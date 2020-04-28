@@ -21,8 +21,7 @@ import TaskDescription from "./Task/TaskDescription";
 import Landing from "./LandingPage/LandingPage";
 import SponsorHome from "./Home/SponsorHome";
 import About from "./About/About";
-import ContactUs from "./ContactUs/ContactUs";
-
+import Analytics from "./analytics/Analytics";
 class Main extends Component {
   render() {
     return (
@@ -40,6 +39,7 @@ class Main extends Component {
         <Route path="/about" exact component={About} />
         <Route path="/home/sponsor" exact component={SponsorHome} />
         <Route path="/home" exact component={Landing} />
+        <Route path="/analytics" exact component={Analytics} />
 
         <Route exact path="/" component={Landing} />
       </div>
