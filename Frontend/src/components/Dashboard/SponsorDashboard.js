@@ -48,7 +48,7 @@ const useStyles = (theme) => ({
         flexDirection: 'column',
     },
     cardMedia: {
-        paddingTop: '56.25%', // 16:9
+        paddingTop: '100%', // 16:9
     },
     cardContent: {
         flexGrow: 1
@@ -162,13 +162,23 @@ class SponsorDashboard extends Component {
                                                                                                   markComplete={() => this.markComplete(task._id)}></MarkCompleteModal> : null;
 
                 return (
-                    <Grid item key={task} xs={10} sm={6} md={3}> {/*md was 4*/}
+                    <Grid item key={task} lg={4} sm={6} md={3}> {/*md was 4*/}
                         <Card className={classes.card}>
+                        <Link
+                                to={{
+                                    pathname: "/task",
+                                    state: {
+                                        taskId: task._id
+                                    }
+                                }}
+                                style={{textDecoration: 'none'}}
+                            >
                             <CardMedia
                                 className={classes.cardMedia}
                                 image={(task.image === null || task.image === undefined) ? window.location.origin + '/no_image.jpg' : task.image}
                                 title={task.title}
-                            />
+                                />
+                                </Link>
                             <CardContent className={classes.cardContent}>
                                 <Typography gutterBottom variant="h6" component="h2">
                                     {task.title}

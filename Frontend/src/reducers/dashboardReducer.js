@@ -31,7 +31,7 @@ export function dashboardNumPageReducer(state = 0, action) {
         case DASHBOARD_TASKS:
             if (action.payload === undefined)
                 return state
-            return Math.ceil(action.payload.data.message.length/12)
+            return Math.ceil(action.payload.data.message.length/9)
         default:
             return state;
     }
