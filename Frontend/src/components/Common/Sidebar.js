@@ -1,85 +1,112 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 //UI imports
-import { slide as Menu } from "react-burger-menu";
+import {slide as Menu} from "react-burger-menu";
 // Redux imports
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import { getProfile } from "../../actions/userProfileActions";
+import {getProfile} from "../../actions/userProfileActions";
 // CSS
 import "../../css/sidebar.css";
 
 const UserRoles = require("../../utils/Constants").UserRoles;
 
 export class Sidebar extends Component {
-  state = {
-    userExists: false,
-    role: null,
-  };
+    state = {
+        userExists: false,
+        role: null,
+    };
 
-  componentWillMount() {
-    // TODO: get email from local storage
-    // const email = localStorage.getItem("email");
-    const email = "divjyot@gmail.com";
+    componentWillMount() {
+        // TODO: get email from local storage
+        // const email = localStorage.getItem("email");
+        const email = "sheena@gmail.com";
 
-    if (email != null) {
-      this.props.getProfile(email).then((response) => {
-        if (response === undefined && this.props.profile.status === 200) {
-          this.setState({
-            firstName: this.props.profile.data.message
-              ? this.props.profile.data.message.name.firstName
-              : "",
-            userExists: true,
-            role: this.props.profile.data.role,
-          });
+        if (email != null) {
+            this.props.getProfile(email).then((response) => {
+                if (response === undefined && this.props.profile.status === 200) {
+                    this.setState({
+                        firstName: this.props.profile.data.message
+                            ? this.props.profile.data.message.name.firstName
+                            : "",
+                        userExists: true,
+                        role: this.props.profile.data.role,
+                    });
+                }
+            });
         }
-      });
     }
-  }
 
-  render() {
-    const role = this.state.userExists ? this.state.role : null;
-    const ratingLink = role
-      ? role == UserRoles.INFLUENCER
-        ? "/ratings/influencer"
-        : "/ratings/sponsor"
-      : "/";
+    render() {
+        const role = this.state.userExists ? this.state.role : null;
 
-    return (
-      <div>
-        <Menu>
-          <a className="menu-item" href="/">
-            Home
-          </a>
-          <a className="menu-item" href="/profile">
-            Profile
-          </a>
-          <a className="menu-item" href="/dashboard">
-            Dashboard
-          </a>
-          <a className="menu-item" href="/">
-            Analytics
-          </a>
-          <a className="menu-item" href="/inbox">
-            Inbox
-          </a>
-          <a className="menu-item" href={ratingLink}>
-            My Ratings
-          </a>
-        </Menu>
-      </div>
-    );
-  }
+        if (role === UserRoles.INFLUENCER) {
+            return (
+                <div>
+                    <Menu>
+                        <a className="menu-item" href="/">
+                            Home
+                        </a>
+                        <a className="menu-item" href="/profile">
+                            Profile
+                        </a>
+                        <a className="menu-item" href="/dashboard">
+                            Dashboard
+                        </a>
+                        <a className="menu-item" href="/">
+                            Analytics
+                        </a>
+                        <a className="menu-item" href="/inbox">
+                            Inbox
+                        </a>
+                        <a className="menu-item" href="/ratings">
+                            My Ratings
+                        </a>
+                    </Menu>
+                </div>
+            );
+
+        } else {
+            // user is sponsor
+            return (
+                <div>
+                    <Menu>
+                        <a className="menu-item" href="/">
+                            Home
+                        </a>
+                        <a className="menu-item" href="/profile">
+                            Profile
+                        </a>
+                        <a className="menu-item" href="/task/new">
+                            Create Task
+                        </a>
+                        <a className="menu-item" href="/dashboard">
+                            Dashboard
+                        </a>
+                        <a className="menu-item" href="/">
+                            Analytics
+                        </a>
+                        <a className="menu-item" href="/inbox">
+                            Inbox
+                        </a>
+                        <a className="menu-item" href="/ratings">
+                            My Ratings
+                        </a>
+                    </Menu>
+                </div>
+            );
+        }
+    }
 }
 
 Sidebar.protoTypes = {
-  getProfile: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
+    getProfile: PropTypes.func.isRequired,
+    profile: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
-  return {
-    profile: state.userProfile.profile,
-  };
+    return {
+        profile: state.userProfile.profile,
+    };
 }
 
-export default connect(mapStateToProps, { getProfile })(Sidebar);
+export default connect(mapStateToProps, {getProfile})(Sidebar);

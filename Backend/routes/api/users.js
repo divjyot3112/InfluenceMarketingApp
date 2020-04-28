@@ -550,7 +550,7 @@ router.post("/signup", (req, res) => {
         });
     })
     .catch((err) => {
-      console.log("Checking already existing user failed");
+      console.log("Checking Database failed. Something wrong with server");
       res.status(500).json({ error: err });
     });
 
@@ -558,6 +558,8 @@ router.post("/signup", (req, res) => {
   // @route   GET api/profile/firstName&&LastName
   // @desc    Search user profiles by name
   // @access  Public
+  // /influencers/search
+  //check email not equal to current email
   router.get("/profile", (req, res) => {
     console.log("Inside search profile by name API");
 

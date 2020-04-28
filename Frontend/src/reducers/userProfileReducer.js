@@ -1,8 +1,9 @@
-import {SAVE_PROFILE, GET_PROFILE} from "../actions/types";
+import {SAVE_PROFILE, GET_PROFILE, DEACTIVATE_PROFILE} from "../actions/types";
 
 const initialState = {
     profile: {},
     updated: false,
+    deactivateProfile: {}
 };
 
 export default function (state = initialState, action) {
@@ -17,6 +18,12 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 updated: true,
+            };
+
+        case DEACTIVATE_PROFILE:
+            return {
+                ...state,
+                deactivateProfile: action.payload,
             };
 
         default:

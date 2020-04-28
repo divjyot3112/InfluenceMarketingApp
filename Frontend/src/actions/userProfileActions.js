@@ -1,5 +1,5 @@
 import axios from "axios";
-import {SAVE_PROFILE, GET_PROFILE, ROOT_URL} from "./types";
+import {SAVE_PROFILE, GET_PROFILE, ROOT_URL, DEACTIVATE_PROFILE} from "./types";
 
 export const getProfile = email => async (dispatch) => {
     try {
@@ -31,6 +31,23 @@ export const saveProfile = (data, email) => async (dispatch) => {
     } catch (e) {
         return {
             type: SAVE_PROFILE,
+            payload: e,
+        };
+    }
+};
+
+export const deactivateProfile = (data, email) => async (dispatch) => {
+    try {
+        const res = await axios.patch(
+            `${ROOT_URL}/users/profile/deactivate?email=${email}`, data
+        );
+        dispatch({
+            type: DEACTIVATE_PROFILE,
+            payload: res.data,
+        });
+    } catch (e) {
+        return {
+            type: DEACTIVATE_PROFILE,
             payload: e,
         };
     }

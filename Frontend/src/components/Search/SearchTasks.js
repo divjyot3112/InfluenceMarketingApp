@@ -12,44 +12,57 @@ import {
     MDBRow,
     MDBContainer,
     MDBCardBody,
-    MDBProgress
+    MDBProgress,
+    // MDBInput,
+    // MDBFormInline
 } from 'mdbreact';
+// import {Form} from 'react-bootstrap'
+import { withStyles } from '@material-ui/core/styles';
+
 // Redux Imports
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import { searchTasks } from "../../actions/searchActions";
+// CSS
+import '../../css/search.css'
+// Utils
+import { TaskStatus } from '../../utils/Constants'
+import { FormControl, FormControlLabel, RadioGroup, Radio } from '@material-ui/core';
 
-export class Search extends Component {
+const useStyles = (theme) => ({
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 250,
+    }
+});
+
+export class SearchTasks extends Component {
     state = {
         tasksLoading: true,
         tasksFound: false,
         items: null,
         hasMore: null,
         totalTasks: null,
-        loadedTasks: null
+        loadedTasks: null,
+        status: null
     }
     componentDidMount() {
         if(this.props.location.state) {
-            if(this.props.location.state.searchParameter==="T"){
-                this.setState({searchString: this.props.location.state.searchString})
-                this.props.searchTasks({ title: this.props.location.state.searchString })
-            } else {
-                // Search People
-            }
+            this.setState({searchString: this.props.location.state.searchString})
+            this.props.searchTasks({ 
+                title: this.props.location.state.searchString,
+                status: this.props.location.state.status
+            })
         }
     }
     componentWillReceiveProps(props) {
         console.log(props.location.state.searchString + " " + this.state.searchString)
         if(props.location.state.searchString!==this.state.searchString){
             this.setState({ searchString: props.location.state.searchString })
-            if(props.location.state.searchParameter==="T"){
-                props.searchTasks({ title: props.location.state.searchString })
-            } else {
-                // Search People
-            }
-        } else {
-            this.setState({ searchString: props.location.state.searchString+" " })
-            // window.location.reload();
+            props.searchTasks({ 
+                title: props.location.state.searchString,
+                status: props.location.state.status
+            })
         }
         if(props.tasks) {
             this.setState({
@@ -129,6 +142,19 @@ export class Search extends Component {
             totalTasks: totalTasks,
             loadedTasks: 2
         })
+    }
+
+    filterClick = (status) => () => {
+        this.setState({
+            status: status
+        })
+        const data = {
+            title: this.state.searchString,
+            status: status
+        }
+        this.props.searchTasks(data)
+        console.log("Onclick")
+        this.componentWillReceiveProps(this.props)
     }
 
     loadMore = () => {
@@ -211,20 +237,106 @@ export class Search extends Component {
                 renderTasks: temp,
                 loadedTasks: this.state.loadedTasks+1
             })
-        } else {
-            
         }
     }
 
     
     render() {
+        const { classes } = this.props;
         console.log(this.state)
         return (
             <div>
                 <MDBContainer>
-                    <MDBRow>
-                        FILTERS
-                    </MDBRow>
+                <FormControl className={classes.formControl}>
+                <RadioGroup row aria-label="position" name="position" defaultValue="end" 
+                // onChange={(event)=>this.filterClick(event)}
+                >
+                    <FormControlLabel
+                        value={TaskStatus.CREATED}
+                        control={<Radio color="primary" />}
+                        label={TaskStatus.CREATED}
+                        labelPlacement="end"
+                        checked={this.state.status===TaskStatus.CREATED ? true : false}
+                        onClick={this.filterClick(TaskStatus.CREATED)}
+                    />
+                    <FormControlLabel
+                        value={TaskStatus.PENDING}
+                        control={<Radio color="primary" />}
+                        label={TaskStatus.PENDING}
+                        labelPlacement="end"
+                        checked={this.state.status===TaskStatus.PENDING ? true : false}
+                        onClick={this.filterClick(TaskStatus.PENDING)}
+                    />
+                    <FormControlLabel
+                        value={TaskStatus.INPROGRESS}
+                        control={<Radio color="primary" />}
+                        label={TaskStatus.INPROGRESS}
+                        labelPlacement="end"
+                        checked={this.state.status===TaskStatus.INPROGRESS ? true : false}
+                        onClick={this.filterClick(TaskStatus.INPROGRESS)}
+                    />
+                    <FormControlLabel
+                        value={TaskStatus.COMPLETED}
+                        control={<Radio color="primary" />}
+                        label={TaskStatus.COMPLETED}
+                        labelPlacement="end"
+                        checked={this.state.status===TaskStatus.COMPLETED ? true : false}
+                        onClick={this.filterClick(TaskStatus.COMPLETED)}
+                    />
+                    <FormControlLabel
+                        value={TaskStatus.ALL}
+                        control={<Radio color="primary" />}
+                        label={TaskStatus.ALL}
+                        labelPlacement="end"
+                        checked={this.state.status===TaskStatus.ALL ? true : false}
+                        onClick={this.filterClick(TaskStatus.ALL)}
+                    />
+                </RadioGroup>
+                </FormControl>
+                </MDBContainer>
+                {/* <MDBContainer className="list">
+                        <label className="container">{TaskStatus.CREATED}
+                            <input
+                                type="radio"
+                                onClick={this.filterClick(TaskStatus.CREATED)}
+                                checked={this.state.status===TaskStatus.CREATED ? true : false}
+                            />
+                            <span className="checkmark"></span>
+                        </label>
+                        <label className="container">{TaskStatus.PENDING}
+                            <input
+                                type="radio"
+                                onClick={this.filterClick(TaskStatus.PENDING)}
+                                checked={this.state.status===TaskStatus.PENDING ? true : false}
+                            />
+                            <span className="checkmark"></span>
+                        </label>
+                        <label className="container">{TaskStatus.INPROGRESS}
+                            <input
+                                type="radio"
+                                onClick={this.filterClick(TaskStatus.INPROGRESS)}
+                                checked={this.state.status===TaskStatus.INPROGRESS ? true : false}
+                            />
+                            <span className="checkmark"></span>
+                        </label>
+                        <label className="container">{TaskStatus.COMPLETED}
+                            <input
+                                type="radio"
+                                onClick={this.filterClick(TaskStatus.COMPLETED)}
+                                checked={this.state.status===TaskStatus.COMPLETED ? true : false}
+                            />
+                            <span className="checkmark"></span>
+                        </label>
+                        <label className="container">{TaskStatus.ALL}
+                            <input
+                                type="radio"
+                                onClick={this.filterClick(TaskStatus.ALL)}
+                                checked={this.state.status===TaskStatus.ALL ? true : false}
+                            />
+                            <span className="checkmark"></span>
+                        </label>
+                </MDBContainer> */}
+                <MDBContainer>
                     {this.state.items}
                     <MDBRow 
                         id="loadingButton" 
@@ -253,13 +365,14 @@ export class Search extends Component {
     }
 }
 
-Search.propTypes = {
+SearchTasks.propTypes = {
     searchTasks: PropTypes.func.isRequired,
-    tasks: PropTypes.object.isRequired
+    tasks: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
     tasks: state.searchItems.tasks
 });
 
-export default connect(mapStateToProps, { searchTasks })(Search)
+export default connect(mapStateToProps, { searchTasks })(withStyles(useStyles)(SearchTasks))

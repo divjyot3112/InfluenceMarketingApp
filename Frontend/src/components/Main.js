@@ -4,7 +4,9 @@ import { Route } from "react-router-dom";
 // Common
 import Appbar from "./Common/Appbar";
 import Sidebar from "./Common/Sidebar";
-import Search from "./Common/Search";
+//Search
+import SearchTasks from "./Search/SearchTasks";
+import SearchPeople from "./Search/SearchPeople";
 // User Profile
 import UserProfile from "./UserProfile/userProfile";
 // Dashboard
@@ -13,9 +15,8 @@ import Dashboard from "./Dashboard/Dashboard";
 import PostTask from "./Task/postTask";
 // Inbox
 import Messenger from "./Inbox/Messenger";
-// Rating
-import SponsorRating from "./Rating/sponsorRating";
-import InfluencerRating from "./Rating/influencerRating";
+// Ratings
+import Rating from "./Rating/rating";
 import TaskDescription from "./Task/TaskDescription";
 import Landing from "./LandingPage/LandingPage";
 import SponsorHome from "./Home/SponsorHome";
@@ -28,19 +29,19 @@ class Main extends Component {
       <div>
         <Route path="/" component={Appbar} />
         <Route path="/" component={Sidebar} />
-        <Route path="/search" exact component={Search} />
+        <Route path="/search/tasks" exact component={SearchTasks} />
+        <Route path="/search/people" exact component={SearchPeople} />
         <Route path="/dashboard" exact component={Dashboard} />
         <Route path="/profile" exact component={UserProfile} />
         <Route path="/task/new" exact component={PostTask} />
         <Route path="/task" exact component={TaskDescription} />
         <Route path="/inbox" exact component={Messenger} />
-        <Route path="/ratings/sponsor" exact component={SponsorRating} />
-        <Route path="/ratings/influencer" exact component={InfluencerRating} />
+        <Route path="/ratings" exact component={Rating} />
+        <Route path="/about" exact component={About} />
+        <Route path="/home/sponsor" exact component={SponsorHome} />
+        <Route path="/home" exact component={Landing} />
+
         <Route exact path="/" component={Landing} />
-        <Route path="/home" component={Landing} />
-        <Route path="/home/sponsor" component={SponsorHome} />
-        <Route path="/about" component={About} />
-        <Route path="/contactus" component={ContactUs} />
       </div>
     );
   }
