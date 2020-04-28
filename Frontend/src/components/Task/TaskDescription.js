@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import {Link} from "react-router-dom";
 // Importing UI components
+import {
+    MDBInput
+} from 'mdbreact'
 // import { Carousel, } from 'react-bootstrap'
-import task_image from './task_image.JPEG'
 // CSS
 import "../../css/taskDescription.css" 
 // Redux imports
@@ -63,11 +65,11 @@ export class TaskDescription extends Component {
                 <div className="wrapper">
                     <div className="nested">
                         <div className="imgdiv">
-                            <img src={task_image} alt="No images for this task" />
+                            <img src={t.image} alt="No images for this task" />
                             {/* Hello */}
                         </div>
                         <div className="title">
-                            <b>{t.title}</b><br/>
+                            <b>Title: </b><MDBInput value={t.title} /><br/>
                             {t.category}
                         </div>
                         <div className="description">
