@@ -48,7 +48,7 @@ export class SearchTasks extends Component {
     }
     componentDidMount() {
         if(this.props.location.state) {
-            this.setState({searchString: this.props.location.state.searchString})
+            this.setState({searchString: this.props.location.state.searchString + " "})
             this.props.searchTasks({ 
                 title: this.props.location.state.searchString,
                 status: this.props.location.state.status

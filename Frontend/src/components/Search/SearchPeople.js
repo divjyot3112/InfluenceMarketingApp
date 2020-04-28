@@ -86,12 +86,12 @@ export class SearchPeople extends Component {
         console.log(props.location.state.searchString + " " + this.state.searchString)
         if(props.location.state.searchString!==this.state.searchString){
             const str = props.location.state.searchString.split(" ", 2)
-            this.setState({ searchString: props.location.state.searchString })
+            this.setState({ searchString: props.location.state.searchString})
             props.searchPeople({
                 firstName: str[0],
-                lastName: str[1] ? str[1] : "a"
+                lastName: str[1] ? str[1] : ""
             })
-        }
+        } 
         let address = props.location.state.address
         let ratingsMap = props.ratingsMap
         let people = props.people
@@ -155,7 +155,7 @@ export class SearchPeople extends Component {
                                         state: {
                                             chatWith: { 
                                                 email:profile.email, 
-                                                name:profile.firstName + " " + profile.lastName, 
+                                                name:profile.name.firstName + " " + profile.name.lastName, 
                                                 photo:profile.image
                                             }
                                         }

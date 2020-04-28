@@ -519,15 +519,6 @@ router.patch("/profile/deactivate", (req, res) => {
   // @access  Public
   router.get("/searchProfile", (req, res) => {
     console.log("Inside search profile by name API" + req.query.firstName + req.query.lastName);
-
-    //   const name = {
-    //     firstName: req.params.firstName,
-    //     lastName: req.params.lastName,
-    //   };
-
-    // function find influencer profile
-    // if not find sponsor profile
-    // return profiles
     let ratingsMap = {}
     InfluencerProfile.find({
       $or: [
