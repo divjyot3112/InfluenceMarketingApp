@@ -502,7 +502,7 @@ router.get("/search", (req, res) => {
           res.status(200).json({ message: tasks });
         } else {
           console.log("No tasks found");
-          res.status(404).json({ message: "No tasks found" });
+          res.status(200).json({ message: tasks });
         }
       })
       .catch((err) => {
@@ -523,7 +523,7 @@ router.get("/search", (req, res) => {
           res.status(200).json({ message: tasks });
         } else {
           console.log("No tasks found");
-          res.status(404).json({ message: "No tasks found" });
+          res.status(200).json({ message: tasks });
         }
       })
       .catch((err) => {
@@ -675,6 +675,25 @@ router.get("/unrated", (req, res) => {
 });
 
 //arman
+// @route   GET /task/:taskId
+// @desc    Fetch a task by Task ID
+// @access  Public
+
+router.get("/:taskId", (req, res) => {
+  console.log("Inside fetch task by ID", req.params.taskId);
+
+  Task.findOne({ _id: ObjectID(req.params.taskId) })
+    .then((task) => {
+      console.log("Task found successfully");
+      res.status(200).json(task);
+    })
+    .catch((err) => {
+      console.log("Task not found");
+      res.status(400).json({ message: "Task does not exists" });
+    });
+});
+
+//arman
 // @route   PUT /task/delete/:taskId
 // @desc    Delete a Task
 // @access  Public
@@ -718,25 +737,6 @@ router.put("/delete/:taskId", (req, res) => {
     .catch((err) => {
       console.log("Inside catch for find task");
       res.status(400).json({ message: "Error finding tasks successfully" });
-    });
-});
-
-//arman
-// @route   GET /task/:taskId
-// @desc    Fetch a task by Task ID
-// @access  Public
-
-router.get("/:taskId", (req, res) => {
-  console.log("Inside fetch task by ID", req.params.taskId);
-
-  Task.findOne({ _id: ObjectID(req.params.taskId) })
-    .then((task) => {
-      console.log("Task found successfully");
-      res.status(200).json(task);
-    })
-    .catch((err) => {
-      console.log("Task not found");
-      res.status(400).json({ message: "Task does not exists" });
     });
 });
 

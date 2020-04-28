@@ -39,7 +39,6 @@ const Gender = [
     "Other"
 ];
 
-const NoImageFoundForTask = "https://firebasestorage.googleapis.com/v0/b/masterfinalproject-4583d.appspot.com/o/tasks%2FnoImageFound.jpg?alt=media&token=cad1cdd5-4571-4192-8962-d67f42a54cdb";
-const NoImageFoundForUser = "https://firebasestorage.googleapis.com/v0/b/masterfinalproject-4583d.appspot.com/o/users%2FNoImageFoundForUser.jpg?alt=media&token=dc0e62e8-ebda-4459-9d2d-88ba55b351eb";
+const NoImageFound = "https://firebasestorage.googleapis.com/v0/b/masterfinalproject-4583d.appspot.com/o/NoImageFound.jpg?alt=media&token=5f7b9f08-fd8a-4f3f-bd80-c129a971be20";
 
-export {UserRoles, TaskStatus, TaskCategories, Gender, MY_USER_ID, MY_ROLE, NoImageFoundForTask, NoImageFoundForUser}
+export {UserRoles, TaskStatus, TaskCategories, Gender, MY_USER_ID, MY_ROLE, NoImageFound}

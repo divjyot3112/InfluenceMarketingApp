@@ -28,7 +28,7 @@ import CreditCardIcon from '@material-ui/icons/CreditCard';
 import Image from 'material-ui-image';
 
 const TaskCategories = require("../../utils/Constants").TaskCategories;
-const NoImageFoundForTask = require("../../utils/Constants").NoImageFoundForTask;
+const NoImageFound = require("../../utils/Constants").NoImageFound;
 
 // for material-ui
 const useStyles = makeStyles((theme) => ({
@@ -127,7 +127,7 @@ class PostTask extends PostTaskFormEventHandlers {
             vacancyCount: this.state.vacancyCount,
             startDate: this.state.startDate,
             endDate: this.state.endDate,
-            image: this.state.url === "" ? NoImageFoundForTask : this.state.url
+            image: this.state.url === "" ? NoImageFound : this.state.url
         };
 
         this.props.saveTask(data).then(() => {
