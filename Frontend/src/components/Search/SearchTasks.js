@@ -1,95 +1,161 @@
-import React, { Component } from 'react'
-import {Link} from "react-router-dom";
-// import InfiniteScroll from 'react-infinite-scroller';
-// UI Imports
-import {
-    MDBBtn,
-    MDBCard,
-    MDBCardImage,
-    MDBCardTitle,
-    MDBCardText,
-    MDBCol,
-    MDBRow,
-    MDBContainer,
-    MDBCardBody,
-    MDBProgress,
-    // MDBInput,
-    // MDBFormInline
-} from 'mdbreact';
-// import {Form} from 'react-bootstrap'
-import { withStyles } from '@material-ui/core/styles';
-
-// Redux Imports
+import React, {Component} from 'react';
 import {connect} from "react-redux";
-import PropTypes from "prop-types";
-import { searchTasks } from "../../actions/searchActions";
-// CSS
-import '../../css/search.css'
-// Utils
-import { TaskStatus } from '../../utils/Constants'
-import { FormControl, FormControlLabel, RadioGroup, Radio } from '@material-ui/core';
+import _ from "lodash";
+import {TaskStatus} from '../../utils/Constants';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardActions from '@material-ui/core/CardActions'
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button'
+import PropTypes from 'prop-types';
+import {withStyles} from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import "../../css/searchTasks.css";
+import {Link} from "react-router-dom";
+import {searchTasks, sortTasks} from "../../actions/searchActions";
+import NoData from "../Dashboard/NoData";
+import Pagination from "../Common/pagination";
+import {paginate} from "../Common/paginate";
 
 const useStyles = (theme) => ({
+    cardGrid: {
+        paddingTop: theme.spacing(8),
+        paddingBottom: theme.spacing(8),
+    },
+    card: {
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    cardMedia: {
+        paddingTop: '56.25%', // 16:9
+    },
+    cardContent: {
+        flexGrow: 1
+    },
+    root: {
+        '& > *': {
+            marginTop: theme.spacing(5),
+        },
+    },
     formControl: {
         margin: theme.spacing(1),
         minWidth: 250,
     }
 });
 
-export class SearchTasks extends Component {
+class SearchTasks extends Component {
+
     state = {
-        tasksLoading: true,
-        tasksFound: false,
-        items: null,
-        hasMore: null,
-        totalTasks: null,
-        loadedTasks: null,
-        status: null
+        currentPage: 1,
+        pageSize: 12,
+        searchString: "",
+        status: ""
+    };
+
+    handlePageChange = page => {
+        this.setState({currentPage: page});
+    };
+
+    handleChangeSelect = (event) => {
+        let sortBy = event.target.value;
+        this.props.sortTasks(sortBy);
+        this.forceUpdate();
     }
+
     componentDidMount() {
-        if(this.props.location.state) {
-            this.setState({searchString: this.props.location.state.searchString})
-            this.props.searchTasks({ 
+        if (this.props.location.state) {
+            this.setState({
+                searchString: this.props.location.state.searchString,
+                status: this.props.location.state.status
+            });
+
+            this.props.searchTasks({
                 title: this.props.location.state.searchString,
                 status: this.props.location.state.status
             })
         }
     }
+
+    handleOnStatusChange = (event) => {
+        let status = event.target.value
+
+        const data = {
+            title: this.state.searchString,
+            status: status
+        };
+
+        this.setState({
+            status: status,
+            currentPage: 1,
+        })
+
+        this.props.searchTasks(data);
+    }
+
+    truncate = (input) => input.length > 30 ? `${input.substring(0, 30)}...` : input
+
     componentWillReceiveProps(props) {
-        console.log(props.location.state.searchString + " " + this.state.searchString)
-        if(props.location.state.searchString!==this.state.searchString){
-            this.setState({ searchString: props.location.state.searchString })
-            props.searchTasks({ 
+        if (props.location.state.searchString !== this.state.searchString) {
+            this.setState({searchString: props.location.state.searchString});
+
+            props.searchTasks({
                 title: props.location.state.searchString,
                 status: props.location.state.status
             })
         }
-        if(props.tasks) {
-            this.setState({
-                tasks: props.tasks
-            })
-        }
-        let tasks = props.tasks
-        let totalTasks = props.tasks.length>9 ? (
-            ((props.tasks.length-9)%6===0) ?  (props.tasks.length-9)/6 + 1 : (props.tasks.length-9)/6 + 2
-        ) : 2
-        let splicedTasks = []
-        let size = 3
-        while (tasks.length > 0)
-            splicedTasks.push(tasks.splice(0, size));
-        let renderTasks = []
-        const sliceAndPush = (sliceSize) => {
-            let sliced = splicedTasks.splice(0,sliceSize)
-            console.log(splicedTasks.length)
-            renderTasks.push(
-                sliced.map((array) => (
-                    <MDBRow>
-                        {array.map(task => (
-                            <MDBCol>
-                            <MDBCard 
-                                style={{ width: "22rem" }}
-                                border="true"
-                            >
+    }
+
+    renderTasks() {
+        const {classes} = this.props;
+
+        if (this.props.tasks && this.props.tasks.length > 0) {
+            const paginatedData = paginate(
+                this.props.tasks ? this.props.tasks : "",
+                this.state.currentPage,
+                this.state.pageSize
+            );
+
+            return _.map(paginatedData, (task) => {
+
+                return (
+                    <Grid item key={task} xs={10} sm={6} md={3}> {/*md was 4*/}
+                        <Card className={classes.card}>
+                            <CardMedia
+                                className={classes.cardMedia}
+                                image={(task.image === null || task.image === undefined) ? window.location.origin + '/no_image.jpg' : task.image}
+                                title={task.title}
+                            />
+                            <CardContent className={classes.cardContent}>
+                                <Typography gutterBottom variant="h6" component="h2">
+                                    {task.title}
+                                </Typography>
+
+                                <Typography>
+                                    <div style={{overflowWrap: "break-word"}}>
+                                        <i>"{this.truncate(task.description)}"</i></div>
+                                </Typography><br/>
+
+                                <Typography>
+                                    <b>Category:</b> {task.category}
+                                </Typography><br/>
+
+                                <Typography>
+                                    <b>Salary:</b> ${task.salary}
+                                </Typography>
+                            </CardContent>
+
+                            <CardActions>
                                 <Link
                                     to={{
                                         pathname: "/task",
@@ -99,280 +165,109 @@ export class SearchTasks extends Component {
                                     }}
                                     style={{textDecoration: 'none'}}
                                 >
-                                    <MDBCardImage
-                                        className="img-fluid"
-                                        src="https://mdbootstrap.com/img/Photos/Others/images/43.jpg"
-                                        waves
-                                    />
+                                    <Button size="small" color="primary">View</Button>
                                 </Link>
-                                <MDBCardBody>
-                                    <MDBCardTitle>{task.title}</MDBCardTitle>
-                                    <MDBCardText>
-                                        <b>Task Category: </b> {task.category} <br/>
-                                        <b>Posted by: </b> 
-                                        <Link
-                                            to={{
-                                                pathname: "/profile",
-                                                state: {
-                                                    email: task.postedBy
-                                                }
-                                            }}
-                                            style={{textDecoration: 'none'}}
-                                        >
-                                            {task.postedBy}
-                                        </Link> <br/>
-                                        <b>Task Status: </b> {task.status}
-                                    </MDBCardText>
-                                </MDBCardBody>
-                            </MDBCard>
-                        </MDBCol>
-                        ))}
-                    </MDBRow>
-                ))
-            )
-        }
-        sliceAndPush(3)
-        let hasMore = splicedTasks.length>0 ? true : false
-        console.log("renderTask len" + renderTasks.length)
-        this.setState({
-            items: renderTasks,
-            renderTasks: renderTasks,
-            splicedTasks: splicedTasks,
-            hasMore: hasMore,
-            totalTasks: totalTasks,
-            loadedTasks: 2
-        })
-    }
-
-    filterClick = (status) => () => {
-        this.setState({
-            status: status
-        })
-        const data = {
-            title: this.state.searchString,
-            status: status
-        }
-        this.props.searchTasks(data)
-        console.log("Onclick")
-        this.componentWillReceiveProps(this.props)
-    }
-
-    loadMore = () => {
-        if(this.state.hasMore) {
-            const sliceSize = 2
-            let renderTasks = this.state.renderTasks
-            let splicedTasks = this.state.splicedTasks
-            let sliced = splicedTasks.splice(0,sliceSize)
-            console.log("Spliced Tasks: " + splicedTasks.length)
-            console.log("renderTasks: " + renderTasks)
-            
-            renderTasks.push(
-                sliced.map((array) => (
-                    <MDBRow>
-                        {array.map(task => (
-                            <MDBCol>
-                            <MDBCard 
-                                style={{ width: "22rem" }}
-                                border="true"
-                            >
-                                <Link
-                                    to={{
-                                        pathname: "/task",
-                                        state: {
-                                            taskId: task._id
-                                        }
-                                    }}
-                                    style={{textDecoration: 'none'}}
-                                >
-                                    <MDBCardImage
-                                        className="img-fluid"
-                                        src="https://mdbootstrap.com/img/Photos/Others/images/43.jpg"
-                                        waves
-                                    />
-                                </Link>
-                                <MDBCardBody>
-                                    <MDBCardTitle>{task.title}</MDBCardTitle>
-                                    <MDBCardText>
-                                        <b>Task Category: </b> {task.category} <br/>
-                                        <b>Posted by: </b> 
-                                        <Link
-                                            to={{
-                                                pathname: "/profile",
-                                                state: {
-                                                    email: task.postedBy
-                                                }
-                                            }}
-                                            style={{textDecoration: 'none'}}
-                                        >
-                                            {task.postedBy}
-                                        </Link> <br/>
-                                        <b>Task Status: </b> {task.status}
-                                    </MDBCardText>
-                                </MDBCardBody>
-                            </MDBCard>
-                        </MDBCol>
-                        ))}
-                    </MDBRow>
-                ))
-            )
-            let temp = []
-            temp.push(
-                renderTasks.map((row) => (
-                    <div>
-                    {row.map(data => (
-                        data
-                    ))}
-                    </div>
-                ))
-            )
-            this.setState({
-                items: temp
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                )
             })
-            console.log("items:" + this.state.items)
-            console.log("renderTask len" + renderTasks.length)
-            let hasMore = splicedTasks.length>0 ? true : false
-            this.setState({
-                hasMore: hasMore,
-                splicedTasks: splicedTasks,
-                renderTasks: temp,
-                loadedTasks: this.state.loadedTasks+1
-            })
+        } else {
+            return <NoData image={window.location.origin + "/no_tasks.png"} description="No Matching Tasks Found"/>
+
         }
     }
 
-    
     render() {
-        const { classes } = this.props;
-        console.log(this.state)
+        const {classes} = this.props
         return (
-            <div>
-                <MDBContainer>
-                <FormControl className={classes.formControl}>
-                <RadioGroup row aria-label="position" name="position" defaultValue="end" 
-                // onChange={(event)=>this.filterClick(event)}
-                >
-                    <FormControlLabel
-                        value={TaskStatus.CREATED}
-                        control={<Radio color="primary" />}
-                        label={TaskStatus.CREATED}
-                        labelPlacement="end"
-                        checked={this.state.status===TaskStatus.CREATED ? true : false}
-                        onClick={this.filterClick(TaskStatus.CREATED)}
-                    />
-                    <FormControlLabel
-                        value={TaskStatus.PENDING}
-                        control={<Radio color="primary" />}
-                        label={TaskStatus.PENDING}
-                        labelPlacement="end"
-                        checked={this.state.status===TaskStatus.PENDING ? true : false}
-                        onClick={this.filterClick(TaskStatus.PENDING)}
-                    />
-                    <FormControlLabel
-                        value={TaskStatus.INPROGRESS}
-                        control={<Radio color="primary" />}
-                        label={TaskStatus.INPROGRESS}
-                        labelPlacement="end"
-                        checked={this.state.status===TaskStatus.INPROGRESS ? true : false}
-                        onClick={this.filterClick(TaskStatus.INPROGRESS)}
-                    />
-                    <FormControlLabel
-                        value={TaskStatus.COMPLETED}
-                        control={<Radio color="primary" />}
-                        label={TaskStatus.COMPLETED}
-                        labelPlacement="end"
-                        checked={this.state.status===TaskStatus.COMPLETED ? true : false}
-                        onClick={this.filterClick(TaskStatus.COMPLETED)}
-                    />
-                    <FormControlLabel
-                        value={TaskStatus.ALL}
-                        control={<Radio color="primary" />}
-                        label={TaskStatus.ALL}
-                        labelPlacement="end"
-                        checked={this.state.status===TaskStatus.ALL ? true : false}
-                        onClick={this.filterClick(TaskStatus.ALL)}
-                    />
-                </RadioGroup>
-                </FormControl>
-                </MDBContainer>
-                {/* <MDBContainer className="list">
-                        <label className="container">{TaskStatus.CREATED}
-                            <input
-                                type="radio"
-                                onClick={this.filterClick(TaskStatus.CREATED)}
-                                checked={this.state.status===TaskStatus.CREATED ? true : false}
-                            />
-                            <span className="checkmark"></span>
-                        </label>
-                        <label className="container">{TaskStatus.PENDING}
-                            <input
-                                type="radio"
-                                onClick={this.filterClick(TaskStatus.PENDING)}
-                                checked={this.state.status===TaskStatus.PENDING ? true : false}
-                            />
-                            <span className="checkmark"></span>
-                        </label>
-                        <label className="container">{TaskStatus.INPROGRESS}
-                            <input
-                                type="radio"
-                                onClick={this.filterClick(TaskStatus.INPROGRESS)}
-                                checked={this.state.status===TaskStatus.INPROGRESS ? true : false}
-                            />
-                            <span className="checkmark"></span>
-                        </label>
-                        <label className="container">{TaskStatus.COMPLETED}
-                            <input
-                                type="radio"
-                                onClick={this.filterClick(TaskStatus.COMPLETED)}
-                                checked={this.state.status===TaskStatus.COMPLETED ? true : false}
-                            />
-                            <span className="checkmark"></span>
-                        </label>
-                        <label className="container">{TaskStatus.ALL}
-                            <input
-                                type="radio"
-                                onClick={this.filterClick(TaskStatus.ALL)}
-                                checked={this.state.status===TaskStatus.ALL ? true : false}
-                            />
-                            <span className="checkmark"></span>
-                        </label>
-                </MDBContainer> */}
-                <MDBContainer>
-                    {this.state.items}
-                    <MDBRow 
-                        id="loadingButton" 
-                        center
-                        style={{marginTop:"0.5%", display:this.state.hasMore ? "block" : "none"}}
-                    >
-                        <MDBCol>
-                            <MDBBtn color="dark" onClick = {this.loadMore}>
-                                Load More
-                            </MDBBtn>
-                        </MDBCol>
-                    </MDBRow>
-                    <MDBRow style={{marginTop:"2%"}}>
-                        <MDBCol>
-                            <MDBProgress 
-                                material
-                                value={this.state.loadedTasks/this.state.totalTasks*100}
-                                heigth="20px"
-                                style={{}}
-                            />
-                        </MDBCol>
-                    </MDBRow>
-                </MDBContainer>
-            </div>
+            <React.Fragment>
+
+                <CssBaseline/>
+                <div className="filter">
+                    <div style={{float: "left"}}>
+                        <FormControl className={classes.formControl}>
+                            <RadioGroup row aria-label="position" name="position" defaultValue="end"
+                                        onChange={(event) => this.handleOnStatusChange(event)}>
+                                <FormControlLabel
+                                    value={TaskStatus.CREATED}
+                                    control={<Radio color="primary"/>}
+                                    label={TaskStatus.CREATED}
+                                    labelPlacement="end"
+                                />
+                                <FormControlLabel
+                                    value={TaskStatus.COMPLETED}
+                                    control={<Radio color="primary"/>}
+                                    label={TaskStatus.COMPLETED}
+                                    labelPlacement="end"
+                                />
+                                <FormControlLabel
+                                    value={TaskStatus.INPROGRESS}
+                                    control={<Radio color="primary"/>}
+                                    label={TaskStatus.INPROGRESS}
+                                    labelPlacement="end"
+                                />
+                                <FormControlLabel value={TaskStatus.PENDING} control={<Radio color="primary"/>}
+                                                  label={TaskStatus.PENDING}/>
+                                <FormControlLabel
+                                    value={TaskStatus.ALL}
+                                    control={<Radio color="primary"/>}
+                                    label={TaskStatus.ALL}
+                                    labelPlacement="end"
+                                />
+                            </RadioGroup>
+                        </FormControl>
+                    </div>
+                    <div style={{float: "right", display: "inline"}}>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel id="demo-controlled-open-select-label">Sort By</InputLabel>
+                            <Select
+                                labelId="demo-controlled-open-select-label"
+                                id="demo-controlled-open-select"
+                                onChange={this.handleChangeSelect}
+                            >
+                                <MenuItem value={0}>Most Recent</MenuItem>
+                                <MenuItem value={1}>Salary: Low to High</MenuItem>
+                                <MenuItem value={2}>Salary: High to Low</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
+                </div>
+                <Container className={classes.cardGrid} maxWidth="md">
+                    <br/>
+                    <br/>
+                    <br/>
+                    <Grid container spacing={4}>
+                        {this.renderTasks()}
+                    </Grid>
+                    <br/>
+                    <br/>
+                    <div className="general-pagination">
+                        <Pagination
+                            itemsCount={this.props.tasks ? this.props.tasks.length : ""}
+                            pageSize={this.state.pageSize}
+                            onPageChange={this.handlePageChange}
+                            currentPage={this.state.currentPage}
+                        />
+                    </div>
+                </Container>
+            </React.Fragment>
         )
     }
 }
 
 SearchTasks.propTypes = {
+    classes: PropTypes.object.isRequired,
     searchTasks: PropTypes.func.isRequired,
-    tasks: PropTypes.object.isRequired,
-    classes: PropTypes.object.isRequired
+    sortTasks: PropTypes.func.isRequired,
+};
+
+function mapStateToProps(state) {
+    return {
+        tasks: state.searchItems.tasks,
+    };
 }
 
-const mapStateToProps = (state) => ({
-    tasks: state.searchItems.tasks
-});
-
-export default connect(mapStateToProps, { searchTasks })(withStyles(useStyles)(SearchTasks))
+export default connect(mapStateToProps, {
+    searchTasks, sortTasks
+})(withStyles(useStyles)(SearchTasks));
