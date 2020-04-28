@@ -15,9 +15,8 @@ import Dashboard from "./Dashboard/Dashboard";
 import PostTask from "./Task/postTask";
 // Inbox
 import Messenger from "./Inbox/Messenger";
-// Rating
-import SponsorRating from "./Rating/sponsorRating";
-import InfluencerRating from "./Rating/influencerRating";
+// Ratings
+import Rating from "./Rating/rating";
 import TaskDescription from "./Task/TaskDescription";
 import Landing from "./LandingPage/LandingPage";
 import SponsorHome from "./Home/SponsorHome";
@@ -36,8 +35,7 @@ class Main extends Component {
                 <Route path="/task/new" exact component={PostTask}/>
                 <Route path="/task" exact component={TaskDescription}/>
                 <Route path="/inbox" exact component={Messenger}/>
-                <Route path="/ratings/sponsor" exact component={SponsorRating}/>
-                <Route path="/ratings/influencer" exact component={InfluencerRating}/>
+                <Route path="/ratings" exact component={Rating}/>
                 <Route path="/about" exact component={About}/>
                 <Route path="/home/sponsor" exact component={SponsorHome}/>
                 <Route path="/home" exact component={Landing}/>
