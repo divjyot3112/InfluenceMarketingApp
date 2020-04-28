@@ -52,7 +52,7 @@ export class Sidebar extends Component {
                         <a className="menu-item" href="/dashboard">
                             Dashboard
                         </a>
-                        <a className="menu-item" href="/">
+                        <a className="menu-item" href="/analytics">
                             Analytics
                         </a>
                         <a className="menu-item" href="/inbox">
