@@ -16,11 +16,10 @@ import CardActions from '@material-ui/core/CardActions'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button'
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import "../../css/searchTasks.css";
+import "../../css/search.css";
 import {Link} from "react-router-dom";
 import {searchTasks, sortTasks} from "../../actions/searchActions";
 import NoData from "../Dashboard/NoData";
@@ -134,7 +133,7 @@ class SearchTasks extends Component {
 
                             <CardMedia
                                 className={classes.cardMedia}
-                                image={(task.image === null || task.image === undefined) ? window.location.origin + '/no_image.jpg' : task.image}
+                                image={(task.image === null || task.image === undefined) ? window.location.origin + '/NoImageFound.jpg' : task.image}
                                 title={task.title}
                             />
 

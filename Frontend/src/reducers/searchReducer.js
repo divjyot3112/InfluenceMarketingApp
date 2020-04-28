@@ -30,27 +30,27 @@ export default function (state = initialState, action) {
             };
 
         case SEARCH_PEOPLE_SORTED_AZ:
-            let sortedPeopleAZ = []
-            const peopleAZ = action.payload.message
-            sortedPeopleAZ = peopleAZ.sort((a, b) => a.name.firstName.localeCompare(b.name.firstName))
+            var data = state.people.sort(function (a, b) {
+                return a.name.firstName.localeCompare(b.name.firstName);
+            })
+
             return {
                 ...state,
-                people: sortedPeopleAZ,
-                ratingsMap: action.payload.ratings
+                people: data,
             };
 
         case SEARCH_PEOPLE_SORTED_ZA:
-            let sortedPeopleZA = []
-            const peopleZA = action.payload.message
-            sortedPeopleZA = peopleZA.sort((a, b) => b.name.firstName.localeCompare(a.name.firstName))
+            data = state.people.sort(function (a, b) {
+                return b.name.firstName.localeCompare(a.name.firstName);
+            })
+
             return {
                 ...state,
-                people: sortedPeopleZA,
-                ratingsMap: action.payload.ratings
+                people: data,
             };
 
         case SORT_INCOME_LOW_TO_HIGH:
-            var data = state.tasks.sort(function (a, b) {
+            data = state.tasks.sort(function (a, b) {
                 return a.salary - b.salary
             })
             return {

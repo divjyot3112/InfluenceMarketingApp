@@ -35,32 +35,6 @@ export const searchPeople = data => dispatch => {
         })
 };
 
-export const searchPeopleSortedZA = data => dispatch => {
-    axios.defaults.withCredentials = true;
-    axios
-        .get(`${ROOT_URL}/users/searchProfile`, {params: {firstName: data.firstName, lastName: data.lastName}})
-        .then(res => {
-            console.log(res);
-            dispatch({
-                type: SEARCH_PEOPLE_SORTED_ZA,
-                payload: res.data
-            })
-        })
-};
-
-export const searchPeopleSortedAZ = data => dispatch => {
-    axios.defaults.withCredentials = true;
-    axios
-        .get(`${ROOT_URL}/users/searchProfile`, {params: {firstName: data.firstName, lastName: data.lastName}})
-        .then(res => {
-            console.log(res);
-            dispatch({
-                type: SEARCH_PEOPLE_SORTED_AZ,
-                payload: res.data
-            })
-        })
-};
-
 export const searchPeopleWithAddress = data => dispatch => {
     axios.defaults.withCredentials = true;
     axios
@@ -90,6 +64,19 @@ export const sortTasks = (sortBy) => dispatch => {
     } else {
         dispatch({
             type: MOST_RECENT_TASKS
+        })
+    }
+}
+
+//sorting users
+export const sortUsers = (sortBy) => dispatch => {
+    if (sortBy === 0) {
+        dispatch({
+            type: SEARCH_PEOPLE_SORTED_AZ
+        })
+    } else if (sortBy === 1) {
+        dispatch({
+            type: SEARCH_PEOPLE_SORTED_ZA
         })
     }
 }
