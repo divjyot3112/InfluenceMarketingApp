@@ -1,25 +1,141 @@
 import React, { Component } from "react";
 import axios from "axios";
-import "./LandingPage.css";
+import "../../css/LandingPage.css";
 import WOW from "wow.js";
 import smallcard from "./Images/social15.jpg";
-import { MY_ROLE, UserRoles } from "../../utils/Constants";
+import { UserRoles, NoImageFoundForUser } from "../../utils/Constants";
 import Footer from "../Common/Footer";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { LoginUser, RegisterUser } from "../../actions/userActions";
+import { Redirect } from "react-router";
+
 //import {initpage} from "./scripts";
 
 class Landing extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      loginEmail: "",
+      loginPassword: "",
+      email: "",
+      password: "",
+      phone: "",
+      role: UserRoles.INFLUENCER,
+      firstName: "",
+      lastName: "",
+    };
+
+    this.handleloginEmail = this.handleloginEmail.bind(this);
+    this.handleloginPassword = this.handleloginPassword.bind(this);
+    this.handleFirstname = this.handleFirstname.bind(this);
+    this.handleLastname = this.handleLastname.bind(this);
+    this.handleEmail = this.handleEmail.bind(this);
+    this.handlePassword = this.handlePassword.bind(this);
+    this.handlePhone = this.handlePhone.bind(this);
+    this.handleRole = this.handleRole.bind(this);
+    this.handleSignUp = this.handleSignUp.bind(this);
   }
+
+  handleloginEmail = (e) => {
+    this.setState({
+      loginEmail: e.target.value,
+    });
+  };
+
+  handleloginPassword = (e) => {
+    this.setState({
+      loginPassword: e.target.value,
+    });
+  };
+
+  handleFirstname = (e) => {
+    this.setState({
+      firstName: e.target.value,
+    });
+  };
+  handleLastname = (e) => {
+    this.setState({
+      lastName: e.target.value,
+    });
+  };
+  handleEmail = (e) => {
+    this.setState({
+      email: e.target.value,
+    });
+  };
+  handlePassword = (e) => {
+    this.setState({
+      password: e.target.value,
+    });
+  };
+  handlePhone = (e) => {
+    this.setState({
+      phone: e.target.value,
+    });
+  };
+  handleRole = (e) => {
+    console.log("Inside Handle Role before switch toggle: ", this.state.role);
+
+    this.setState({
+      role: UserRoles.SPONSOR,
+    });
+    console.log("Inside Handle Role after switch toggle: ", this.state.role);
+  };
+
+  handleLogin = (e) => {
+    e.preventDefault();
+    console.log("Inside Handle Login");
+
+    const data = {
+      email: this.state.loginEmail,
+      password: this.state.loginPassword,
+    };
+    console.log("Inside Handle Login data ", data);
+    this.props.LoginUser(data);
+  };
+
+  handleSignUp = (e) => {
+    e.preventDefault();
+    console.log("Inside Handle Sign Up");
+
+    const data = {
+      email: this.state.email,
+      password: this.state.password,
+      phone: this.state.phone,
+      role: this.state.role,
+      name: {
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+      },
+      image: NoImageFoundForUser,
+    };
+    console.log("Inside Handle Sign Up data ", data);
+    this.props.RegisterUser(data);
+  };
+
   componentDidMount() {
     const wow = new WOW();
 
     wow.init();
   }
   render() {
+    if (this.props.loginSuccess) {
+      window.alert("Logged in Successfully");
+      //  window.localStorage.setItem("role":user);
+      // if (role == Influencer) this.props.history.push("/home/influencer");
+      // else {
+      //   this.props.history.push("/home/sponsor");
+      // }
+    }
+
+    if (this.props.SignUpSuccess) {
+      window.alert("Signed up Successfully");
+
+      window.alert("Please Login using the form here!");
+    }
+
     return (
       <div>
         <nav
@@ -83,7 +199,10 @@ class Landing extends Component {
                       <i class="fas fa-envelope prefix grey-text"></i>
                       <input
                         type="text"
-                        id="form2"
+                        id="email"
+                        name="email"
+                        value={this.state.loginEmail}
+                        onChange={this.handleloginEmail}
                         class="form-control"
                         placeholder="Email"
                       />
@@ -95,7 +214,10 @@ class Landing extends Component {
                       <i class="fas fa-key prefix grey-text"></i>
                       <input
                         type="password"
-                        id="form2"
+                        id="password"
+                        name="password"
+                        value={this.state.loginPassword}
+                        onChange={this.handleloginPassword}
                         class="form-control"
                         placeholder="Password"
                       />
@@ -104,56 +226,20 @@ class Landing extends Component {
                   </div>
                   <div class="col-sm-2">
                     <div class="md-form">
-                      <button class="btn btn-success ">Login</button>
+                      <button
+                        class="btn btn-success "
+                        onClick={this.handleLogin}
+                      >
+                        >Login
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-              {/* <div class="col-sm-8">
-                <ul>
-                  <li>
-                    <a
-                      href="https://www.facebook.com/mdbootstrap"
-                      class="nav-link"
-                      target="_blank"
-                    >
-                      <i class="fab fa-facebook-f"></i>
-                    </a>
-                  </li>
-
-                  <li>
-                    <a
-                      href="https://twitter.com/MDBootstrap"
-                      class="nav-link"
-                      target="_blank"
-                    >
-                      <i class="fab fa-twitter"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://github.com/mdbootstrap/bootstrap-material-design"
-                      class="nav-link border border-light rounded"
-                      target="_blank"
-                    >
-                      <i class="fab fa-linkedin mr-2"></i>Linkedin
-                    </a>
-                  </li>
-                </ul>
-              </div> */}
             </div>
           </div>
         </header>
-        <div
-          class="masthead"
-          //   class="view full-page-intro"
-          //   style={{
-          //     "background-image":
-          //       "url('https://mdbootstrap.com/img/Photos/Others/images/78.jpg')",
-          //     "background-repeat": "no-repeat",
-          //     "background-size": "cover",
-          //   }}
-        >
+        <div class="masthead">
           <div class="mask rgba-black-light d-flex justify-content-center align-items-center">
             <div class="container">
               <div class="row wow fadeIn">
@@ -219,67 +305,94 @@ class Landing extends Component {
                           <i class="fas fa-user prefix grey-text"></i>
                           <input
                             type="text"
-                            id="form3"
+                            name="firstName"
+                            value={this.state.firstName}
+                            onChange={this.handleFirstname}
+                            id="firstName"
                             class="form-control"
-                            placeholder="Name"
+                            placeholder="First Name"
                           />
-
-                          {/* <label for="form3">Your name</label> */}
-                        </div>
-                        <div class="md-form">
-                          <i class="fas fa-envelope prefix grey-text"></i>
-                          <input
-                            type="text"
-                            id="form2"
-                            class="form-control"
-                            placeholder="Email"
-                          />
-                          {/* <label for="form2">Your email</label> */}
-                        </div>
-
-                        <div class="md-form">
-                          <i class="fas fa-key prefix grey-text"></i>
-                          <input
-                            type="password"
-                            id="form2"
-                            class="form-control"
-                            placeholder="Password"
-                          />
-                          {/* <label for="form2">Your Password</label> */}
-                        </div>
-
-                        <div class="md-form">
-                          <i class="fas fa-phone prefix grey-text"></i>
-                          <input
-                            type="text"
-                            id="form8"
-                            class="form-control"
-                            placeholder="Phone Number"
-                          ></input>
-                          {/* <label for="form8">Phone Number</label> */}
-                        </div>
-
-                        <div class="text-center">
-                          <button class="btn btn-success">
-                            Create Account
-                          </button>
-                          <hr />
-
-                          <div class="custom-control custom-switch">
+                          <div class="md-form">
+                            <i class="fas fa-user prefix grey-text"></i>
                             <input
-                              type="checkbox"
-                              class="custom-control-input"
-                              id="customSwitch1"
+                              type="text"
+                              name="lastName"
+                              value={this.state.lastName}
+                              onChange={this.handleLastname}
+                              id="lastName"
+                              class="form-control"
+                              placeholder="Last Name"
                             />
-                            <label
-                              class="custom-control-label"
-                              for="customSwitch1"
-                            >
-                              <b> I am a Sponsor </b>
-                            </label>
+
+                            {/* <label for="form3">Your name</label> */}
+                          </div>
+                          <div class="md-form">
+                            <i class="fas fa-envelope prefix grey-text"></i>
+                            <input
+                              type="text"
+                              id="email"
+                              name="email"
+                              value={this.state.email}
+                              onChange={this.handleEmail}
+                              class="form-control"
+                              placeholder="Email"
+                            />
+                            {/* <label for="form2">Your email</label> */}
                           </div>
 
-                          {/* <input
+                          <div class="md-form">
+                            <i class="fas fa-key prefix grey-text"></i>
+                            <input
+                              type="password"
+                              id="password"
+                              name="password"
+                              value={this.state.password}
+                              onChange={this.handlePassword}
+                              class="form-control"
+                              placeholder="Password"
+                            />
+                            {/* <label for="form2">Your Password</label> */}
+                          </div>
+
+                          <div class="md-form">
+                            <i class="fas fa-phone prefix grey-text"></i>
+                            <input
+                              type="text"
+                              id="phone"
+                              name="phone"
+                              value={this.state.phone}
+                              onChange={this.handlePhone}
+                              id="phone"
+                              class="form-control"
+                              placeholder="Phone Number"
+                            ></input>
+                            {/* <label for="form8">Phone Number</label> */}
+                          </div>
+
+                          <div class="text-center">
+                            <button
+                              class="btn btn-success"
+                              onClick={this.handleSignUp}
+                            >
+                              Create Account
+                            </button>
+                            <hr />
+
+                            <div class="custom-control custom-switch">
+                              <input
+                                type="checkbox"
+                                class="custom-control-input"
+                                id="role"
+                                name="role"
+                                value={this.state.role}
+                                onChange={this.handleRole}
+                              />
+                              <label class="custom-control-label" for="role">
+                                <b> I am a Sponsor </b>
+                              </label>
+                            </div>
+
+                            {/* <input
                             type="checkbox"
                             checked
                             id="checkbox1"
@@ -291,6 +404,7 @@ class Landing extends Component {
                             data-width="150"
                             data-height="30"
                           /> */}
+                          </div>
                         </div>
                       </form>
                     </div>
@@ -763,4 +877,16 @@ class Landing extends Component {
     );
   }
 }
-export default Landing;
+
+// function mapStateToProps
+const mapStateToProps = (state) => ({
+  JWTtoken: state.JWTtoken,
+  loginSuccess: state.loginSuccess,
+  SignUpSuccess: state.SignUpSuccess,
+  userDetails: state.userDetails,
+  loading: state.loading,
+});
+
+//function mapDispatchToProps
+
+export default connect(mapStateToProps, { LoginUser, RegisterUser })(Landing);

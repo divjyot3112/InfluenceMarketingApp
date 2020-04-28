@@ -1,24 +1,34 @@
 import { LOGIN_USER, REGISTER_USER } from "../actions/types";
 
 const initialState = {
-  role: "",
-  signedIn: false,
+  JWTtoken: {},
+  loginSuccess: false,
+  SignUpSuccess: false,
+  userDetails: {},
   loading: false,
-  redirect: false,
 };
 
-export function landingPageReducer(state = initialState, action) {
+export default function userReducer(state = initialState, action) {
+  console.log("Inside user reducer");
+  console.log("dasdasas", action);
+
   switch (action.type) {
     case LOGIN_USER:
+      // console.log("Inside case LOGIN_USER");
       return {
         ...state,
-        role: action.payload,
+        JWTtoken: action.payload.message,
+        loginSuccess: true,
       };
 
     case REGISTER_USER:
+      // console.log("Inside case REGISTER_USER");
+      // console.log("action payload", action.payload.message);
+
       return {
         ...state,
-        redirect: action.payload,
+        userDetails: action.payload.message,
+        SignUpSuccess: true,
       };
     default:
       return state;
