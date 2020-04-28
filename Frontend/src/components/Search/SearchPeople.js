@@ -335,7 +335,7 @@ export class SearchPeople extends Component {
                 <MDBContainer>
                 <FormControl className={classes.formControl}>
                 <InputLabel shrink id="demo-simple-select-placeholder-label-label">
-                    Enhance your search
+                    Enhance Search Results
                 </InputLabel>
                 <Select
                     labelId="demo-simple-select-placeholder-label-label"
