@@ -131,15 +131,29 @@ class SearchTasks extends Component {
                 return (
                     <Grid item key={task} xs={10} sm={6} md={3}> {/*md was 4*/}
                         <Card className={classes.card}>
+
                             <CardMedia
                                 className={classes.cardMedia}
                                 image={(task.image === null || task.image === undefined) ? window.location.origin + '/no_image.jpg' : task.image}
                                 title={task.title}
                             />
+
                             <CardContent className={classes.cardContent}>
-                                <Typography gutterBottom variant="h6" component="h2">
-                                    {task.title}
-                                </Typography>
+                                <CardActions>
+                                    <Link
+                                        to={{
+                                            pathname: "/task",
+                                            state: {
+                                                taskId: task._id
+                                            }
+                                        }}
+                                        style={{textDecoration: "none"}}
+                                    >
+                                        <Typography gutterBottom variant="h6" component="h2">
+                                            {task.title}
+                                        </Typography>
+                                    </Link>
+                                </CardActions>
 
                                 <Typography>
                                     <div style={{overflowWrap: "break-word"}}>
@@ -154,20 +168,6 @@ class SearchTasks extends Component {
                                     <b>Salary:</b> ${task.salary}
                                 </Typography>
                             </CardContent>
-
-                            <CardActions>
-                                <Link
-                                    to={{
-                                        pathname: "/task",
-                                        state: {
-                                            taskId: task._id
-                                        }
-                                    }}
-                                    style={{textDecoration: 'none'}}
-                                >
-                                    <Button size="small" color="primary">View</Button>
-                                </Link>
-                            </CardActions>
                         </Card>
                     </Grid>
                 )
