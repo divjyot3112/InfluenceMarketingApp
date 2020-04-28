@@ -44,7 +44,7 @@ export const LoginUser = (data) => (dispatch) => {
     console.log("Inside login action Response", response);
     dispatch({
       type: LOGIN_USER,
-      payload: response.data,
+      payload: response.data.token,
     });
   });
 };

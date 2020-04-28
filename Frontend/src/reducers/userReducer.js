@@ -17,7 +17,7 @@ export default function userReducer(state = initialState, action) {
       // console.log("Inside case LOGIN_USER");
       return {
         ...state,
-        JWTtoken: action.payload.message,
+        JWTtoken: action.payload,
         loginSuccess: true,
       };
 

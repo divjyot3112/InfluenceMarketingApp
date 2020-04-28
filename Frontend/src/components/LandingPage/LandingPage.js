@@ -3,13 +3,14 @@ import axios from "axios";
 import "../../css/LandingPage.css";
 import WOW from "wow.js";
 import smallcard from "./Images/social15.jpg";
-import { UserRoles, NoImageFoundForUser } from "../../utils/Constants";
+import { UserRoles, NoImageFound } from "../../utils/Constants";
 import Footer from "../Common/Footer";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { LoginUser, RegisterUser } from "../../actions/userActions";
 import { Redirect } from "react-router";
 import jwt_decode from "jwt-decode";
+import { Link } from "react-router-dom";
 
 //import {initpage} from "./scripts";
 
@@ -110,7 +111,7 @@ class Landing extends Component {
         firstName: this.state.firstName,
         lastName: this.state.lastName,
       },
-      image: NoImageFoundForUser,
+      image: NoImageFound,
     };
     console.log("Inside Handle Sign Up data ", data);
     this.props.RegisterUser(data);
@@ -126,11 +127,21 @@ class Landing extends Component {
       window.alert("Logged in Successfully");
 
       const token = this.props.JWTtoken;
+      console.log("TOKEN BEFORE DECODE....", token);
+
       if (token && token !== "Bearer undefined") {
-        const userrole = jwt_decode(token).role;
-        window.localStorage.setItem("role", userrole);
+        const decodedtoken = jwt_decode(token);
+
+        console.log("TOKEN AFTER DECODE....", decodedtoken);
+        console.log("ROLE IN TOKEN AFTER DECODE....", decodedtoken.user.role);
+
+        window.localStorage.setItem("role", decodedtoken.user.role);
+
+        window.localStorage.setItem("email", decodedtoken.user.email);
+
+        this.props.history.push("/home");
       } else {
-        window.localStorage.setItem("role", "not found");
+        window.alert("Something went wrong! Please try loggin in again!!!!");
       }
     }
 
@@ -138,6 +149,7 @@ class Landing extends Component {
       window.alert("Signed up Successfully");
 
       window.alert("Please Login using the form here!");
+      window.location.reload();
     }
 
     return (
@@ -799,7 +811,7 @@ class Landing extends Component {
                         aria-hidden="true"
                       ></i>
                     </div>
-                    <div class="col-10 mb-2">
+                    <div class="col-z10 mb-2">
                       <h5 class="feature-title font-bold mb-1">ABCD</h5>{" "}
                       <p class="grey-text mt-2">
                         Lorem ipsum dolor sit amet, consectetur adipisicing
@@ -884,11 +896,11 @@ class Landing extends Component {
 
 // function mapStateToProps
 const mapStateToProps = (state) => ({
-  JWTtoken: state.JWTtoken,
-  loginSuccess: state.loginSuccess,
-  SignUpSuccess: state.SignUpSuccess,
-  userDetails: state.userDetails,
-  loading: state.loading,
+  JWTtoken: state.user.JWTtoken,
+  loginSuccess: state.user.loginSuccess,
+  SignUpSuccess: state.user.SignUpSuccess,
+  userDetails: state.user.userDetails,
+  loading: state.user.loading,
 });
 
 //function mapDispatchToProps
