@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { LoginUser, RegisterUser } from "../../actions/userActions";
 import { Redirect } from "react-router";
+import jwt_decode from "jwt-decode";
 
 //import {initpage} from "./scripts";
 
@@ -123,11 +124,14 @@ class Landing extends Component {
   render() {
     if (this.props.loginSuccess) {
       window.alert("Logged in Successfully");
-      //  window.localStorage.setItem("role":user);
-      // if (role == Influencer) this.props.history.push("/home/influencer");
-      // else {
-      //   this.props.history.push("/home/sponsor");
-      // }
+
+      const token = this.props.JWTtoken;
+      if (token && token !== "Bearer undefined") {
+        const userrole = jwt_decode(token).role;
+        window.localStorage.setItem("role", userrole);
+      } else {
+        window.localStorage.setItem("role", "not found");
+      }
     }
 
     if (this.props.SignUpSuccess) {
@@ -230,7 +234,7 @@ class Landing extends Component {
                         class="btn btn-success "
                         onClick={this.handleLogin}
                       >
-                        >Login
+                        Login
                       </button>
                     </div>
                   </div>
