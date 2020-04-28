@@ -22,3 +22,8 @@
     background: url(/Frontend/public/no_tasks.png) center no-repeat;
     background-size: cover;
 }
+
+.average-ratings {
+    width: 100%;
+    margin-left: 10%;
+}

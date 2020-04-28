@@ -23,6 +23,7 @@ import Pagination from "../Common/pagination";
 import {paginate} from "../Common/paginate";
 import {If} from "react-if";
 import Button from "@material-ui/core/Button";
+import StarRatings from 'react-star-ratings';
 
 const useStyles = (theme) => ({
     cardGrid: {
@@ -132,6 +133,17 @@ class SearchPeople extends Component {
                                         <Typography gutterBottom variant="h6" component="h2">
                                             {user.name.firstName} {user.name.lastName}
                                         </Typography>
+                                        <div className="average-ratings">
+                                            <StarRatings
+                                                rating={Number(this.props.avgRatings[user.email])}
+                                                starRatedColor="#FAAD1C"
+                                                numberOfStars={5}
+                                                starDimension="20"
+                                                starSpacing="0"
+                                            />
+                                        </div>
+                                        <br/>
+                                        <br/>
                                     </Link>
                                 </CardActions>
 
@@ -229,6 +241,7 @@ SearchPeople.propTypes = {
 function mapStateToProps(state) {
     return {
         people: state.searchItems.people,
+        avgRatings: state.searchItems.avgRatings,
     };
 }
 
