@@ -2,20 +2,36 @@ import axios from "axios";
 import { REGISTER_USER, LOGIN_USER, ROOT_URL } from "./types";
 
 //SIGNUP ACTION
-export const RegisterUser = (data) => (dispatch) => {
-  console.log("Inside Register user action");
-
-  axios.defaults.withCredentials = true;
-
-  axios.post(`${ROOT_URL}/users/signup`, data).then((response) => {
-    //Signup Action dispatched
-    console.log("Inside sign up action Response", response);
+export const RegisterUser = (data) => async (dispatch) => {
+  try {
+    const res = await axios.post(`${ROOT_URL}/users/signup`, data);
     dispatch({
       type: REGISTER_USER,
-      payload: response.data,
+      payload: res.data,
     });
-  });
+  } catch (e) {
+    return {
+      type: REGISTER_USER,
+      payload: e,
+    };
+  }
 };
+
+// //SIGNUP ACTION
+// export const RegisterUser = (data) => (dispatch) => {
+//   console.log("Inside Register user action");
+
+//   axios.defaults.withCredentials = true;
+
+//   axios.post(`${ROOT_URL}/users/signup`, data).then((response) => {
+//     //Signup Action dispatched
+//     console.log("Inside sign up action Response", response);
+//     dispatch({
+//       type: REGISTER_USER,
+//       payload: response.data,
+//     });
+//   });
+// };
 
 //LOGIN ACTION
 export const LoginUser = (data) => (dispatch) => {
