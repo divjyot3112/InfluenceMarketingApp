@@ -40,7 +40,7 @@ import UploadImageIcon from '../../images/uploadImageIcon.png'
 const userRoles = require("../../utils/Constants").UserRoles;
 const TaskCategories = require("../../utils/Constants").TaskCategories;
 const Gender = require("../../utils/Constants").Gender;
-const NoImageFoundForUser = require("../../utils/Constants").NoImageFoundForUser;
+const NoImageFound = require("../../utils/Constants").NoImageFound;
 
 
 const useStyles = makeStyles((theme) => ({
@@ -216,7 +216,7 @@ class UserProfile extends UserProfileFormEventHandlers {
             taskCategories: this.state.taskCategories,
             company: this.state.company,
             followersCount: this.state.followersCount,
-            image: this.state.url === "" ? NoImageFoundForUser : this.state.url
+            image: this.state.url === "" ? NoImageFound : this.state.url
         };
 
         this.props.saveProfile(data, email).then(() => {

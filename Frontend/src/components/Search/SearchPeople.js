@@ -1,400 +1,237 @@
-import React, { Component } from 'react'
-import {Link} from "react-router-dom";
-// import InfiniteScroll from 'react-infinite-scroller';
-// UI Imports
-import {
-    // MDBAvatar,
-    MDBBtn,
-    MDBCard,
-    MDBCol,
-    MDBRow,
-    MDBContainer,
-    MDBCardBody,
-    MDBProgress,
-    MDBIcon,
-} from 'mdbreact';
-import Avatar from '@material-ui/core/Avatar';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-// import {Form} from 'react-bootstrap'
-import { withStyles } from '@material-ui/core/styles';
-import { MdStars } from "react-icons/md";
-// Redux Imports
+import React, {Component} from 'react';
 import {connect} from "react-redux";
-import PropTypes from "prop-types";
-import { searchPeople, searchPeopleWithAddress, searchPeopleSortedZA, searchPeopleSortedAZ } from "../../actions/searchActions";
-import { getInfluencerRatings } from '../../actions/ratingActions'
-// CSS
-import '../../css/search.css'
-// Utils
-import { FormControl, FormControlLabel, RadioGroup, Radio } from '@material-ui/core';
+import _ from "lodash";
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardActions from '@material-ui/core/CardActions'
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import PropTypes from 'prop-types';
+import {withStyles} from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import "../../css/search.css";
+import {Link} from "react-router-dom";
+import {searchPeople, sortUsers} from "../../actions/searchActions";
+import NoData from "../Dashboard/NoData";
+import Pagination from "../Common/pagination";
+import {paginate} from "../Common/paginate";
+import {If} from "react-if";
+import Button from "@material-ui/core/Button";
 
 const useStyles = (theme) => ({
+    cardGrid: {
+        paddingTop: theme.spacing(8),
+        paddingBottom: theme.spacing(8),
+    },
+    card: {
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    cardMedia: {
+        paddingTop: '56.25%', // 16:9
+    },
+    cardContent: {
+        flexGrow: 1
+    },
+    root: {
+        '& > *': {
+            marginTop: theme.spacing(5),
+        },
+    },
     formControl: {
         margin: theme.spacing(1),
         minWidth: 250,
-    },
-    large: {
-        width: theme.spacing(10),
-        height: theme.spacing(10),
-        marginTop: "10%",
-        marginLeft:"40%"
     }
 });
 
-export class SearchPeople extends Component {
+class SearchPeople extends Component {
+
     state = {
-        colors: [
-            "##F44336",
-            "##EF9A9A",
-            "#F48FB1",
-            "#CE93D8",
-            "#9575CD",
-            "#7986CB",
-            "#64B5F6",
-            "#4DB6AC",
-            "#1DE9B6",
-            "#81C784",
-            "#9CCC65",
-            "#CDDC39",
-            "#FFEB3B"
-        ],
-        peopleLoading: true,
-        peopleFound: false,
-        items: null,
-        hasMore: null,
-        totalPeople: null,
-        loadedPeople: null,
-        status: null,
-        ratingsMap: null,
-        filter: ""
+        currentPage: 1,
+        pageSize: 12,
+        searchString: ""
+    };
+
+    handlePageChange = page => {
+        this.setState({currentPage: page});
+    };
+
+    handleChangeSelect = (event) => {
+        let sortBy = event.target.value;
+        this.props.sortUsers(sortBy);
+        this.forceUpdate();
     }
+
     componentDidMount() {
-        
-        if(this.props.location.state) {
-            const str = this.props.location.state.searchString.split(" ", 2)
+        if (this.props.location.state) {
+            const name = this.props.location.state.searchString.split(" ", 2)
             this.setState({searchString: this.props.location.state.searchString})
-            this.props.searchPeople({ 
-                firstName: str[0],
-                lastName: str[1] ? str[1] : ""
+
+            this.props.searchPeople({
+                firstName: name[0],
+                lastName: name[1] ? name[1] : null
             })
         }
     }
+
+    truncate = (input) => input && input.length > 30 ? `${input.substring(0, 30)}...` : input
+
     componentWillReceiveProps(props) {
-        let { classes } = this.props;
-        console.log(props.location.state.searchString + " " + this.state.searchString)
-        if(props.location.state.searchString!==this.state.searchString){
-            const str = props.location.state.searchString.split(" ", 2)
-            this.setState({ searchString: props.location.state.searchString})
+        if (props.location.state.searchString !== this.state.searchString) {
+            const name = props.location.state.searchString.split(" ", 2)
+            this.setState({searchString: props.location.state.searchString});
+
             props.searchPeople({
-                firstName: str[0],
-                lastName: str[1] ? str[1] : ""
+                firstName: name[0],
+                lastName: name[1] ? name[1] : null
             })
-        } 
-        let address = props.location.state.address
-        let ratingsMap = props.ratingsMap
-        let people = props.people
-        
-        this.setState({
-            people: people,
-            ratingsMap: ratingsMap,
-            address: address
-        })
-        
-        let totalPeople = props.people.length>9 ? (
-            ((props.people.length-9)%6===0) ?  (props.people.length-9)/6 + 1 : (props.people.length-9)/6 + 2
-        ) : 2
-        let splicedPeople = []
-        let size = 3
-        while (people.length > 0)
-            splicedPeople.push(people.splice(0, size));
-        let renderPeople = []
-        const sliceAndPush = (sliceSize) => {
-            let sliced = splicedPeople.splice(0,sliceSize)
-            console.log(splicedPeople.length)
-            renderPeople.push(
-                sliced.map((array) => (
-                    <MDBRow>
-                        {array.map(profile => (
-                            <MDBCol md='4'>
-                            <MDBCard style={{
-                                background: this.state.colors[Math.floor(Math.random()*this.state.colors.length)]
-                            }}>
-                                {/* <MDBCardUp gradient='aqua' /> */}
+        }
+    }
+
+    renderProfiles() {
+
+        const {classes} = this.props;
+
+        if (this.props.people && this.props.people.length > 0) {
+            const paginatedData = paginate(
+                this.props.people ? this.props.people : "",
+                this.state.currentPage,
+                this.state.pageSize
+            );
+
+            return _.map(paginatedData, (user) => {
+
+                return (
+                    <Grid item key={user} xs={10} sm={6} md={3}> {/*md was 4*/}
+                        <Card className={classes.card}>
+
+                            <CardMedia
+                                className={classes.cardMedia}
+                                image={(user.image === null || user.image === undefined) ? window.location.origin + '/NoImageFound.jpg' : user.image}
+                                title={user.email}
+                            />
+
+                            <CardContent className={classes.cardContent}>
+                                <CardActions>
+                                    <Link
+                                        to={{
+                                            pathname: "/profile",
+                                            state: {
+                                                email: user.email
+                                            }
+                                        }}
+                                        style={{textDecoration: "none"}}
+                                    >
+                                        <Typography gutterBottom variant="h6" component="h2">
+                                            {user.name.firstName} {user.name.lastName}
+                                        </Typography>
+                                    </Link>
+                                </CardActions>
+
+                                <If condition={user.aboutMe}>
+                                    <Typography>
+                                        <div style={{overflowWrap: "break-word"}}>
+                                            <i>"{this.truncate(user.aboutMe)}"</i></div>
+                                    </Typography>
+                                </If>
+                                <br/>
+
+                                <Typography>
+                                    <b>Number of Followers:</b> {user.followersCount ? user.followersCount : "NA"}
+                                </Typography><br/>
+
+                            </CardContent>
+
+                            <CardActions>
                                 <Link
                                     to={{
-                                        pathname: "/profile",
-                                        state: {
-                                            email:profile.email
-                                        }
-                                    }}
-                                    style={{textDecoration: 'none'}}
-                                >
-                                    {/* <MDBAvatar className='mx-auto white'> */}
-                                    <Avatar src={profile.image} className={classes.large} />
-                                </Link>
-                                <div style={{alignSelf:"center"}}>
-                                    <MdStars/>
-                                    {console.log(ratingsMap[profile.email])}
-                                    {
-                                        ratingsMap[profile.email]===null || ratingsMap[profile.email]===undefined ? 
-                                        null :
-                                        (
-                                            ratingsMap[profile.email]%1===0 ? ratingsMap[profile.email] :
-                                            (Math.round(ratingsMap[profile.email]*100)/100).toFixed(2)
-                                        )
-                                    }
-                                </div>
-                                <hr/>
-                                <MDBCardBody style={{textAlign:"left"}}>
-                                    {profile.name.firstName + " " + profile.name.lastName}<br/>
-                                    <div>
-                                    <Link to={{
                                         pathname: "/inbox",
                                         state: {
-                                            chatWith: { 
-                                                email:profile.email, 
-                                                name:profile.name.firstName + " " + profile.name.lastName, 
-                                                photo:profile.image
+                                            chatWith: {
+                                                email: user.email,
+                                                name: user.name.firstName + " " + user.name.lastName,
+                                                photo: user.image
                                             }
                                         }
                                     }}
-                                    style={{display: 
-                                        profile.email===localStorage.getItem("email") ? "none" : "block"
-                                    , textDecoration: 'none', textAlign:"right" }}><MDBBtn>Chat
-                                        <MDBIcon icon="comment" className="ml-1" /></MDBBtn></Link> 
-                                    <span style={{textAlign:"left"}}>
-                                        {profile.aboutMe}
-                                    </span>
-                                    </div>
-                                </MDBCardBody>
-                            </MDBCard>
-                        </MDBCol>
-                        ))}
-                    </MDBRow>
-                ))
-            )
-        }
-        sliceAndPush(3)
-        let hasMore = splicedPeople.length>0 ? true : false
-        console.log("renderPeople len" + renderPeople.length)
-        this.setState({
-            items: renderPeople,
-            renderPeople: renderPeople,
-            splicedPeople: splicedPeople,
-            hasMore: hasMore,
-            totalPeople: totalPeople,
-            loadedPeople: 2
-        })
-    }
-
-    filterClick = (e) => {
-        this.setState({
-            filter: e.target.value
-        })
-        if(e.target.value==="alphaza") {
-            const str = this.state.searchString.split(" ", 2)
-            const data = {
-                firstName: str[0],
-                lastName: str[1] ? str[1] : "a",
-                // address: this.state.address
-            }
-            this.props.searchPeopleSortedZA(data)
-            this.componentWillReceiveProps(this.props)
-        }
-        if(e.target.value==="alphaaz") {
-            const str = this.state.searchString.split(" ", 2)
-            const data = {
-                firstName: str[0],
-                lastName: str[1] ? str[1] : "a",
-                // address: this.state.address
-            }
-            this.props.searchPeopleSortedAZ(data)
-            this.componentWillReceiveProps(this.props)
-        }
-        if(e.target.value==="address") {
-            const str = this.state.searchString.split(" ", 2)
-            const data = {
-                firstName: str[0],
-                lastName: str[1] ? str[1] : "a",
-                address: this.state.address
-            }
-            this.props.searchPeopleWithAddress(data)
-            this.componentWillReceiveProps(this.props)
-        }
-        if(e.target.value==="") {
-            const str = this.state.searchString.split(" ", 2)
-            const data = {
-                firstName: str[0],
-                lastName: str[1] ? str[1] : "a",
-                // address: this.state.address
-            }
-            this.props.searchPeople(data)
-            this.componentWillReceiveProps(this.props)
-        }
-    }
-
-    loadMore = () => {
-        let { classes } = this.props;
-        if(this.state.hasMore) {
-            const sliceSize = 2
-            let renderPeople = this.state.renderPeople
-            let ratingsMap = this.state.ratingsMap
-            let splicedPeople = this.state.splicedPeople
-            let sliced = splicedPeople.splice(0,sliceSize)
-            console.log("Spliced People: " + splicedPeople.length)
-            console.log("renderPeople: " + renderPeople)
-            
-            renderPeople.push(
-                sliced.map((array) => (
-                    <MDBRow>
-                        {array.map(profile => (
-                            <MDBCol md='4'>
-                            <MDBCard style={{
-                                background: this.state.colors[Math.floor(Math.random()*this.state.colors.length)]
-                            }}>
-                                {/* <MDBCardUp gradient='aqua' /> */}
-                                <Link
-                                    to={{
-                                        pathname: "/profile",
-                                        state: {
-                                            email:profile.email
-                                        }
-                                    }}
                                     style={{textDecoration: 'none'}}
                                 >
-                                    {/* <MDBAvatar className='mx-auto white'> */}
-                                    <Avatar src={profile.image} className={classes.large} />
+                                    <Button color="primary">Chat &nbsp; <i
+                                        className="fas fa-comment"></i></Button>
                                 </Link>
-                                <div style={{alignSelf:"center"}}>
-                                    <MdStars/>
-                                    {
-                                        ratingsMap[profile.email]===null ? null :
-                                        (
-                                            ratingsMap[profile.email]%1===0 ? ratingsMap[profile.email] :
-                                            (Math.round(ratingsMap[profile.email]*100)/100).toFixed(2)
-                                        )
-                                    }
-                                </div>
-                                <hr/>
-                                <MDBCardBody style={{textAlign:"left"}}>
-                                    {profile.name.firstName + " " + profile.name.lastName}<br/>
-                                    <div>
-                                    <Link to={{
-                                        pathname: "/inbox",
-                                        state: {
-                                            chatWith: { email: "vandana2@gmail.com", name: "Vandana2 ABC",photo:"url"}
-                                        }
-                                    }}
-                                    style={{display: 
-                                        profile.email===localStorage.getItem("email") ? "none" : "block"
-                                    , textDecoration: 'none', textAlign:"right" }}><MDBBtn>Chat
-                                        <MDBIcon icon="comment" className="ml-1" /></MDBBtn></Link> 
-                                    <span style={{textAlign:"left"}}>
-                                        {profile.aboutMe}
-                                    </span>
-                                    </div>
-                                </MDBCardBody>
-                            </MDBCard>
-                        </MDBCol>
-                        ))}
-                    </MDBRow>
-                ))
-            )
-            let temp = []
-            temp.push(
-                renderPeople.map((row) => (
-                    <div>
-                    {row.map(data => (
-                        data
-                    ))}
-                    </div>
-                ))
-            )
-            this.setState({
-                items: temp
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                )
             })
-            console.log("items:" + this.state.items)
-            console.log("renderPeople len" + renderPeople.length)
-            let hasMore = splicedPeople.length>0 ? true : false
-            this.setState({
-                hasMore: hasMore,
-                splicedPeople: splicedPeople,
-                renderPeople: temp,
-                loadedPeople: this.state.loadedPeople+1
-            })
+        } else {
+            return <NoData image={window.location.origin + "/no_tasks.png"} description="No Matching Profiles Found"/>
+
         }
     }
 
     render() {
-        const { classes } = this.props;
-        console.log(this.state)
+        const {classes} = this.props
         return (
-            <div>
-                <MDBContainer>
-                <FormControl className={classes.formControl}>
-                <InputLabel shrink id="demo-simple-select-placeholder-label-label">
-                    Enhance your search
-                </InputLabel>
-                <Select
-                    labelId="demo-simple-select-placeholder-label-label"
-                    value={this.state.filter}
-                    onChange={(e) => this.filterClick(e)}
-                    displayEmpty
-                    className={classes.selectEmpty}
-                >
-                    <MenuItem value="">
-                        <em>None</em>
-                    </MenuItem>
-                    <MenuItem value="alphaaz">Sort Alphabetically (a-z)</MenuItem>
-                    <MenuItem value="alphaza">Sort Alphabetically (z-a)</MenuItem>
-                    <MenuItem value="address">Search Near Your Area</MenuItem>
-                </Select>
-                </FormControl>
-                </MDBContainer>
-                <MDBContainer>
-                    {this.state.items}
-                    <MDBRow 
-                        id="loadingButton" 
-                        center
-                        style={{marginTop:"0.5%", display:this.state.hasMore ? "block" : "none"}}
-                    >
-                        <MDBCol>
-                            <MDBBtn color="dark" onClick = {this.loadMore}>
-                                Load More
-                            </MDBBtn>
-                        </MDBCol>
-                    </MDBRow>
-                    <MDBRow style={{marginTop:"2%"}}>
-                        <MDBCol>
-                            <MDBProgress 
-                                material
-                                value={this.state.loadedPeople/this.state.totalPeople*100}
-                                heigth="20px"
-                                style={{}}
-                            />
-                        </MDBCol>
-                    </MDBRow>
-                </MDBContainer>
-            </div>
+            <React.Fragment>
+                <CssBaseline/>
+                <div className="filter">
+                    <div style={{float: "right", display: "inline"}}>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel id="demo-controlled-open-select-label">Sort By</InputLabel>
+                            <Select
+                                labelId="demo-controlled-open-select-label"
+                                id="demo-controlled-open-select"
+                                onChange={this.handleChangeSelect}
+                            >
+                                <MenuItem value={0}>Alphabetically (a-z)</MenuItem>
+                                <MenuItem value={1}>Alphabetically (z-a)</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
+                </div>
+                <Container className={classes.cardGrid} maxWidth="md">
+                    <br/>
+                    <br/>
+                    <br/>
+                    <Grid container spacing={4}>
+                        {this.renderProfiles()}
+                    </Grid>
+                    <br/>
+                    <br/>
+                    <div className="general-pagination">
+                        <Pagination
+                            itemsCount={this.props.tasks ? this.props.tasks.length : ""}
+                            pageSize={this.state.pageSize}
+                            onPageChange={this.handlePageChange}
+                            currentPage={this.state.currentPage}
+                        />
+                    </div>
+                </Container>
+            </React.Fragment>
         )
     }
 }
 
 SearchPeople.propTypes = {
+    classes: PropTypes.object.isRequired,
     searchPeople: PropTypes.func.isRequired,
-    getInfluencerRatings: PropTypes.func.isRequired,
-    people: PropTypes.object.isRequired,
-    ratingsMap: PropTypes.object.isRequired,
-    classes: PropTypes.object.isRequired
+    sortUsers: PropTypes.func.isRequired,
+};
+
+function mapStateToProps(state) {
+    return {
+        people: state.searchItems.people,
+    };
 }
 
-const mapStateToProps = (state) => ({
-    people: state.searchItems.people,
-    ratingsMap: state.searchItems.ratingsMap
-});
-
-export default connect(mapStateToProps, { 
-    searchPeople, getInfluencerRatings, searchPeopleWithAddress, searchPeopleSortedZA, searchPeopleSortedAZ
-})(withStyles(useStyles)(SearchPeople))
+export default connect(mapStateToProps, {
+    searchPeople, sortUsers
+})(withStyles(useStyles)(SearchPeople));

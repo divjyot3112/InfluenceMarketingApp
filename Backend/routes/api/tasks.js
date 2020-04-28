@@ -273,7 +273,7 @@ router.put("/:taskId/select", (req, res) => {
         .then(task => {
             // check if task exists
             if (task) {
-                if( task.postedBy===req.query.email) {
+                if (task.postedBy === req.query.email) {
                     // task should be in CREATED state
                     if (task.status == taskStatus.CREATED) {
                         Task.findOneAndUpdate(
@@ -317,7 +317,22 @@ router.put("/:taskId/select", (req, res) => {
                                                 if (error) {
                                                     console.log(error);
                                                 } else {
-                                                    console.log('Email sent: ' + info.response);
+                                                    console.log('Email sent to rejected candidates: ' + info.response);
+                                                }
+                                            });
+
+                                            mailOptions = {
+                                                from: "influencemarketing.contact@gmail.com",
+                                                to: task.selectedCandidates,
+                                                subject: 'Update on Application for ' + task.title,
+                                                text: 'Congratulations! You have been selected for the task: ' + task.title
+                                            };
+
+                                            transporter.sendMail(mailOptions, function (error, info) {
+                                                if (error) {
+                                                    console.log(error);
+                                                } else {
+                                                    console.log('Email sent to selected candidates: ' + info.response);
                                                 }
                                             });
 
@@ -348,8 +363,8 @@ router.put("/:taskId/select", (req, res) => {
                         res.status(401).json({message: "Task is already in progress"})
                     }
                 } else {
-                    console.log("Task not found")
-                    res.status(401).json({message: "Permission not granted"})
+                    console.log("You don't have permission to select a candidate")
+                    res.status(401).json({message: "You don't have permission to select a candidate"})
                 }
             } else {
                 console.log("Task does not exist")
@@ -424,7 +439,7 @@ router.get("/search", (req, res) => {
                     res.status(200).json({message: tasks});
                 } else {
                     console.log("No tasks found");
-                    res.status(404).json({message: "No tasks found"});
+                    res.status(200).json({message: tasks});
                 }
             })
             .catch(err => {
@@ -440,7 +455,7 @@ router.get("/search", (req, res) => {
                     res.status(200).json({message: tasks});
                 } else {
                     console.log("No tasks found");
-                    res.status(404).json({message: "No tasks found"});
+                    res.status(200).json({message: tasks});
                 }
             })
             .catch(err => {

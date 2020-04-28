@@ -2,7 +2,7 @@
     text-align: center;
     color: red;
     font-size: 300%;
-    margin: 40% 30% 60% 30%;
+    margin: 20% 30% 60% 30%;
 }
 
 .main-ratings-sponsor {
@@ -11,12 +11,8 @@
 }
 
 .sorting-options {
-    margin: 0% 0% 0% 75%;
+    margin: 0% 20% 0% 63%;
     height: auto;
-}
-
-.sorting-options select {
-    width: 35%;
 }
 
 .ratings-cards-main {

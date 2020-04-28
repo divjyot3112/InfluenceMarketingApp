@@ -31,7 +31,7 @@ export const fetchDashboardTasks = (email, status,nextFun) => dispatch => {
 export const getCurrentPageTasks = (pageNum, allTasks) => dispatch => {
     dispatch({
         type: DASHBOARD_CURRENT_PAGE_TASKS,
-        payload: allTasks.slice((pageNum - 1) * 12, pageNum * 12)
+        payload: allTasks.slice((pageNum - 1) * 9, pageNum * 9)
     })
 }
 
