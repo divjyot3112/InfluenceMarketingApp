@@ -313,13 +313,28 @@ router.put("/:taskId/select", (req, res) => {
                                                 text: 'We regret to inform you that your application has been rejected.'
                                             };
 
-                                            transporter.sendMail(mailOptions, function (error, info) {
-                                                if (error) {
-                                                    console.log(error);
-                                                } else {
-                                                    console.log('Email sent: ' + info.response);
-                                                }
-                                            });
+                                           transporter.sendMail(mailOptions, function (error, info) {
+                                            if (error) {
+                                                console.log(error);
+                                            } else {
+                                                console.log('Email sent to rejected candidates: ' + info.response);
+                                            }
+                                        });
+
+                                        mailOptions = {
+                                            from: "influencemarketing.contact@gmail.com",
+                                            to: task.selectedCandidates,
+                                            subject: 'Update on Application for ' + task.title,
+                                            text: 'Congratulations! You have been selected for the task: ' + task.title
+                                        };
+                                      
+                                       transporter.sendMail(mailOptions, function (error, info) {
+                                            if (error) {
+                                                console.log(error);
+                                            } else {
+                                                console.log('Email sent to selected candidates: ' + info.response);
+                                            }
+                                        });
 
                                             res.status(200).json({message: "Candidate selected successfully"})
                                         })
@@ -348,8 +363,8 @@ router.put("/:taskId/select", (req, res) => {
                         res.status(401).json({message: "Task is already in progress"})
                     }
                 } else {
-                    console.log("Task not found")
-                    res.status(401).json({message: "Permission not granted"})
+                    console.log("You don't have permission to select a candidate")
+                    res.status(401).json({message: "You don't have permission to select a candidate"})
                 }
             } else {
                 console.log("Task does not exist")
