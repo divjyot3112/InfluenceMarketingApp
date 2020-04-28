@@ -287,7 +287,7 @@ router.put("/:taskId/select", (req, res) => {
                         .then(task => {
                             console.log("Candidate selected successfully")
 
-                            console.log("Checking if vacancy count is full" + task.vacancyCount)
+                            console.log("Checking if vacancy count is full " + task.vacancyCount)
                             if (task.selectedCandidates.length == task.vacancyCount) {
                                 Task.findOneAndUpdate(
                                     {_id: ObjectID(req.params.taskId)},
@@ -316,7 +316,22 @@ router.put("/:taskId/select", (req, res) => {
                                             if (error) {
                                                 console.log(error);
                                             } else {
-                                                console.log('Email sent: ' + info.response);
+                                                console.log('Email sent to rejected candidates: ' + info.response);
+                                            }
+                                        });
+
+                                        mailOptions = {
+                                            from: "influencemarketing.contact@gmail.com",
+                                            to: task.selectedCandidates,
+                                            subject: 'Update on Application for ' + task.title,
+                                            text: 'Congratulations! You have been selected for the task: ' + task.title
+                                        };
+
+                                        transporter.sendMail(mailOptions, function (error, info) {
+                                            if (error) {
+                                                console.log(error);
+                                            } else {
+                                                console.log('Email sent to selected candidates: ' + info.response);
                                             }
                                         });
 
