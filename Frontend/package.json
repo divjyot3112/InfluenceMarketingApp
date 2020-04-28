@@ -23,6 +23,7 @@
     "jest": "^24.9.0",
     "joi-browser": "^13.4.0",
     "jquery": "^3.5.0",
+    "jwt-decode": "^2.2.0",
     "material-ui-image": "^3.2.3",
     "mdbootstrap": "^4.16.0",
     "mdbreact": "latest",

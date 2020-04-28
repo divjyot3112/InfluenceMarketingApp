@@ -8,7 +8,7 @@ header,
 .masthead {
   height: 100vh;
   min-height: 50vh;
-  background-image: url("./Images/social17.jpg");
+  background-image: url("../../src/components/LandingPage/Images/social1.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -16,16 +16,16 @@ header,
 
 .tophead {
   min-height: 10vh;
-  background-image: url("./Images/social14.jpg");
+  background-image: url("../../src/components/LandingPage/Images/social14.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .firstcontainer {
-  height: 600vh;
-  min-height: 1500vh;
-  background-image: url("./Images/social9.jpg");
+  height: 60vh;
+  min-height: 150vh;
+  background-image: url("../../src/components/LandingPage/Images/social9.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
