@@ -36,11 +36,12 @@ import EditIcon from '@material-ui/icons/Edit';
 import NumberFormat from 'react-number-format';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import Image from 'material-ui-image';
-import { TableSortLabel } from "@material-ui/core";
-import { TaskStatus } from "../../utils/Constants";
+import {getEmailFromLocalStorage, getRoleFromLocalStorage} from "../Common/auth";
+import {TaskStatus} from "../../utils/Constants";
 
 const TaskCategories = require("../../utils/Constants").TaskCategories;
 const NoImageFound = require("../../utils/Constants").NoImageFound;
+const UserRoles = require("../../utils/Constants").UserRoles;
 
 // for material-ui
 const useStyles = makeStyles((theme) => ({
@@ -73,12 +74,12 @@ const useStyles = makeStyles((theme) => ({
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 16;
 const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 400,
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 400,
+        },
     },
-  },
 };
 
 // to format salary field
@@ -142,52 +143,52 @@ class PostTask extends PostTaskFormEventHandlers {
     }
 
     componentDidMount() {
-        if(this.props.location.state) {
+        if (this.props.location.state) {
             this.props.getTask(this.props.location.state)
                 .then(res => {
                     // if(res) {
-                        const task = this.props.task
-                        console.log("Task " + task)
-                        this.setState({
-                            taskId: task._id,
-                            postedBy: task.postedBy,
-                            title: task.title,
-                            description: task.description,
-                            salary: task.salary,
-                            category: task.category,
-                            startDate: task.startDate,
-                            endDate: task.endDate,
-                            url: task.image,
-                            vacancyCount: task.vacancyCount,
-                            status: task.status,
-                            appliedCandidates: task.appliedCandidates,
-                            selectedCandidates: task.selectedCandidates,
-                            selected: task.selectedCandidates
-                        })
-                        let viewSelected = task.postedBy===localStorage.getItem('email') ? true : false
-                        if(task.selectedCandidates && !viewSelected) {
-                            task.selectedCandidates.forEach(candidate => {
-                                if(candidate===localStorage.getItem('email')){
-                                    viewSelected = true;
-                                }
-                            });
-                        }
-                        this.setState({viewSelected: viewSelected})
-                        // if(viewSelected) {
-                        //     this.props.getSelectedCandidateProfiles(task._id).then(res => {
-                        //         if(res) {
-                        //             const profiles = props.profiles
-                        //             this.setState({
-                        //                 profiles: profiles
-                        //             })
-                        //         }
-                        //     })
-                        // }
+                    const task = this.props.task
+                    console.log("Task " + task)
+                    this.setState({
+                        taskId: task._id,
+                        postedBy: task.postedBy,
+                        title: task.title,
+                        description: task.description,
+                        salary: task.salary,
+                        category: task.category,
+                        startDate: task.startDate,
+                        endDate: task.endDate,
+                        url: task.image,
+                        vacancyCount: task.vacancyCount,
+                        status: task.status,
+                        appliedCandidates: task.appliedCandidates,
+                        selectedCandidates: task.selectedCandidates,
+                        selected: task.selectedCandidates
+                    })
+                    let viewSelected = task.postedBy === localStorage.getItem('email') ? true : false
+                    if (task.selectedCandidates && !viewSelected) {
+                        task.selectedCandidates.forEach(candidate => {
+                            if (candidate === localStorage.getItem('email')) {
+                                viewSelected = true;
+                            }
+                        });
+                    }
+                    this.setState({viewSelected: viewSelected})
+                    // if(viewSelected) {
+                    //     this.props.getSelectedCandidateProfiles(task._id).then(res => {
+                    //         if(res) {
+                    //             const profiles = props.profiles
+                    //             this.setState({
+                    //                 profiles: profiles
+                    //             })
+                    //         }
+                    //     })
+                    // }
                     // }
                 })
         }
     }
-    
+
     schema = {
         title: Joi.string()
             .max(30)
@@ -204,8 +205,7 @@ class PostTask extends PostTaskFormEventHandlers {
     onSubmit = (e) => {
         e.preventDefault();
 
-        // TODO: Get username from local storage
-        const postedBy = "sheena@gmail.com";
+        const postedBy = getEmailFromLocalStorage();
 
         const data = {
             postedBy: postedBy,
@@ -221,24 +221,24 @@ class PostTask extends PostTaskFormEventHandlers {
 
         this.props.editTask(this.state.taskId, data).then(() => {
             if (this.props.edited) {
-                window.alert("Task saved successfully!");
+                window.alert("Task edited successfully!");
                 window.location.reload();
             } else {
-                window.alert("Task could not be saved. Please try again later.");
+                window.alert("Task could not be edited. Please try again later.");
             }
         });
     };
 
     handleSelectCandidates = () => {
         this.props.selectCandidates(
-            this.state.taskId, 
+            this.state.taskId,
             {
                 selectedCandidates: this.state.selected,
                 email: localStorage.getItem('email')
             }
         )
             .then(res => {
-                if(this.props.selected) {
+                if (this.props.selected) {
                     window.alert("Candidates Successfully Selected")
                     window.location.reload();
                 } else {
@@ -259,11 +259,9 @@ class PostTask extends PostTaskFormEventHandlers {
     }
 
     render() {
-        // TODO: if user is not logged in, redirect to home
-        console.log(this.state)
         const {classes} = this.props;
         let renderSelectedCandidates = []
-        if(this.state.selectedCandidates && this.state.viewSelected) {
+        if (this.state.selectedCandidates && this.state.viewSelected) {
             this.state.selectedCandidates.map(candidate => (
                 renderSelectedCandidates.push(
                     <Link
@@ -279,10 +277,10 @@ class PostTask extends PostTaskFormEventHandlers {
                     </Link>
                 )
             ))
-        } else if(this.state.viewSelected) {
+        } else if (this.state.viewSelected) {
             renderSelectedCandidates = "No Candidates Selected"
         }
-        if (false) { // TODO: check if user is not sponsor (role comes from local storage)
+        if (getRoleFromLocalStorage() != UserRoles.SPONSOR) {
             return (
                 <React.Fragment>
                     <div className="main-post-task">
@@ -296,8 +294,8 @@ class PostTask extends PostTaskFormEventHandlers {
                     <div className="main-post-task">
                         <form className={classes.root}>
                             <div className="form_body_bottom">
-                                <div style={{marginBottom:"2%"}}><b>
-                                    Task Posted By: 
+                                <div style={{marginBottom: "2%"}}><b>
+                                    Task Posted By:
                                     <Link
                                         to={{
                                             pathname: "/profile",
@@ -494,7 +492,7 @@ class PostTask extends PostTaskFormEventHandlers {
                                 </Button>
 
                                 <Button
-                                    disabled={this.state.postedBy!==localStorage.getItem("email")}
+                                    disabled={this.state.postedBy !== localStorage.getItem("email")}
                                     variant="contained"
                                     color="secondary"
                                     size="large"
@@ -505,18 +503,18 @@ class PostTask extends PostTaskFormEventHandlers {
                                     {this.state.editMode ? "Cancel" : "Edit Task"}
                                 </Button>
                                 <Tooltip title="Task cannot be deleted after candidates are selected">
-                                <Button
-                                    disabled={this.state.status!==TaskStatus.CREATED && 
-                                        this.state.postedBy!==localStorage.getItem("email")}
-                                    variant="contained"
-                                    color="secondary"
-                                    size="large"
-                                    className="classes.button btn-cancel"
-                                    onClick={this.toggle} // todo
-                                    startIcon={<DeleteIcon/>}
-                                >
-                                    Delete Task
-                                </Button>
+                                    <Button
+                                        disabled={this.state.status !== TaskStatus.CREATED &&
+                                        this.state.postedBy !== localStorage.getItem("email")}
+                                        variant="contained"
+                                        color="secondary"
+                                        size="large"
+                                        className="classes.button btn-cancel"
+                                        onClick={this.toggle} // todo
+                                        startIcon={<DeleteIcon/>}
+                                    >
+                                        Delete Task
+                                    </Button>
                                 </Tooltip>
                                 <Dialog
                                     open={this.state.open}
@@ -525,40 +523,40 @@ class PostTask extends PostTaskFormEventHandlers {
                                     aria-describedby="simple-modal-description"
                                 >
                                     <DialogTitle id="alert-dialog-title">
-                                    Are you sure you want to delete this task?
+                                        Are you sure you want to delete this task?
                                     </DialogTitle>
                                     <DialogActions>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        size="large"
-                                        className="classes.button btn-cancel"
-                                        // onClick={this.onDelete} // todo
-                                        startIcon={<DoneIcon/>}
-                                    >
-                                        Yes
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        size="large"
-                                        className="classes.button btn-cancel"
-                                        onClick={this.toggle}
-                                        startIcon={<CloseIcon/>}
-                                    >
-                                        No
-                                    </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            size="large"
+                                            className="classes.button btn-cancel"
+                                            // onClick={this.onDelete} // todo
+                                            startIcon={<DoneIcon/>}
+                                        >
+                                            Yes
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            size="large"
+                                            className="classes.button btn-cancel"
+                                            onClick={this.toggle}
+                                            startIcon={<CloseIcon/>}
+                                        >
+                                            No
+                                        </Button>
                                     </DialogActions>
                                 </Dialog>
                             </div>
                             <hr/>
-                            <div className="form-body" style={{marginBottom:"5%"}}>
-                                <div 
-                                    className="form_body_left" 
+                            <div className="form-body" style={{marginBottom: "5%"}}>
+                                <div
+                                    className="form_body_left"
                                     style={{
-                                        paddingBottom:"2%",
-                                        display: this.state.postedBy===localStorage.getItem('email')
-                                            && this.state.status===TaskStatus.CREATED ? "block" : "none"
+                                        paddingBottom: "2%",
+                                        display: this.state.postedBy === localStorage.getItem('email')
+                                        && this.state.status === TaskStatus.CREATED ? "block" : "none"
                                     }}
                                 >
                                     {/*To display this if task status is created + sponsor=postedby*/}
@@ -572,14 +570,14 @@ class PostTask extends PostTaskFormEventHandlers {
                                             multiple
                                             value={this.state.selected}
                                             onChange={this.handleSelect}
-                                            input={<Input />}
+                                            input={<Input/>}
                                             MenuProps={MenuProps}
                                         >
                                             {this.state.appliedCandidates ? this.state.appliedCandidates.map((email) => (
                                                 <MenuItem key={email} value={email}>
                                                     {email}
                                                 </MenuItem>
-                                        )) : ""}
+                                            )) : ""}
                                         </Select>
                                         <Button
                                             variant="contained"
@@ -588,16 +586,16 @@ class PostTask extends PostTaskFormEventHandlers {
                                             className="classes.button btn-cancel"
                                             onClick={this.handleSelectCandidates}
                                             startIcon={<SelectAllIcon/>}
-                                            style={{marginTop:10}}
+                                            style={{marginTop: 10}}
                                         >
                                             Confirm Selection
                                         </Button>
                                     </FormControl>
                                 </div>
-                                <div 
-                                    className="form_body_right" 
+                                <div
+                                    className="form_body_right"
                                     style={{
-                                        paddingBottom:"2%",
+                                        paddingBottom: "2%",
                                         display: this.state.viewSelected ? "block" : "none"
                                     }}
                                 >

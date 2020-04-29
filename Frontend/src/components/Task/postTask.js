@@ -133,10 +133,10 @@ class PostTask extends PostTaskFormEventHandlers {
 
         this.props.saveTask(data).then(() => {
             if (this.props.saved) {
-                window.alert("Task saved successfully!");
+                window.alert("Task posted successfully!");
                 window.location.reload();
             } else {
-                window.alert("Task could not be saved. Please try again later.");
+                window.alert("Task could not be posted. Please try again later.");
             }
         });
     };
