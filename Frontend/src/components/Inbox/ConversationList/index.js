@@ -6,8 +6,8 @@ import { fetchConversations, markRead } from "../../../actions/inboxActions";
 import { connect } from "react-redux";
 import './ConversationList.css';
 import SearchUsers from '../SearchUsers/SearchUsers';
-import {MY_USER_ID} from '../../../utils/Constants'
-//const MY_USER_ID = 'user2'; //TODO: add current user email
+//import {MY_USER_ID} from '../../../utils/Constants'
+const MY_USER_ID = localStorage.getItem("email"); //TODO: add current user email
 class ConversationList extends Component {
 
   constructor(props) {

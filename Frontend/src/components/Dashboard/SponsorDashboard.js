@@ -33,10 +33,10 @@ import DeleteModal from './DeleteModal'
 import MarkCompleteModal from './MarkCompleteModal'
 import NoData from './NoData'
 import "../../css/dashboard.css";
-import {MY_USER_ID} from "../../utils/Constants";
+//import {MY_USER_ID} from "../../utils/Constants";
 import {Link} from "react-router-dom";
 //create the Navbar Component
-
+const MY_USER_ID = localStorage.getItem("email");
 const useStyles = (theme) => ({
     cardGrid: {
         paddingTop: theme.spacing(8),
