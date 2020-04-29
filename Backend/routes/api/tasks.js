@@ -134,40 +134,40 @@ router.get("/:taskId/applicants", (req, res) => {
     });
 });
 
-// @route   PUT api/task/edit/:taskId
+// @route   PUT api/tasks/edit/:taskId
 // @desc    Edit a task for given task id
 // @access  Public
 router.put("/edit/:taskId", (req, res) => {
-  console.log("Inside Edit Task request for Task ID:", req.params.taskId);
-  Task.findOneAndUpdate(
-    { _id: ObjectID(req.params.taskId) },
-    {
-      $set: {
-        title: req.body.title,
-        postedBy: req.body.postedBy,
-        postedOn: req.body.postedOn,
-        description: req.body.description,
-        images: req.body.images,
-        status: req.body.status,
-        salary: req.body.salary,
-        category: req.body.category,
-        appliedCandidates: req.body.appliedCandidates,
-        selectedCandidates: req.body.selectedCandidates,
-        vacancyCount: req.body.vacancyCount,
-        startDate: req.body.startDate,
-        endDate: req.body.endDate,
-      },
-    },
-    { returnOriginal: false, useFindAndModify: false }
-  )
-    .then((task) => {
-      console.log("Task modified successfully");
-      res.status(200).json({ message: "Task modified successfully" });
-    })
-    .catch((err) => {
-      console.log("Task could not be modified");
-      res.status(400).json({ message: "Task could not be modified" });
-    });
+    console.log("Inside Edit Task request for Task ID:", req.params.taskId);
+    Task.findOneAndUpdate(
+        {_id: ObjectID(req.params.taskId)},
+        {
+            $set: {
+                title: req.body.title,
+                postedBy: req.body.postedBy,
+                postedOn: req.body.postedOn,
+                description: req.body.description,
+                image: req.body.image,
+                status: req.body.status,
+                salary: req.body.salary,
+                category: req.body.category,
+                appliedCandidates: req.body.appliedCandidates,
+                selectedCandidates: req.body.selectedCandidates,
+                vacancyCount: req.body.vacancyCount,
+                startDate: req.body.startDate,
+                endDate: req.body.endDate
+            }
+        },
+        {returnOriginal: false, useFindAndModify: false}
+    )
+        .then(task => {
+            console.log("Task modified successfully")
+            res.status(200).json({message: "Task modified successfully"})
+        })
+        .catch(err => {
+            console.log("Task could not be modified")
+            res.status(400).json({message: "Task could not be modified"})
+        })
 });
 
 // @route   GET api/tasks?email&&status
@@ -311,7 +311,7 @@ router.put("/:taskId/select", (req, res) => {
             Task.findOneAndUpdate(
               { _id: ObjectID(req.params.taskId) },
               {
-                $push: {
+                $set: {
                   selectedCandidates: req.body.selectedCandidates,
                 },
               },

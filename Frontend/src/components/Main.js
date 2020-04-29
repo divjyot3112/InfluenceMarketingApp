@@ -13,12 +13,11 @@ import UserProfile from "./UserProfile/userProfile";
 import Dashboard from "./Dashboard/Dashboard";
 // Task
 import PostTask from "./Task/postTask";
-import TaskDescription from "./Task/TaskDescription";
+import TaskDescription from "./Task/TaskDesc";
 // Inbox
 import Messenger from "./Inbox/Messenger";
 // Ratings
 import Rating from "./Rating/rating";
-// Home
 import Landing from "./LandingPage/LandingPage";
 import Home from "./Home/home";
 import About from "./About/About";
