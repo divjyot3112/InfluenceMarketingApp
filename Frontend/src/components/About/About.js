@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import "./About.css";
+import "../../css/about.css";
 import WOW from "wow.js";
 
 class About extends Component {

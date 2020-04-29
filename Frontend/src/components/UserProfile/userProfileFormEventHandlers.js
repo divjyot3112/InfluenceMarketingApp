@@ -1,6 +1,7 @@
 import {Component} from "react";
 import Joi from "joi-browser";
 import {storage} from "../../utils/firebase";
+import {getEmailFromLocalStorage} from "../Common/auth";
 
 class UserProfileFormEventHandlers extends Component {
     state = {
@@ -166,8 +167,7 @@ class UserProfileFormEventHandlers extends Component {
         if (image) {
             this.setState({image: image});
 
-            // TODO: get email from local storage
-            const email = "sheena@gmail.com";
+            const email = getEmailFromLocalStorage();
             const fileName = email + "_" + image.name;
 
             const uploadTask = storage.ref("users/" + fileName).put(image);

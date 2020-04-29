@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import "./SponsorHome.css";
+import "../../css/sponsorHome.css";
 import WOW from "wow.js";
 
 class SponsorHome extends Component {

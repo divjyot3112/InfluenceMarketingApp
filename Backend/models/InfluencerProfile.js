@@ -23,7 +23,7 @@ var InfluencerProfileSchema = new Schema({
     lastName: String,
   },
   tasksCompleted: [String], // Task id Array
-  dateOfBirth: { type: Date, default: Date.now },
+  dateOfBirth: Date,
   address: String,
 });
 
