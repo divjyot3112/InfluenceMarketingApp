@@ -25,6 +25,8 @@ import {searchTasks, sortTasks} from "../../actions/searchActions";
 import NoData from "../Dashboard/NoData";
 import Pagination from "../Common/pagination";
 import {paginate} from "../Common/paginate";
+import {Redirect} from "react-router";
+import {getEmailFromLocalStorage} from "../Common/auth";
 
 const useStyles = (theme) => ({
     cardGrid: {
@@ -178,10 +180,15 @@ class SearchTasks extends Component {
     }
 
     render() {
+        let redirectVar = null;
+        if (!getEmailFromLocalStorage()) {
+            redirectVar = <Redirect to="/"/>;
+        }
+
         const {classes} = this.props
         return (
             <React.Fragment>
-
+                {redirectVar}
                 <CssBaseline/>
                 <div className="filter">
                     <div style={{float: "left"}}>

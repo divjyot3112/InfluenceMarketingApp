@@ -43,8 +43,6 @@ class SponsorRating extends Component {
     };
 
     render() {
-        // TODO: if user is not logged in, redirect to home
-
         const {ratings} = this.props;
         const data = Object.keys(ratings)
 

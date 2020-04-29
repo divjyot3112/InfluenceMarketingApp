@@ -42,11 +42,8 @@ class InfluencerRating extends Component {
     };
 
     render() {
-        // TODO: if user is not logged in, redirect to home
 
         const {ratings, averageRating} = this.props;
-        console.log("****")
-        console.log(ratings)
         const data = Object.keys(ratings)
 
         const paginatedData = paginate(
