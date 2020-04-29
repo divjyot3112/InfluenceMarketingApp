@@ -17,14 +17,6 @@
     margin-top: 2%;
 }
 
-.form_body_center {
-    border: 1px solid #d3d8de;
-    padding: 2% 2% 2% 2%;
-    width: 50%;
-    align-self: center;
-    /* float: left; */
-}
-
 .form_body_left {
     border: 1px solid #d3d8de;
     padding: 2% 2% 0.5% 2%;
