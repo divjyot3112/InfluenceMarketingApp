@@ -3,18 +3,24 @@ import React, {Component} from "react";
 import {slide as Menu} from "react-burger-menu";
 // CSS
 import "../../css/sidebar.css";
-import {getRoleFromLocalStorage} from "../Common/auth";
+import {getEmailFromLocalStorage, getRoleFromLocalStorage} from "../Common/auth";
+import {Redirect} from "react-router";
 
 const UserRoles = require("../../utils/Constants").UserRoles;
 
 export class Sidebar extends Component {
 
     render() {
-        const role = getRoleFromLocalStorage()
+        const role = getRoleFromLocalStorage();
+        let redirectVar = null;
+        if (!getEmailFromLocalStorage()) {
+            redirectVar = <Redirect to="/"/>;
+        }
 
         if (role === UserRoles.INFLUENCER) {
             return (
                 <div>
+                    {redirectVar}
                     <Menu>
                         <a className="menu-item" href="/">
                             Home
@@ -42,6 +48,7 @@ export class Sidebar extends Component {
             // user is sponsor
             return (
                 <div>
+                    {redirectVar}
                     <Menu>
                         <a className="menu-item" href="/">
                             Home

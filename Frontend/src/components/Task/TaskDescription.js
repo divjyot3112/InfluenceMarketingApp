@@ -11,8 +11,6 @@ import "../../css/taskDescription.css"
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {getTask} from "../../actions/taskActions";
-import {Redirect} from "react-router";
-import {getEmailFromLocalStorage} from "../Common/auth";
 
 export class TaskDescription extends Component {
     state = {
@@ -41,11 +39,6 @@ export class TaskDescription extends Component {
     }
 
     render() {
-        let redirectVar = null;
-        if (!getEmailFromLocalStorage()) {
-            redirectVar = <Redirect to="/"/>;
-        }
-
         const {task} = this.props;
         const t = ((task || {}).task || {})
         let selected = false;
@@ -71,7 +64,6 @@ export class TaskDescription extends Component {
         console.log(t)
         return (
             <div>
-                {redirectVar}
                 <div className="wrapper">
                     <div className="nested">
                         <div className="imgdiv">
