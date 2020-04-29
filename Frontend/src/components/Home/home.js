@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
-import SponsorAnalytics from './SponsorAnalytics'
-import InfluencerAnalytics from './InfluencerAnalytics'
+import SponsorHome from './SponsorHome'
 import {UserRoles} from '../../utils/Constants'
 import {getEmailFromLocalStorage, getRoleFromLocalStorage} from "../Common/auth";
 import {Redirect} from "react-router";
 
-class Analytics extends Component {
+class Home extends Component {
     render() {
         let redirectVar = null;
         if (!getEmailFromLocalStorage()) {
@@ -15,10 +14,11 @@ class Analytics extends Component {
         if (redirectVar != null)
             return redirectVar;
 
-        let analytics = (getRoleFromLocalStorage() === UserRoles.INFLUENCER) ?
-            <InfluencerAnalytics></InfluencerAnalytics> : <SponsorAnalytics></SponsorAnalytics>
-        return analytics
+        const role = getRoleFromLocalStorage();
+        let rating = (role === UserRoles.INFLUENCER) ? "" :
+            <SponsorHome></SponsorHome>
+        return rating
     }
 }
 
-export default Analytics;
+export default Home;

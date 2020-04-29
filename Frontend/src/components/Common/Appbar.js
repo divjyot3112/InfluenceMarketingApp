@@ -28,6 +28,7 @@ import {getProfile, deactivateProfile} from "../../actions/userProfileActions";
 import "../../css/appbar.css";
 import {If} from "react-if";
 import Avatar from '@material-ui/core/Avatar';
+import {getEmailFromLocalStorage, getRoleFromLocalStorage} from "../Common/auth";
 
 const UserRoles = require("../../utils/Constants").UserRoles;
 
@@ -44,10 +45,8 @@ export class Appbar extends Component {
     }
 
     componentDidMount() {
-        // TODO: get email from local storage
-        // const email = localStorage.getItem("email");
-        const email = "divjyot@gmail.com";
-        const role = UserRoles.SPONSOR;
+        const email = getEmailFromLocalStorage();
+        const role = getRoleFromLocalStorage();
 
         this.setState({role: role});
         if (email != null) {
@@ -58,8 +57,8 @@ export class Appbar extends Component {
                             ? this.props.profile.data.message.name.firstName
                             : "",
                         address: this.props.profile.data.message.address
-                        ? this.props.profile.data.message.address
-                        : "",
+                            ? this.props.profile.data.message.address
+                            : "",
                         image: this.props.profile.data.message
                             ? this.props.profile.data.message.image
                             : "",
@@ -118,16 +117,13 @@ export class Appbar extends Component {
     handleLogout = () => {
         localStorage.removeItem("email");
         localStorage.removeItem("role");
-        window.location.href = "/home";
-        ;
+        window.location.href = "/";
     };
 
     handleDeactivateAccount = () => {
         const password = prompt("Please enter your password to deactivate your account:");
 
-        // TODO: get email from local storage
-        // const email = localStorage.getItem("email");
-        const email = "divjyot@gmail.com";
+        const email = getEmailFromLocalStorage()
 
         if (password != null) {
             if (password !== "") {
@@ -150,8 +146,6 @@ export class Appbar extends Component {
     }
 
     render() {
-        let username = null;
-
         return (
             <React.Fragment>
                 <div>
@@ -258,7 +252,7 @@ export class Appbar extends Component {
                                 <div className="vertical"></div>
 
                                 <NavItem className="nav-item-box nav-home">
-                                    <NavLink href="/"><p>Home</p></NavLink>
+                                    <NavLink href="/home"><p>Home</p></NavLink>
                                 </NavItem>
                                 <div className="vertical"></div>
 
@@ -294,7 +288,6 @@ export class Appbar extends Component {
 
                         </Collapse>
                     </Navbar>
-                    {/* <Sidebar /> */}
                 </div>
             </React.Fragment>
         )

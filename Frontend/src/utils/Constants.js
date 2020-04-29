@@ -1,6 +1,8 @@
-//TODO: update MY_USER_ID and MY_ROLE to get form localStorage 
-const MY_USER_ID = 'sheena@gmail.com'
-const MY_ROLE = "Sponsor"
+import {getEmailFromLocalStorage, getRoleFromLocalStorage} from "../components/Common/auth";
+
+const MY_USER_ID = getEmailFromLocalStorage();
+const MY_ROLE = getRoleFromLocalStorage();
+
 const UserRoles = {
     SPONSOR: "Sponsor",
     INFLUENCER: "Influencer"

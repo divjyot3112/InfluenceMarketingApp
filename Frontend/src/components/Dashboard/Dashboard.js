@@ -1,12 +1,24 @@
 import React, {Component} from 'react'
 import InfluencerDashboard from './InfluencerDashboard'
 import SponsorDashboard from './SponsorDashboard'
-import { MY_ROLE, UserRoles } from '../../utils/Constants'
+import {UserRoles} from '../../utils/Constants'
+import {getEmailFromLocalStorage, getRoleFromLocalStorage} from "../Common/auth";
+import {Redirect} from "react-router";
+
 class Dashboard extends Component {
     render() {
-      let dashBoard = (MY_ROLE === UserRoles.INFLUENCER )?<InfluencerDashboard></InfluencerDashboard>:<SponsorDashboard></SponsorDashboard>
-      return dashBoard
-  }
+        let redirectVar = null;
+        if (!getEmailFromLocalStorage()) {
+            redirectVar = <Redirect to="/"/>;
+        }
+
+        if (redirectVar != null)
+            return redirectVar;
+
+        let dashBoard = (getRoleFromLocalStorage() === UserRoles.INFLUENCER) ?
+            <InfluencerDashboard></InfluencerDashboard> : <SponsorDashboard></SponsorDashboard>
+        return dashBoard
+    }
 }
 
 export default Dashboard;

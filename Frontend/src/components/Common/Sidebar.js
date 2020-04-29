@@ -1,43 +1,16 @@
 import React, {Component} from "react";
 //UI imports
 import {slide as Menu} from "react-burger-menu";
-// Redux imports
-import {connect} from "react-redux";
-import PropTypes from "prop-types";
-import {getProfile} from "../../actions/userProfileActions";
 // CSS
 import "../../css/sidebar.css";
+import {getRoleFromLocalStorage} from "../Common/auth";
 
 const UserRoles = require("../../utils/Constants").UserRoles;
 
 export class Sidebar extends Component {
-    state = {
-        userExists: false,
-        role: null,
-    };
-
-    componentWillMount() {
-        // TODO: get email from local storage
-        // const email = localStorage.getItem("email");
-        const email = "sheena@gmail.com";
-
-        if (email != null) {
-            this.props.getProfile(email).then((response) => {
-                if (response === undefined && this.props.profile.status === 200) {
-                    this.setState({
-                        firstName: this.props.profile.data.message
-                            ? this.props.profile.data.message.name.firstName
-                            : "",
-                        userExists: true,
-                        role: this.props.profile.data.role,
-                    });
-                }
-            });
-        }
-    }
 
     render() {
-        const role = this.state.userExists ? this.state.role : null;
+        const role = getRoleFromLocalStorage()
 
         if (role === UserRoles.INFLUENCER) {
             return (
@@ -98,15 +71,4 @@ export class Sidebar extends Component {
     }
 }
 
-Sidebar.protoTypes = {
-    getProfile: PropTypes.func.isRequired,
-    profile: PropTypes.object.isRequired,
-};
-
-function mapStateToProps(state) {
-    return {
-        profile: state.userProfile.profile,
-    };
-}
-
-export default connect(mapStateToProps, {getProfile})(Sidebar);
+export default Sidebar;

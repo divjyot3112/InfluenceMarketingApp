@@ -26,7 +26,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import NumberFormat from 'react-number-format';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import Image from 'material-ui-image';
+import {getEmailFromLocalStorage, getRoleFromLocalStorage} from "../Common/auth";
+import {Redirect} from "react-router";
 
+const UserRoles = require("../../utils/Constants").UserRoles;
 const TaskCategories = require("../../utils/Constants").TaskCategories;
 const NoImageFound = require("../../utils/Constants").NoImageFound;
 
@@ -115,8 +118,7 @@ class PostTask extends PostTaskFormEventHandlers {
     onSubmit = (e) => {
         e.preventDefault();
 
-        // TODO: Get username from local storage
-        const postedBy = "sheena@gmail.com";
+        const postedBy = getEmailFromLocalStorage();
 
         const data = {
             postedBy: postedBy,
@@ -151,12 +153,17 @@ class PostTask extends PostTaskFormEventHandlers {
     }
 
     render() {
-        // TODO: if user is not logged in, redirect to home
+        let redirectVar = null;
+        if (!getEmailFromLocalStorage()) {
+            redirectVar = <Redirect to="/"/>;
+        }
+
         const {classes} = this.props;
 
-        if (false) { // TODO: check if user is not sponsor (role comes from local storage)
+        if (getRoleFromLocalStorage() != UserRoles.SPONSOR) {
             return (
                 <React.Fragment>
+                    {redirectVar}
                     <div className="main-post-task">
                         <p className="task-not-found">Access Denied</p>
                     </div>
@@ -165,6 +172,7 @@ class PostTask extends PostTaskFormEventHandlers {
         } else {
             return (
                 <React.Fragment>
+                    {redirectVar}
                     <div className="main-post-task">
                         <form className={classes.root}>
                             <div className="form_body_bottom">

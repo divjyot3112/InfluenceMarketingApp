@@ -35,7 +35,9 @@ import 'react-google-places-autocomplete/dist/index.min.css';
 import NumberFormat from "react-number-format";
 import PeopleIcon from '@material-ui/icons/People';
 import ExampleComponent from "react-rounded-image";
-import UploadImageIcon from '../../images/uploadImageIcon.png'
+import UploadImageIcon from '../../images/uploadImageIcon.png';
+import {getEmailFromLocalStorage} from "../Common/auth";
+import {Redirect} from "react-router";
 
 const userRoles = require("../../utils/Constants").UserRoles;
 const TaskCategories = require("../../utils/Constants").TaskCategories;
@@ -160,8 +162,7 @@ class UserProfile extends UserProfileFormEventHandlers {
         if (this.props.location.state)
             this.setState({isCurrentUser: false})
 
-        // TODO: Get username from local storage
-        const username = this.props.location.state ? this.props.location.state.email : "divjyot@gmail.com";
+        const username = this.props.location.state ? this.props.location.state.email : getEmailFromLocalStorage();
 
         this.props.getProfile(username).then((response) => {
             if (response === undefined && this.props.profile.status === 200) {
@@ -200,8 +201,7 @@ class UserProfile extends UserProfileFormEventHandlers {
 
     handleProfile = (e) => {
         e.preventDefault();
-        // TODO: Get username from local storage
-        const email = "divjyot@gmail.com";
+        const email = getEmailFromLocalStorage();
 
         const data = {
             name: {
@@ -241,12 +241,17 @@ class UserProfile extends UserProfileFormEventHandlers {
     }
 
     render() {
-        // TODO: if user is not logged in, redirect to home
+        let redirectVar = null;
+        if (!getEmailFromLocalStorage()) {
+            redirectVar = <Redirect to="/"/>;
+        }
+
         const {classes} = this.props;
 
         if (!this.state.exists) {
             return (
                 <React.Fragment>
+                    {redirectVar}
                     <div className="profile-main">
                         <If condition={this.state.loading}>
                             <Then>
@@ -265,6 +270,7 @@ class UserProfile extends UserProfileFormEventHandlers {
         } else {
             return (
                 <React.Fragment>
+                    {redirectVar}
                     <div className="profile-main">
                         <div className="main-background">
                             <div className="photo-main">
