@@ -157,7 +157,7 @@ class UserProfile extends UserProfileFormEventHandlers {
 
 
     componentDidMount() {
-        if (this.props.location.state)
+        if (this.props.location.state && this.props.location.state.email != getEmailFromLocalStorage())
             this.setState({isCurrentUser: false})
 
         const username = this.props.location.state ? this.props.location.state.email : getEmailFromLocalStorage();
@@ -423,7 +423,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                     </div>
 
                                     <div className="profile_information_right">
-                                        <FormControl className="classes.formControl input-field" required>
+                                        <FormControl className="classes.formControl input-field">
                                             <InputLabel>Contact Number</InputLabel>
                                             <Input
                                                 value={this.state.phone}

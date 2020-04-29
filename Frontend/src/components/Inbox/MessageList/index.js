@@ -7,8 +7,8 @@ import moment from 'moment';
 import { sendMessage , fetchConversations} from "../../../actions/inboxActions";
 import { connect } from "react-redux";
 import './MessageList.css';
-import {MY_USER_ID} from '../../../utils/Constants'
-//const MY_USER_ID = 'user2'; //TODO: add current user email
+//import {MY_USER_ID} from '../../../utils/Constants'
+const MY_USER_ID = localStorage.getItem("email"); //TODO: add current user email
 
 const URL = 'ws://localhost:3030'
 
