@@ -24,9 +24,9 @@ import Container from '@material-ui/core/Container';
 import Pagination from '@material-ui/lab/Pagination';
 import NoData from './NoData'
 import "../../css/dashboard.css";
-import {MY_USER_ID} from "../../utils/Constants";
+//import {MY_USER_ID} from "../../utils/Constants";
 import {Link} from "react-router-dom";
-
+const MY_USER_ID = localStorage.getItem("email");
 //create the Navbar Component
 
 const useStyles = (theme) => ({

@@ -12,8 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import { fetchAllUsersForInbox } from "../../../actions/inboxActions";
 import { connect } from "react-redux";
 import ConversationListItem from '../ConversationListItem';
-import {MY_USER_ID} from '../../../utils/Constants'
-//const MY_USER_ID = 'user2'; //TODO: add current user email
+//import {MY_USER_ID} from '../../../utils/Constants'
+const MY_USER_ID = localStorage.getItem("email");; //TODO: add current user email
 
 const styles = (theme) => ({
     root: {
