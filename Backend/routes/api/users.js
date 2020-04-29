@@ -1,3 +1,4 @@
+
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
@@ -513,83 +514,213 @@ router.patch("/profile/deactivate", (req, res) => {
     }
 );
 
-//arman
+// //arman
+//   // @route   GET api/profile/firstName&&LastName
+//   // @desc    Search user profiles by name
+//   // @access  Public
+//   router.get("/searchProfile", (req, res) => {
+//     console.log("Inside search profile by name API" + req.query.firstName + req.query.lastName);
+
+//     //   const name = {
+//     //     firstName: req.params.firstName,
+//     //     lastName: req.params.lastName,
+//     //   };
+
+//     // function find influencer profile
+//     // if not find sponsor profile
+//     // return profiles
+//     let ratingsMap = {}
+//     InfluencerProfile.find({
+//       $or: [
+//         { "name.firstName": { $regex: new RegExp(req.query.firstName, "i") } },
+//         { "name.lastName": { $regex: new RegExp(req.query.lastName, "i") } },
+//       ],
+//     })
+//       .then((profiles) => {
+//         if (profiles.length > 0) {
+//           console.log(
+//             "Profiles searched successfully for name " +
+//               "First name: " +
+//               req.query.firstName +
+//               " and Last name" +
+//               req.query.lastName +
+//               "Getting Ratings:"
+//           );
+          
+//           profiles.map((profile, profileIndex) => (
+//             Rating.find({
+//                 influencer: profile.email
+//             })
+//             .sort({ratedOn: -1})
+//             .then(r => {
+//                 if (r.length != 0) {
+//                     console.log("Ratings fetched successfully for influencer: " + profile.email);
+//                     // console.log(r[0])
+//                     const email = profile.email
+//                     console.log(profile.email)
+//                     let avgRating = 0
+//                     r.map(x => {
+//                         avgRating += x.rating/r.length
+//                     })
+//                     console.log(avgRating)
+//                     ratingsMap[email] = JSON.stringify(avgRating)
+//                     console.log(ratingsMap)
+
+//                 } else {
+//                     console.log("No Ratings found for influencer: " + profile.email);
+//                     ratingsMap[profile.email] = null
+//                     // res.status(404).json({message: "No Ratings found"});
+//                 }
+//                 if(profileIndex===profiles.length-1) {
+//                     // console.log("Ratings Map" + ratingsMap)
+//                     res.status(200).json({message: profiles, ratings: ratingsMap})
+//                 }
+//             })
+//             .catch(err => {console.log(err)})
+//           ))
+//         } else {
+//           console.log("No  Profiles found");
+//           res
+//             .status(404)
+//             .json({ message: "No Profile with matching name found" });
+//         }
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//         res
+//           .status(500)
+//           .json({ message: "Profile could not be fetched. Error: " + err });
+//       });
+//   });
+
+
+  //arman
+// @route   POST api/users/signup
+// @desc    Sign Up a new user
+// @access  Public
+router.post("/signup", (req, res) => {
+  console.log("Inside signup post request", req.body);
+
+  //check for already existing user
+  User.findOne({ email: req.body.email })
+    .then((user) => {
+      if (user) {
+        console.log("Found user but User already exists!!");
+        res.status(400).json({ msg: "User already exists!" });
+      }
+
+      // Otherwise create new user
+
+      console.log("Creating new user");
+      const newUser = new User({
+        email: req.body.email,
+        password: req.body.password,
+        role: req.body.role,
+        isActive: true,
+      });
+      //save the user details
+      newUser
+        .save()
+        .then((user) => {
+          let newProfile;
+
+          //check role to create appropriate profile
+          if (req.body.role == userRoles.INFLUENCER) {
+            newProfile = new InfluencerProfile({
+              name: req.body.name,
+              image: req.body.image,
+              phone: req.body.phone,
+              email: req.body.email,
+            });
+          } else {
+            newProfile = new SponsorProfile({
+              name: req.body.name,
+              image: req.body.image,
+              phone: req.body.phone,
+              email: req.body.email,
+            });
+          }
+          //save profile details
+          newProfile
+            .save()
+            .then((profile) => {
+              console.log("User created", profile);
+              console.log(user);
+              res.status(200).json({ message: { profile, user } });
+            })
+            .catch((err) => {
+              res.status(400).json({
+                message: "Something went wrong while creating user profile",
+              });
+            });
+        })
+        .catch((err) => {
+          res
+            .status(400)
+            .json({ msg: "Something went wrong while creating user" });
+        });
+    })
+    .catch((err) => {
+      console.log("Checking Database failed. Something wrong with server");
+      res.status(500).json({ error: err });
+    });
+
+  //arman
   // @route   GET api/profile/firstName&&LastName
   // @desc    Search user profiles by name
   // @access  Public
-  router.get("/searchProfile", (req, res) => {
-    console.log("Inside search profile by name API" + req.query.firstName + req.query.lastName);
+  // /influencers/search
+  //check email not equal to current email
+  router.get("/profile", (req, res) => {
+    console.log("Inside search profile by name API");
 
-    //   const name = {
-    //     firstName: req.params.firstName,
-    //     lastName: req.params.lastName,
-    //   };
+    let conditions;
 
-    // function find influencer profile
-    // if not find sponsor profile
-    // return profiles
-    let ratingsMap = {}
-    InfluencerProfile.find({
-      $or: [
-        { "name.firstName": { $regex: new RegExp(req.query.firstName, "i") } },
-        { "name.lastName": { $regex: new RegExp(req.query.lastName, "i") } },
-      ],
-    })
-      .then((profiles) => {
-        if (profiles.length > 0) {
+    if (req.query.firstName && req.query.lastName == null) {
+      conditions = {
+        // match firstname
+        "name.firstName": { $regex: new RegExp(req.query.firstName, "i") },
+      };
+    } else if (req.query.lastName && req.query.firstName == null) {
+      //match lastname
+
+      conditions = {
+        "name.lastName": { $regex: new RegExp(req.query.lastName, "i") },
+      };
+    } else {
+      //match entire name
+      conditions = {
+        $and: [
+          {
+            "name.firstName": { $regex: new RegExp(req.query.firstName, "i") },
+          },
+          { "name.lastName": { $regex: new RegExp(req.query.lastName, "i") } },
+        ],
+      };
+    }
+
+    InfluencerProfile.find(conditions)
+      .then((influencerprofiles) => {
+        if (influencerprofiles.length > 0) {
           console.log(
             "Profiles searched successfully for name " +
               "First name: " +
               req.query.firstName +
               " and Last name" +
-              req.query.lastName +
-              "Getting Ratings:"
+              req.query.lastName
           );
-          
-          profiles.map((profile, profileIndex) => (
-            Rating.find({
-                influencer: profile.email
-            })
-            .sort({ratedOn: -1})
-            .then(r => {
-                if (r.length != 0) {
-                    console.log("Ratings fetched successfully for influencer: " + profile.email);
-                    // console.log(r[0])
-                    const email = profile.email
-                    console.log(profile.email)
-                    let avgRating = 0
-                    r.map(x => {
-                        avgRating += x.rating/r.length
-                    })
-                    console.log(avgRating)
-                    ratingsMap[email] = JSON.stringify(avgRating)
-                    console.log(ratingsMap)
 
-                } else {
-                    console.log("No Ratings found for influencer: " + profile.email);
-                    ratingsMap[profile.email] = null
-                    // res.status(404).json({message: "No Ratings found"});
-                }
-                if(profileIndex===profiles.length-1) {
-                    // console.log("Ratings Map" + ratingsMap)
-                    res.status(200).json({message: profiles, ratings: ratingsMap})
-                }
-            })
-            .catch(err => {console.log(err)})
-          ))
-        } else {
-          console.log("No  Profiles found");
-          res
-            .status(404)
-            .json({ message: "No Profile with matching name found" });
+          res.status(200).json(influencerprofiles);
         }
       })
       .catch((err) => {
         console.log(err);
         res
           .status(500)
-          .json({ message: "Profile could not be fetched. Error: " + err });
+          .json({ message: "Influencer could not be fetched. Error: " + err });
       });
   });
+});
+
 
 module.exports = router;

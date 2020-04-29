@@ -92,7 +92,7 @@ export class Appbar extends Component {
 
     onSearch = (e) => {
         if (this.state.searchString.length > 0) {
-            console.log(this.state.searchString)
+            // console.log(this.state.searchString)
             this.state.search ? (
                 this.props.history.push({
                     pathname: "/search/people",
