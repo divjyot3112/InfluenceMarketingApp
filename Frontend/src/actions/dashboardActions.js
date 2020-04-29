@@ -29,6 +29,7 @@ export const fetchDashboardTasks = (email, status,nextFun) => dispatch => {
 
 //for pagination
 export const getCurrentPageTasks = (pageNum, allTasks) => dispatch => {
+    if((pageNum - 1) * 9 >= allTasks.length && pageNum!==1) pageNum = pageNum-1
     dispatch({
         type: DASHBOARD_CURRENT_PAGE_TASKS,
         payload: allTasks.slice((pageNum - 1) * 9, pageNum * 9)
@@ -85,7 +86,7 @@ export const addRating = (data, email) => dispatch => {
 
 export const cancelTask = (taskId, nextFun) => dispatch => {
     axios.defaults.withCredentials = true;
-    axios.put(`${ROOT_URL}/tasks/delete`, {params:{taskId:taskId}})
+    axios.put(`${ROOT_URL}/tasks/delete/${taskId}`)
         .then((response) => { //Action dispatched
             console.log("Response", response);
             dispatch({
