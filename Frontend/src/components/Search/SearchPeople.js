@@ -231,7 +231,7 @@ class SearchPeople extends Component {
                     <br/>
                     <div className="general-pagination">
                         <Pagination
-                            itemsCount={this.props.tasks ? this.props.tasks.length : ""}
+                            itemsCount={this.props.people ? this.props.people.length : ""}
                             pageSize={this.state.pageSize}
                             onPageChange={this.handlePageChange}
                             currentPage={this.state.currentPage}
