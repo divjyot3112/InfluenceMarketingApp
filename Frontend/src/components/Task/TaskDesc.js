@@ -261,6 +261,7 @@ class PostTask extends PostTaskFormEventHandlers {
     render() {
         const {classes} = this.props;
         let renderSelectedCandidates = []
+
         if (this.state.selectedCandidates && this.state.viewSelected) {
             this.state.selectedCandidates.map(candidate => (
                 renderSelectedCandidates.push(
@@ -280,334 +281,325 @@ class PostTask extends PostTaskFormEventHandlers {
         } else if (this.state.viewSelected) {
             renderSelectedCandidates = "No Candidates Selected"
         }
-        if (getRoleFromLocalStorage() != UserRoles.SPONSOR) {
-            return (
-                <React.Fragment>
-                    <div className="main-post-task">
-                        <p className="task-not-found">Access Denied</p>
-                    </div>
-                </React.Fragment>
-            );
-        } else {
-            return (
-                <React.Fragment>
-                    <div className="main-post-task">
-                        <form className={classes.root}>
-                            <div className="form_body_bottom">
-                                <div style={{marginBottom: "2%"}}><b>
-                                    Task Posted By:
-                                    <Link
-                                        to={{
-                                            pathname: "/profile",
-                                            state: {
-                                                email: this.state.postedBy
-                                            }
-                                        }}
-                                        style={{textDecoration: 'none'}}
-                                    >
-                                        {" " + this.state.postedBy}
-                                    </Link>
-                                </b></div>
-                                <div className="input-group mb-3">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                                    </div>
-                                    <div className="custom-file">
-                                        <input
-                                            disabled={!this.state.editMode}
-                                            type="file"
-                                            className="custom-file-input"
-                                            id="image"
-                                            name="image"
-                                            multiple={false}
-                                            onChange={this.handleUpload}
-                                            aria-describedby="inputGroupFileAddon01"/>
-                                        <label className="custom-file-label" htmlFor="inputGroupFile01">Choose
-                                            File</label>
-                                    </div>
-                                </div>
-
-                                <Image
-                                    src={this.state.url}
-                                    aspectRatio={(16 / 9)}
-                                    disableSpinner
-                                />
-                            </div>
-
-                            <div className="form-body">
-                                <div className="form_body_left">
-                                    <TextField
-                                        error
-                                        disabled={!this.state.editMode}
-                                        className="input-field"
-                                        onChange={this.handleTitle}
-                                        name="title"
-                                        value={this.state.title}
-                                        autoFocus={true}
-                                        required
-                                        error={this.state.errors.title}
-                                        helperText={this.state.errors.title}
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <ViewHeadlineIcon/>
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        label="Title"/>
-                                    <br/>
-                                    <br/>
-
-                                    <TextField
-                                        error
-                                        disabled={!this.state.editMode}
-                                        className="input-field"
-                                        onChange={this.handleDescription}
-                                        name="description"
-                                        value={this.state.description}
-                                        required
-                                        error={this.state.errors.description}
-                                        helperText={this.state.errors.description}
-                                        multiline
-                                        rows={5}
-                                        variant="outlined"
-                                        label="Description"/>
-                                    <br/>
-                                    <br/>
-
-                                    <TextField
-                                        error
-                                        disabled={!this.state.editMode}
-                                        label="Salary"
-                                        className="input-field"
-                                        onChange={this.handleSalary}
-                                        value={this.state.salary}
-                                        required
-                                        error={this.state.errors.salary}
-                                        helperText={this.state.errors.salary}
-                                        name="salary"
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <CreditCardIcon/>
-                                                </InputAdornment>
-                                            ),
-                                            inputComponent: NumberFormatCustom,
-                                        }}
-                                    />
-                                    <br/>
-                                    <br/>
-                                </div>
-
-                                <div className="form_body_right">
-
-                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                        <Grid container justify="space-around">
-                                            <DatePicker
-                                                disabled={!this.state.editMode}
-                                                variant="inline"
-                                                className="input-date"
-                                                label="Start Date"
-                                                format="dd MMMM yyyy"
-                                                value={new Date(this.state.startDate)}
-                                                onChange={this.handleStartDate}
-                                                name="startDate"
-                                                error={this.state.errors.startDate}
-                                                helperText={this.state.errors.startDate}
-                                            />
-                                        </Grid>
-                                    </MuiPickersUtilsProvider>
-                                    <br/>
-
-                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                        <Grid container justify="space-around">
-                                            <DatePicker
-                                                disabled={!this.state.editMode}
-                                                variant="inline"
-                                                className="input-date"
-                                                label="End Date"
-                                                format="dd MMMM yyyy"
-                                                value={new Date(this.state.endDate)}
-                                                onChange={this.handleEndDate}
-                                                name="endDate"
-                                                error={this.state.errors.endDate}
-                                                helperText={this.state.errors.endDate}
-                                            />
-                                        </Grid>
-                                    </MuiPickersUtilsProvider>
-                                    <br/>
-
-                                    <TextField
-                                        required
-                                        disabled={!this.state.editMode}
-                                        type="number"
-                                        label="Vacancy Count"
-                                        className="input-field"
-                                        onChange={this.handleVacancyCount}
-                                        value={this.state.vacancyCount}
-                                        error={this.state.errors.vacancyCount}
-                                        helperText={this.state.errors.vacancyCount}
-                                        name="vacancyCount"
-                                        inputProps={{min: "1", max: "5", step: "1"}}/>
-                                    <br/>
-                                    <br/>
-
-                                    <FormControl className="classes.formControl input-field" required>
-                                        <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            disabled={!this.state.editMode}
-                                            id="demo-simple-select"
-                                            value={this.state.category}
-                                            onChange={this.handleCategory}
-                                            onClick={this.handleCategory}
-                                            name="category"
-                                            error={this.state.errors.category}
-                                            required
-                                        >
-                                            {TaskCategories.map(value => (
-                                                <MenuItem value={value}>{value}</MenuItem>
-                                            ))}
-                                        </Select>
-                                        <FormHelperText><span
-                                            className="error"> {this.state.errors.category}</span></FormHelperText>
-                                    </FormControl>
-                                    <br/>
-                                    <br/>
-                                </div>
-                            </div>
-
-                            <div className="buttons">
-                                <Button
-                                    id="submitButton"
-                                    variant="contained"
-                                    color="primary"
-                                    size="large"
-                                    className="classes.button btn-save"
-                                    disabled={Object.keys(this.state.errors).length !== 0 || this.checkDisable()}
-                                    onClick={this.onSubmit}
-                                    startIcon={<SaveIcon/>}
+        
+        return (
+            <React.Fragment>
+                <div className="main-post-task">
+                    <form className={classes.root}>
+                        <div className="form_body_bottom">
+                            <div style={{marginBottom: "2%"}}><b>
+                                Task Posted By:
+                                <Link
+                                    to={{
+                                        pathname: "/profile",
+                                        state: {
+                                            email: this.state.postedBy
+                                        }
+                                    }}
+                                    style={{textDecoration: 'none'}}
                                 >
-                                    Save
-                                </Button>
+                                    {" " + this.state.postedBy}
+                                </Link>
+                            </b></div>
+                            <div className="input-group mb-3">
+                                <div className="input-group-prepend">
+                                    <span className="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                                </div>
+                                <div className="custom-file">
+                                    <input
+                                        disabled={!this.state.editMode}
+                                        type="file"
+                                        className="custom-file-input"
+                                        id="image"
+                                        name="image"
+                                        multiple={false}
+                                        onChange={this.handleUpload}
+                                        aria-describedby="inputGroupFileAddon01"/>
+                                    <label className="custom-file-label" htmlFor="inputGroupFile01">Choose
+                                        File</label>
+                                </div>
+                            </div>
 
+                            <Image
+                                src={this.state.url}
+                                aspectRatio={(16 / 9)}
+                                disableSpinner
+                            />
+                        </div>
+
+                        <div className="form-body">
+                            <div className="form_body_left">
+                                <TextField
+                                    error
+                                    disabled={!this.state.editMode}
+                                    className="input-field"
+                                    onChange={this.handleTitle}
+                                    name="title"
+                                    value={this.state.title}
+                                    autoFocus={true}
+                                    required
+                                    error={this.state.errors.title}
+                                    helperText={this.state.errors.title}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <ViewHeadlineIcon/>
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    label="Title"/>
+                                <br/>
+                                <br/>
+
+                                <TextField
+                                    error
+                                    disabled={!this.state.editMode}
+                                    className="input-field"
+                                    onChange={this.handleDescription}
+                                    name="description"
+                                    value={this.state.description}
+                                    required
+                                    error={this.state.errors.description}
+                                    helperText={this.state.errors.description}
+                                    multiline
+                                    rows={5}
+                                    variant="outlined"
+                                    label="Description"/>
+                                <br/>
+                                <br/>
+
+                                <TextField
+                                    error
+                                    disabled={!this.state.editMode}
+                                    label="Salary"
+                                    className="input-field"
+                                    onChange={this.handleSalary}
+                                    value={this.state.salary}
+                                    required
+                                    error={this.state.errors.salary}
+                                    helperText={this.state.errors.salary}
+                                    name="salary"
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <CreditCardIcon/>
+                                            </InputAdornment>
+                                        ),
+                                        inputComponent: NumberFormatCustom,
+                                    }}
+                                />
+                                <br/>
+                                <br/>
+                            </div>
+
+                            <div className="form_body_right">
+
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <Grid container justify="space-around">
+                                        <DatePicker
+                                            disabled={!this.state.editMode}
+                                            variant="inline"
+                                            className="input-date"
+                                            label="Start Date"
+                                            format="dd MMMM yyyy"
+                                            value={new Date(this.state.startDate)}
+                                            onChange={this.handleStartDate}
+                                            name="startDate"
+                                            error={this.state.errors.startDate}
+                                            helperText={this.state.errors.startDate}
+                                        />
+                                    </Grid>
+                                </MuiPickersUtilsProvider>
+                                <br/>
+
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <Grid container justify="space-around">
+                                        <DatePicker
+                                            disabled={!this.state.editMode}
+                                            variant="inline"
+                                            className="input-date"
+                                            label="End Date"
+                                            format="dd MMMM yyyy"
+                                            value={new Date(this.state.endDate)}
+                                            onChange={this.handleEndDate}
+                                            name="endDate"
+                                            error={this.state.errors.endDate}
+                                            helperText={this.state.errors.endDate}
+                                        />
+                                    </Grid>
+                                </MuiPickersUtilsProvider>
+                                <br/>
+
+                                <TextField
+                                    required
+                                    disabled={!this.state.editMode}
+                                    type="number"
+                                    label="Vacancy Count"
+                                    className="input-field"
+                                    onChange={this.handleVacancyCount}
+                                    value={this.state.vacancyCount}
+                                    error={this.state.errors.vacancyCount}
+                                    helperText={this.state.errors.vacancyCount}
+                                    name="vacancyCount"
+                                    inputProps={{min: "1", max: "5", step: "1"}}/>
+                                <br/>
+                                <br/>
+
+                                <FormControl className="classes.formControl input-field" required>
+                                    <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        disabled={!this.state.editMode}
+                                        id="demo-simple-select"
+                                        value={this.state.category}
+                                        onChange={this.handleCategory}
+                                        onClick={this.handleCategory}
+                                        name="category"
+                                        error={this.state.errors.category}
+                                        required
+                                    >
+                                        {TaskCategories.map(value => (
+                                            <MenuItem value={value}>{value}</MenuItem>
+                                        ))}
+                                    </Select>
+                                    <FormHelperText><span
+                                        className="error"> {this.state.errors.category}</span></FormHelperText>
+                                </FormControl>
+                                <br/>
+                                <br/>
+                            </div>
+                        </div>
+
+                        <div className="buttons">
+                            <Button
+                                id="submitButton"
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                className="classes.button btn-save"
+                                disabled={Object.keys(this.state.errors).length !== 0 || this.checkDisable()}
+                                onClick={this.onSubmit}
+                                startIcon={<SaveIcon/>}
+                            >
+                                Save
+                            </Button>
+
+                            <Button
+                                disabled={this.state.postedBy !== localStorage.getItem("email")}
+                                variant="contained"
+                                color="secondary"
+                                size="large"
+                                className="classes.button btn-cancel"
+                                onClick={this.state.editMode ? this.onCancel : this.onEditClick}
+                                startIcon={this.state.editMode ? <CloseIcon/> : <EditIcon/>}
+                            >
+                                {this.state.editMode ? "Cancel" : "Edit Task"}
+                            </Button>
+                            <Tooltip title="Task cannot be deleted after candidates are selected">
                                 <Button
-                                    disabled={this.state.postedBy !== localStorage.getItem("email")}
+                                    disabled={this.state.status !== TaskStatus.CREATED &&
+                                    this.state.postedBy !== localStorage.getItem("email")}
                                     variant="contained"
                                     color="secondary"
                                     size="large"
                                     className="classes.button btn-cancel"
-                                    onClick={this.state.editMode ? this.onCancel : this.onEditClick}
-                                    startIcon={this.state.editMode ? <CloseIcon/> : <EditIcon/>}
+                                    onClick={this.toggle} // todo
+                                    startIcon={<DeleteIcon/>}
                                 >
-                                    {this.state.editMode ? "Cancel" : "Edit Task"}
+                                    Delete Task
                                 </Button>
-                                <Tooltip title="Task cannot be deleted after candidates are selected">
+                            </Tooltip>
+                            <Dialog
+                                open={this.state.open}
+                                onClose={this.toggle}
+                                aria-labelledby="simple-modal-title"
+                                aria-describedby="simple-modal-description"
+                            >
+                                <DialogTitle id="alert-dialog-title">
+                                    Are you sure you want to delete this task?
+                                </DialogTitle>
+                                <DialogActions>
                                     <Button
-                                        disabled={this.state.status !== TaskStatus.CREATED &&
-                                        this.state.postedBy !== localStorage.getItem("email")}
                                         variant="contained"
                                         color="secondary"
                                         size="large"
                                         className="classes.button btn-cancel"
-                                        onClick={this.toggle} // todo
-                                        startIcon={<DeleteIcon/>}
+                                        // onClick={this.onDelete} // todo
+                                        startIcon={<DoneIcon/>}
                                     >
-                                        Delete Task
+                                        Yes
                                     </Button>
-                                </Tooltip>
-                                <Dialog
-                                    open={this.state.open}
-                                    onClose={this.toggle}
-                                    aria-labelledby="simple-modal-title"
-                                    aria-describedby="simple-modal-description"
-                                >
-                                    <DialogTitle id="alert-dialog-title">
-                                        Are you sure you want to delete this task?
-                                    </DialogTitle>
-                                    <DialogActions>
-                                        <Button
-                                            variant="contained"
-                                            color="secondary"
-                                            size="large"
-                                            className="classes.button btn-cancel"
-                                            // onClick={this.onDelete} // todo
-                                            startIcon={<DoneIcon/>}
-                                        >
-                                            Yes
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            size="large"
-                                            className="classes.button btn-cancel"
-                                            onClick={this.toggle}
-                                            startIcon={<CloseIcon/>}
-                                        >
-                                            No
-                                        </Button>
-                                    </DialogActions>
-                                </Dialog>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        size="large"
+                                        className="classes.button btn-cancel"
+                                        onClick={this.toggle}
+                                        startIcon={<CloseIcon/>}
+                                    >
+                                        No
+                                    </Button>
+                                </DialogActions>
+                            </Dialog>
+                        </div>
+                        <hr/>
+                        <div className="form-body" style={{marginBottom: "5%"}}>
+                            <div
+                                className="form_body_left"
+                                style={{
+                                    paddingBottom: "2%",
+                                    display: this.state.postedBy === localStorage.getItem('email')
+                                    && this.state.status === TaskStatus.CREATED ? "block" : "none"
+                                }}
+                            >
+                                {/*To display this if task status is created + sponsor=postedby*/}
+                                <h4>Select Candidates for the task</h4>
+                                <FormControl className="classes.formControl input-field">
+                                    <InputLabel id="demo-mutiple-name-label">Select</InputLabel>
+                                    <Select
+                                        disabled={!this.state.appliedCandidates}
+                                        labelId="demo-mutiple-name-label"
+                                        id="demo-mutiple-name"
+                                        multiple
+                                        value={this.state.selected}
+                                        onChange={this.handleSelect}
+                                        input={<Input/>}
+                                        MenuProps={MenuProps}
+                                    >
+                                        {this.state.appliedCandidates ? this.state.appliedCandidates.map((email) => (
+                                            <MenuItem key={email} value={email}>
+                                                {email}
+                                            </MenuItem>
+                                        )) : ""}
+                                    </Select>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        size="large"
+                                        className="classes.button btn-cancel"
+                                        onClick={this.handleSelectCandidates}
+                                        startIcon={<SelectAllIcon/>}
+                                        style={{marginTop: 10}}
+                                    >
+                                        Confirm Selection
+                                    </Button>
+                                </FormControl>
                             </div>
-                            <hr/>
-                            <div className="form-body" style={{marginBottom: "5%"}}>
-                                <div
-                                    className="form_body_left"
-                                    style={{
-                                        paddingBottom: "2%",
-                                        display: this.state.postedBy === localStorage.getItem('email')
-                                        && this.state.status === TaskStatus.CREATED ? "block" : "none"
-                                    }}
-                                >
-                                    {/*To display this if task status is created + sponsor=postedby*/}
-                                    <h4>Select Candidates for the task</h4>
-                                    <FormControl className="classes.formControl input-field">
-                                        <InputLabel id="demo-mutiple-name-label">Select</InputLabel>
-                                        <Select
-                                            disabled={!this.state.appliedCandidates}
-                                            labelId="demo-mutiple-name-label"
-                                            id="demo-mutiple-name"
-                                            multiple
-                                            value={this.state.selected}
-                                            onChange={this.handleSelect}
-                                            input={<Input/>}
-                                            MenuProps={MenuProps}
-                                        >
-                                            {this.state.appliedCandidates ? this.state.appliedCandidates.map((email) => (
-                                                <MenuItem key={email} value={email}>
-                                                    {email}
-                                                </MenuItem>
-                                            )) : ""}
-                                        </Select>
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            size="large"
-                                            className="classes.button btn-cancel"
-                                            onClick={this.handleSelectCandidates}
-                                            startIcon={<SelectAllIcon/>}
-                                            style={{marginTop: 10}}
-                                        >
-                                            Confirm Selection
-                                        </Button>
-                                    </FormControl>
-                                </div>
-                                <div
-                                    className="form_body_right"
-                                    style={{
-                                        paddingBottom: "2%",
-                                        display: this.state.viewSelected ? "block" : "none"
-                                    }}
-                                >
-                                    <h4>Selected Candidates</h4>
-                                    {renderSelectedCandidates}
-                                </div>
+                            <div
+                                className="form_body_right"
+                                style={{
+                                    paddingBottom: "2%",
+                                    display: this.state.viewSelected ? "block" : "none"
+                                }}
+                            >
+                                <h4>Selected Candidates</h4>
+                                {renderSelectedCandidates}
                             </div>
-                        </form>
-                    </div>
-                </React.Fragment>
-            )
-        }
+                        </div>
+                    </form>
+                </div>
+            </React.Fragment>
+        )
     }
 }
 
