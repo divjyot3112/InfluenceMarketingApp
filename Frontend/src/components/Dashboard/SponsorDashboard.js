@@ -48,7 +48,7 @@ const useStyles = (theme) => ({
         flexDirection: 'column',
     },
     cardMedia: {
-        paddingTop: '100%', // 16:9
+        paddingTop: '60%', // 16:9
     },
     cardContent: {
         flexGrow: 1
@@ -121,7 +121,7 @@ class SponsorDashboard extends Component {
         console.log(event)
         let status = event.target.value
         this.props.fetchDashboardTasks(MY_USER_ID, event.target.value, () => {
-            this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks);
+            this.props.getCurrentPageTasks(1, this.props.dashboardTasks);
             this.setState({
                 sortBy: 0,
                 status: status
@@ -137,7 +137,6 @@ class SponsorDashboard extends Component {
                 })
             });
         })
-
     }
 
     markComplete = (taskId) => {
@@ -156,7 +155,7 @@ class SponsorDashboard extends Component {
             return _.map(this.props.currentPageTasks, (task) => {
                 let rateButton = (task.status === TaskStatus.COMPLETED) ?
                     <AddRatingModal taskData={task}></AddRatingModal> : null;
-                let deleteButton = (task.status !== TaskStatus.COMPLETED && task.selectedCandidates !== undefined && task.selectedCandidates.length <= 0) ?
+                let deleteButton = (task.status !== TaskStatus.COMPLETED && task.selectedCandidates !== undefined && task.selectedCandidates !== null && task.selectedCandidates.length <= 0) ?
                     <DeleteModal taskData={task} deleteTask={() => this.deleteTask(task._id)}></DeleteModal> : null;
                 let completeButton = (task.status === TaskStatus.INPROGRESS) ? <MarkCompleteModal taskData={task}
                                                                                                   markComplete={() => this.markComplete(task._id)}></MarkCompleteModal> : null;

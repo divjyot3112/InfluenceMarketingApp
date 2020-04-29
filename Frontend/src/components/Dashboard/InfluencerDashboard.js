@@ -111,7 +111,7 @@ class InfluencerDashboard extends Component {
     handleOnStatusChange = (event) => {
         console.log(event)
         this.props.fetchDashboardTasks(MY_USER_ID, event.target.value, () => {
-            this.props.getCurrentPageTasks(this.state.currPage, this.props.dashboardTasks);
+            this.props.getCurrentPageTasks(0, this.props.dashboardTasks);
             this.setState({
                 sortBy: 0
             })

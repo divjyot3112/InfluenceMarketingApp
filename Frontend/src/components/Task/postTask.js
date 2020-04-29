@@ -26,7 +26,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import NumberFormat from 'react-number-format';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import Image from 'material-ui-image';
+import {getEmailFromLocalStorage, getRoleFromLocalStorage} from "../Common/auth";
 
+const UserRoles = require("../../utils/Constants").UserRoles;
 const TaskCategories = require("../../utils/Constants").TaskCategories;
 const NoImageFoundForTask = require("../../utils/Constants").NoImageFoundForTask;
 
@@ -115,8 +117,7 @@ class PostTask extends PostTaskFormEventHandlers {
     onSubmit = (e) => {
         e.preventDefault();
 
-        // TODO: Get username from local storage
-        const postedBy = "sheena@gmail.com";
+        const postedBy = getEmailFromLocalStorage();
 
         const data = {
             postedBy: postedBy,
@@ -151,10 +152,9 @@ class PostTask extends PostTaskFormEventHandlers {
     }
 
     render() {
-        // TODO: if user is not logged in, redirect to home
         const {classes} = this.props;
 
-        if (false) { // TODO: check if user is not sponsor (role comes from local storage)
+        if (getRoleFromLocalStorage() != UserRoles.SPONSOR) {
             return (
                 <React.Fragment>
                     <div className="main-post-task">

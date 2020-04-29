@@ -178,10 +178,10 @@ class SearchTasks extends Component {
     }
 
     render() {
-        const {classes} = this.props
+        const {classes} = this.props;
+
         return (
             <React.Fragment>
-
                 <CssBaseline/>
                 <div className="filter">
                     <div style={{float: "left"}}>

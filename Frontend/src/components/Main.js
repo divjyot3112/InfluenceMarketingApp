@@ -2,9 +2,9 @@ import React, {Component} from "react";
 import {Route} from "react-router-dom";
 // Routes
 // Common
-import Appbar from "./Common/Appbar"
-import Sidebar from "./Common/Sidebar"
-//Search
+import Appbar from "./Common/Appbar";
+import Sidebar from "./Common/Sidebar";
+// Search
 import SearchTasks from "./Search/SearchTasks";
 import SearchPeople from "./Search/SearchPeople";
 // User Profile
@@ -13,15 +13,18 @@ import UserProfile from "./UserProfile/userProfile";
 import Dashboard from "./Dashboard/Dashboard";
 // Task
 import PostTask from "./Task/postTask";
+import TaskDescription from "./Task/TaskDesc";
 // Inbox
 import Messenger from "./Inbox/Messenger";
 // Ratings
 import Rating from "./Rating/rating";
 import TaskDescription from "./Task/TaskDesc";
 import Landing from "./LandingPage/LandingPage";
-import SponsorHome from "./Home/SponsorHome";
+import Home from "./Home/home";
 import About from "./About/About";
-import Analytics from "./analytics/Analytics"
+// Analytics
+import Analytics from "./analytics/Analytics";
+
 class Main extends Component {
     render() {
         return (
@@ -37,11 +40,9 @@ class Main extends Component {
                 <Route path="/inbox" exact component={Messenger}/>
                 <Route path="/ratings" exact component={Rating}/>
                 <Route path="/about" exact component={About}/>
-                <Route path="/home/sponsor" exact component={SponsorHome}/>
-                <Route path="/home" exact component={Landing} />
+                <Route path="/home" exact component={Home}/>
                 <Route path="/analytics" exact component={Analytics}/>
-
-                <Route exact path="/" component={Landing}/>
+                <Route path="/" exact component={Landing}/>
             </div>
         );
     }

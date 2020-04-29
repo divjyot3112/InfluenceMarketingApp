@@ -26,7 +26,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 people: action.payload.message,
-                ratingsMap: action.payload.ratings
+                avgRatings: action.payload.ratings
             };
 
         case SEARCH_PEOPLE_SORTED_AZ:
