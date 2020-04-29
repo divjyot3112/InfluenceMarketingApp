@@ -740,7 +740,7 @@ router.get("/:taskId", (req, res) => {
     .then((task) => {
       if (task) {
         console.log("Task found successfully");
-        res.status(200).json(task);
+        res.status(200).json({message:task});
       } else {
         console.log("Task does not exist ");
         res.status(400).json({ message: "Task does not exists" });

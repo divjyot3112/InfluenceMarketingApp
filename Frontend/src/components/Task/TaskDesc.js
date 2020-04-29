@@ -144,30 +144,50 @@ class PostTask extends PostTaskFormEventHandlers {
     componentDidMount() {
         if(this.props.location.state) {
             this.props.getTask(this.props.location.state)
+                .then(res => {
+                    // if(res) {
+                        const task = this.props.task
+                        console.log("Task " + task)
+                        this.setState({
+                            taskId: task._id,
+                            postedBy: task.postedBy,
+                            title: task.title,
+                            description: task.description,
+                            salary: task.salary,
+                            category: task.category,
+                            startDate: task.startDate,
+                            endDate: task.endDate,
+                            url: task.image,
+                            vacancyCount: task.vacancyCount,
+                            status: task.status,
+                            appliedCandidates: task.appliedCandidates,
+                            selectedCandidates: task.selectedCandidates,
+                            selected: task.selectedCandidates
+                        })
+                        let viewSelected = task.postedBy===localStorage.getItem('email') ? true : false
+                        if(task.selectedCandidates && !viewSelected) {
+                            task.selectedCandidates.forEach(candidate => {
+                                if(candidate===localStorage.getItem('email')){
+                                    viewSelected = true;
+                                }
+                            });
+                        }
+                        this.setState({viewSelected: viewSelected})
+                        // if(viewSelected) {
+                        //     this.props.getSelectedCandidateProfiles(task._id).then(res => {
+                        //         if(res) {
+                        //             const profiles = props.profiles
+                        //             this.setState({
+                        //                 profiles: profiles
+                        //             })
+                        //         }
+                        //     })
+                        // }
+                    // }
+                })
         }
     }
-
-    componentWillReceiveProps(props) {
-        const task = props.task
-        console.log("Task " + task)
-        this.setState({
-            taskId: task._id,
-            postedBy: task.postedBy,
-            title: task.title,
-            description: task.description,
-            salary: task.salary,
-            category: task.category,
-            startDate: task.startDate,
-            endDate: task.endDate,
-            url: task.image,
-            vacancyCount: task.vacancyCount,
-            status: task.status,
-            appliedCandidates: task.appliedCandidates,
-            selectedCandidates: task.selectedCandidates,
-            selected: task.selectedCandidates
-        })
-    }
-
+    
     schema = {
         title: Joi.string()
             .max(30)
@@ -243,16 +263,7 @@ class PostTask extends PostTaskFormEventHandlers {
         console.log(this.state)
         const {classes} = this.props;
         let renderSelectedCandidates = []
-        let viewSelected = this.state.postedBy===localStorage.getItem('email') ? true : false
-        
-        if(this.state.selectedCandidates && !viewSelected) {
-            this.state.selectedCandidates.forEach(candidate => {
-                if(candidate===localStorage.getItem('email')){
-                    viewSelected = true;
-                }
-            });
-        }
-        if(this.state.selectedCandidates && viewSelected) {
+        if(this.state.selectedCandidates && this.state.viewSelected) {
             this.state.selectedCandidates.map(candidate => (
                 renderSelectedCandidates.push(
                     <Link
@@ -268,10 +279,9 @@ class PostTask extends PostTaskFormEventHandlers {
                     </Link>
                 )
             ))
-        } else if(viewSelected) {
+        } else if(this.state.viewSelected) {
             renderSelectedCandidates = "No Candidates Selected"
         }
-        console.log("viewSelected"+viewSelected)
         if (false) { // TODO: check if user is not sponsor (role comes from local storage)
             return (
                 <React.Fragment>
@@ -588,7 +598,7 @@ class PostTask extends PostTaskFormEventHandlers {
                                     className="form_body_right" 
                                     style={{
                                         paddingBottom:"2%",
-                                        display: viewSelected ? "block" : "none"
+                                        display: this.state.viewSelected ? "block" : "none"
                                     }}
                                 >
                                     <h4>Selected Candidates</h4>
