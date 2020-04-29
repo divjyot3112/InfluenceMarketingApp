@@ -133,6 +133,33 @@ class PostTaskFormEventHandlers extends Component {
         window.location.reload();
     }
 
+    onEditClick = (e) => {
+        this.setState({
+            editMode: true
+        })
+    }
+
+    toggle = (e) => {
+        this.setState({
+            open: !this.state.open
+        })
+    }
+
+    handleSelect = (e) => {
+        const options = e.target.value;
+        if(options.length>this.state.vacancyCount) {
+            window.alert("Please mind the vacancy count!")
+        } else {
+            const value = []
+            for (let i = 0, l = options.length; i < l; i += 1) {
+                value.push(options[i]);
+            }
+            this.setState({
+                selected: value
+            })
+        }
+    }
+
     handleUpload = (e) => {
         const image = e.target.files[0];
         if (image) {

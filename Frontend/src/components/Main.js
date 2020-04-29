@@ -17,7 +17,7 @@ import PostTask from "./Task/postTask";
 import Messenger from "./Inbox/Messenger";
 // Ratings
 import Rating from "./Rating/rating";
-import TaskDescription from "./Task/TaskDescription";
+import TaskDescription from "./Task/TaskDesc";
 import Landing from "./LandingPage/LandingPage";
 import SponsorHome from "./Home/SponsorHome";
 import About from "./About/About";

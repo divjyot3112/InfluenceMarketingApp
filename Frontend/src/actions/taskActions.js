@@ -1,5 +1,5 @@
 import axios from "axios";
-import {SAVE_TASK, GET_TASK, ROOT_URL} from "./types";
+import {SAVE_TASK, GET_TASK, EDIT_TASK, ROOT_URL, SELECTED_CANDIDATES} from "./types";
 
 export const saveTask = (data) => async (dispatch) => {
     try {
@@ -11,6 +11,37 @@ export const saveTask = (data) => async (dispatch) => {
     } catch (e) {
         return {
             type: SAVE_TASK,
+            payload: e,
+        };
+    }
+};
+
+export const editTask = (taskId, data) => async (dispatch) => {
+    try {
+        const res = await axios.put(`${ROOT_URL}/tasks/edit/${taskId}`, data);
+        dispatch({
+            type: EDIT_TASK,
+            payload: res.data,
+        });
+    } catch (e) {
+        return {
+            type: EDIT_TASK,
+            payload: e,
+        };
+    }
+};
+
+export const selectCandidates = (taskId, data) => async (dispatch) => {
+    // console.log("Actions " + taskId + data)
+    try {
+        const res = await axios.put(`${ROOT_URL}/tasks/${taskId}/select`, data);
+        dispatch({
+            type: SELECTED_CANDIDATES,
+            payload: res.data,
+        });
+    } catch (e) {
+        return {
+            type: SELECTED_CANDIDATES,
             payload: e,
         };
     }

@@ -111,7 +111,7 @@ router.get('/:taskId/applicants', (req, res) => {
         })
 });
 
-// @route   PUT api/task/edit/:taskId
+// @route   PUT api/tasks/edit/:taskId
 // @desc    Edit a task for given task id
 // @access  Public
 router.put("/edit/:taskId", (req, res) => {
@@ -124,7 +124,7 @@ router.put("/edit/:taskId", (req, res) => {
                 postedBy: req.body.postedBy,
                 postedOn: req.body.postedOn,
                 description: req.body.description,
-                images: req.body.images,
+                image: req.body.image,
                 status: req.body.status,
                 salary: req.body.salary,
                 category: req.body.category,
@@ -268,18 +268,18 @@ router.get("/filter", (req, res) => {
 // @desc    Select a candidate for a task by sponsor
 // @access  Public
 router.put("/:taskId/select", (req, res) => {
-    console.log("Inside select candidate request")
+    console.log("Inside select candidate request " + req.body.selectedCandidates + req.body.email)
     Task.findOne({_id: ObjectID(req.params.taskId)})
         .then(task => {
             // check if task exists
             if (task) {
-                if (task.postedBy === req.query.email) {
+                if (task.postedBy === req.body.email) {
                     // task should be in CREATED state
                     if (task.status == taskStatus.CREATED) {
                         Task.findOneAndUpdate(
                             {_id: ObjectID(req.params.taskId)},
                             {
-                                $push: {
+                                $set: {
                                     selectedCandidates: req.body.selectedCandidates
                                 }
                             },

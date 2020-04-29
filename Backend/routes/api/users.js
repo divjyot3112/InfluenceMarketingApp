@@ -513,19 +513,109 @@ router.patch("/profile/deactivate", (req, res) => {
     }
 );
 
+// //arman
+//   // @route   GET api/users/searcProfile/firstName&&LastName
+//   // @desc    Search user profiles by name
+//   // @access  Public
+//   router.get("/searchProfile", (req, res) => {
+//     console.log("Inside search profile by name API" + req.query.firstName + req.query.lastName);
+//     let ratingsMap = {}
+//     InfluencerProfile.find({
+//       $or: [
+//         { "name.firstName": { $regex: new RegExp(req.query.firstName, "i") } },
+//         { "name.lastName": { $regex: new RegExp(req.query.lastName, "i") } },
+//       ],
+//     })
+//       .then((profiles) => {
+//         if (profiles.length > 0) {
+//           console.log(
+//             "Profiles searched successfully for name " +
+//               "First name: " +
+//               req.query.firstName +
+//               " and Last name" +
+//               req.query.lastName +
+//               "Getting Ratings:"
+//           );
+          
+//           profiles.map((profile, profileIndex) => (
+//             Rating.find({
+//                 influencer: profile.email
+//             })
+//             .sort({ratedOn: -1})
+//             .then(r => {
+//                 if (r.length != 0) {
+//                     console.log("Ratings fetched successfully for influencer: " + profile.email);
+//                     // console.log(r[0])
+//                     const email = profile.email
+//                     console.log(profile.email)
+//                     let avgRating = 0
+//                     r.map(x => {
+//                         avgRating += x.rating/r.length
+//                     })
+//                     console.log(avgRating)
+//                     ratingsMap[email] = JSON.stringify(avgRating)
+//                     console.log(ratingsMap)
+
+//                 } else {
+//                     console.log("No Ratings found for influencer: " + profile.email);
+//                     ratingsMap[profile.email] = null
+//                     // res.status(404).json({message: "No Ratings found"});
+//                 }
+//                 if(profileIndex===profiles.length-1) {
+//                     // console.log("Ratings Map" + ratingsMap)
+//                     res.status(200).json({message: profiles, ratings: ratingsMap})
+//                 }
+//             })
+//             .catch(err => {console.log(err)})
+//           ))
+//         } else {
+//           console.log("No  Profiles found");
+//           res
+//             .status(404)
+//             .json({ message: "No Profile with matching name found" });
+//         }
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//         res
+//           .status(500)
+//           .json({ message: "Profile could not be fetched. Error: " + err });
+//       });
+//   });
+
 //arman
-  // @route   GET api/profile/firstName&&LastName
+  // @route   GET api/users/searcProfile/firstName&&LastName
   // @desc    Search user profiles by name
   // @access  Public
   router.get("/searchProfile", (req, res) => {
     console.log("Inside search profile by name API" + req.query.firstName + req.query.lastName);
-    let ratingsMap = {}
-    InfluencerProfile.find({
-      $or: [
-        { "name.firstName": { $regex: new RegExp(req.query.firstName, "i") } },
-        { "name.lastName": { $regex: new RegExp(req.query.lastName, "i") } },
-      ],
-    })
+    let conditions;
+    let ratingsMap = {};
+
+    if (req.query.firstName && req.query.lastName == null) {
+      conditions = {
+        // match firstname
+        "name.firstName": { $regex: new RegExp(req.query.firstName, "i") },
+      };
+    } else if (req.query.lastName && req.query.firstName == null) {
+      //match lastname
+
+      conditions = {
+        "name.lastName": { $regex: new RegExp(req.query.lastName, "i") },
+      };
+    } else {
+      //match entire name
+      conditions = {
+        $and: [
+          {
+            "name.firstName": { $regex: new RegExp(req.query.firstName, "i") },
+          },
+          { "name.lastName": { $regex: new RegExp(req.query.lastName, "i") } },
+        ],
+      };
+    }
+
+    InfluencerProfile.find(conditions)
       .then((profiles) => {
         if (profiles.length > 0) {
           console.log(
