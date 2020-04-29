@@ -18,7 +18,6 @@ import TaskDescription from "./Task/TaskDesc";
 import Messenger from "./Inbox/Messenger";
 // Ratings
 import Rating from "./Rating/rating";
-import TaskDescription from "./Task/TaskDesc";
 import Landing from "./LandingPage/LandingPage";
 import Home from "./Home/home";
 import About from "./About/About";
