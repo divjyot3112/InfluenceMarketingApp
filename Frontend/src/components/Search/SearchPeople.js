@@ -24,6 +24,7 @@ import {paginate} from "../Common/paginate";
 import {If} from "react-if";
 import Button from "@material-ui/core/Button";
 import StarRatings from 'react-star-ratings';
+import {getEmailFromLocalStorage} from "../Common/auth";
 
 const useStyles = (theme) => ({
     cardGrid: {
@@ -77,7 +78,8 @@ class SearchPeople extends Component {
 
             this.props.searchPeople({
                 firstName: name[0],
-                lastName: name[1] ? name[1] : null
+                lastName: name[1] ? name[1] : null,
+                email: getEmailFromLocalStorage()
             })
         }
     }
@@ -91,7 +93,8 @@ class SearchPeople extends Component {
 
             props.searchPeople({
                 firstName: name[0],
-                lastName: name[1] ? name[1] : null
+                lastName: name[1] ? name[1] : null,
+                email: getEmailFromLocalStorage()
             })
         }
     }
@@ -184,7 +187,7 @@ class SearchPeople extends Component {
                 )
             })
         } else {
-            return <NoData image={window.location.origin + "/no_tasks.png"} description="No Matching Profiles Found"/>
+            return <NoData image={window.location.origin + "/no_tasks.png"} description="No Profiles Found"/>
 
         }
     }

@@ -157,7 +157,7 @@ export class Appbar extends Component {
                 {redirectVar}
                 <div>
                     <Navbar color="dark" expand="md" className="navbar-main">
-                        <NavbarBrand href="/" className="navbar-brand">Together</NavbarBrand>
+                        <NavbarBrand href="/home" className="navbar-brand">Together</NavbarBrand>
                         <NavbarToggler onClick={this.toggle}/>
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="mr-auto" navbar className="navbar-search-main">
