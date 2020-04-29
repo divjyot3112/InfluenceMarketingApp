@@ -9,7 +9,7 @@ import {paginate} from "../Common/paginate";
 import StarRatings from 'react-star-ratings';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {Else, If, Then} from "react-if";
-
+import {getEmailFromLocalStorage} from "../Common/auth";
 
 class InfluencerRating extends Component {
     state = {
@@ -20,8 +20,7 @@ class InfluencerRating extends Component {
 
 
     componentDidMount() {
-        // TODO: Get influencer email from local storage
-        const email = "divjyot@gmail.com";
+        const email = getEmailFromLocalStorage();
         this.props.getInfluencerRatings(email).then((response) => {
             this.setState({loading: false});
         });
@@ -46,6 +45,8 @@ class InfluencerRating extends Component {
         // TODO: if user is not logged in, redirect to home
 
         const {ratings, averageRating} = this.props;
+        console.log("****")
+        console.log(ratings)
         const data = Object.keys(ratings)
 
         const paginatedData = paginate(

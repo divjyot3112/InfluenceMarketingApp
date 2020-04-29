@@ -9,7 +9,7 @@ import {paginate} from "../Common/paginate";
 import StarRatings from "react-star-ratings";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {Else, If, Then} from "react-if";
-
+import {getEmailFromLocalStorage} from "../Common/auth";
 
 class SponsorRating extends Component {
     state = {
@@ -20,8 +20,7 @@ class SponsorRating extends Component {
 
 
     componentDidMount() {
-        // TODO: Get sponsor email from local storage
-        const email = "sheena@gmail.com";
+        const email = getEmailFromLocalStorage()
 
         this.props.getSponsorRatings(email).then((response) => {
             this.setState({loading: false});

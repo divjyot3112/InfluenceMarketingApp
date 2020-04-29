@@ -1,6 +1,7 @@
 import {Component} from "react";
 import Joi from "joi-browser";
 import {storage} from "../../utils/firebase";
+import {getEmailFromLocalStorage} from "../Common/auth";
 
 class PostTaskFormEventHandlers extends Component {
     state = {
@@ -137,9 +138,8 @@ class PostTaskFormEventHandlers extends Component {
         const image = e.target.files[0];
         if (image) {
             this.setState({image: image});
-
-            // TODO: get email from local storage
-            const email = "sheena@gmail.com";
+            
+            const email = getEmailFromLocalStorage();
             const fileName = email + "_" + image.name;
 
             const uploadTask = storage.ref("tasks/" + fileName).put(image);
