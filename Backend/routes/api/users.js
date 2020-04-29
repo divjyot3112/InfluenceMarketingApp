@@ -82,9 +82,9 @@ router.post("/login", (req, res) => {
 // @route   GET api/users/profile?email
 // @desc    Get Profile
 // @access  Public
-
 router.get("/profile", (req, res) => {
-    console.log("Inside Get Profile Request", req.query.email);
+    console.log("Inside GET Profile Request", req.query.email);
+
     User.findOne({email: req.query.email, isActive: true})
         .then((user) => {
             // check if user exists
@@ -132,11 +132,11 @@ router.get("/profile", (req, res) => {
 // @desc    User profile update
 // @access  Public
 router.put("/profile", (req, res) => {
-    console.log("Inside Update Profile put request");
+    console.log("Inside Update Profile PUT request");
     console.log("Profile to be updated: ", req.query.email);
+
     User.findOne({email: req.query.email, isActive: true})
         .then((user) => {
-            console.log("User: ", user);
             // check if user exists
             if (user) {
                 if (user.role == userRoles.SPONSOR) {
@@ -516,102 +516,21 @@ router.patch("/profile/deactivate", (req, res) => {
         });
 });
 
-// //arman
-//   // @route   GET api/profile/firstName&&LastName
-//   // @desc    Search user profiles by name
-//   // @access  Public
-//   router.get("/searchProfile", (req, res) => {
-//     console.log("Inside search profile by name API" + req.query.firstName + req.query.lastName);
-
-//     //   const name = {
-//     //     firstName: req.params.firstName,
-//     //     lastName: req.params.lastName,
-//     //   };
-
-//     // function find influencer profile
-//     // if not find sponsor profile
-//     // return profiles
-//     let ratingsMap = {}
-//     InfluencerProfile.find({
-//       $or: [
-//         { "name.firstName": { $regex: new RegExp(req.query.firstName, "i") } },
-//         { "name.lastName": { $regex: new RegExp(req.query.lastName, "i") } },
-//       ],
-//     })
-//       .then((profiles) => {
-//         if (profiles.length > 0) {
-//           console.log(
-//             "Profiles searched successfully for name " +
-//               "First name: " +
-//               req.query.firstName +
-//               " and Last name" +
-//               req.query.lastName +
-//               "Getting Ratings:"
-//           );
-
-//           profiles.map((profile, profileIndex) => (
-//             Rating.find({
-//                 influencer: profile.email
-//             })
-//             .sort({ratedOn: -1})
-//             .then(r => {
-//                 if (r.length != 0) {
-//                     console.log("Ratings fetched successfully for influencer: " + profile.email);
-//                     // console.log(r[0])
-//                     const email = profile.email
-//                     console.log(profile.email)
-//                     let avgRating = 0
-//                     r.map(x => {
-//                         avgRating += x.rating/r.length
-//                     })
-//                     console.log(avgRating)
-//                     ratingsMap[email] = JSON.stringify(avgRating)
-//                     console.log(ratingsMap)
-
-//                 } else {
-//                     console.log("No Ratings found for influencer: " + profile.email);
-//                     ratingsMap[profile.email] = null
-//                     // res.status(404).json({message: "No Ratings found"});
-//                 }
-//                 if(profileIndex===profiles.length-1) {
-//                     // console.log("Ratings Map" + ratingsMap)
-//                     res.status(200).json({message: profiles, ratings: ratingsMap})
-//                 }
-//             })
-//             .catch(err => {console.log(err)})
-//           ))
-//         } else {
-//           console.log("No  Profiles found");
-//           res
-//             .status(404)
-//             .json({ message: "No Profile with matching name found" });
-//         }
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//         res
-//           .status(500)
-//           .json({ message: "Profile could not be fetched. Error: " + err });
-//       });
-//   });
-
-//arman
 // @route   POST api/users/signup
 // @desc    Sign Up a new user
 // @access  Public
 router.post("/signup", (req, res) => {
-    console.log("Inside signup post request", req.body);
+    console.log("Inside signup POST request", req.body);
 
-    //check for already existing user
     User.findOne({email: req.body.email})
         .then((user) => {
+            //check if user exists
             if (user) {
-                console.log("Found user but User already exists!!");
-                res.status(400).json({msg: "User already exists!"});
+                console.log("User already exists");
+                res.status(400).json({msg: "User already exists"});
             }
 
-            // Otherwise create new user
-
+            // else create new user
             console.log("Creating new user");
             const newUser = new User({
                 email: req.body.email,
@@ -641,28 +560,27 @@ router.post("/signup", (req, res) => {
                             email: req.body.email,
                         });
                     }
-                    //save profile details
+
                     newProfile
                         .save()
                         .then((profile) => {
                             console.log("User created", profile);
-                            console.log(user);
                             res.status(200).json({message: {profile, user}});
                         })
                         .catch((err) => {
-                            res.status(400).json({
+                            res.status(401).json({
                                 message: "Something went wrong while creating user profile",
                             });
                         });
                 })
                 .catch((err) => {
                     res
-                        .status(400)
+                        .status(401)
                         .json({msg: "Something went wrong while creating user"});
                 });
         })
         .catch((err) => {
-            console.log("Checking Database failed. Something wrong with server");
+            console.log("Something went wrong");
             res.status(500).json({error: err});
         });
 });
