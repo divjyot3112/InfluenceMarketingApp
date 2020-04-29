@@ -37,13 +37,11 @@ import PeopleIcon from '@material-ui/icons/People';
 import ExampleComponent from "react-rounded-image";
 import UploadImageIcon from '../../images/uploadImageIcon.png';
 import {getEmailFromLocalStorage} from "../Common/auth";
-import {Redirect} from "react-router";
 
 const userRoles = require("../../utils/Constants").UserRoles;
 const TaskCategories = require("../../utils/Constants").TaskCategories;
 const Gender = require("../../utils/Constants").Gender;
 const NoImageFound = require("../../utils/Constants").NoImageFound;
-
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -241,17 +239,11 @@ class UserProfile extends UserProfileFormEventHandlers {
     }
 
     render() {
-        let redirectVar = null;
-        if (!getEmailFromLocalStorage()) {
-            redirectVar = <Redirect to="/"/>;
-        }
-
         const {classes} = this.props;
 
         if (!this.state.exists) {
             return (
                 <React.Fragment>
-                    {redirectVar}
                     <div className="profile-main">
                         <If condition={this.state.loading}>
                             <Then>
@@ -270,7 +262,6 @@ class UserProfile extends UserProfileFormEventHandlers {
         } else {
             return (
                 <React.Fragment>
-                    {redirectVar}
                     <div className="profile-main">
                         <div className="main-background">
                             <div className="photo-main">

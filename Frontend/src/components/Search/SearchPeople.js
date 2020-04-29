@@ -24,8 +24,6 @@ import {paginate} from "../Common/paginate";
 import {If} from "react-if";
 import Button from "@material-ui/core/Button";
 import StarRatings from 'react-star-ratings';
-import {Redirect} from "react-router";
-import {getEmailFromLocalStorage} from "../Common/auth";
 
 const useStyles = (theme) => ({
     cardGrid: {
@@ -192,15 +190,10 @@ class SearchPeople extends Component {
     }
 
     render() {
-        let redirectVar = null;
-        if (!getEmailFromLocalStorage()) {
-            redirectVar = <Redirect to="/"/>;
-        }
+        const {classes} = this.props;
 
-        const {classes} = this.props
         return (
             <React.Fragment>
-                {redirectVar}
                 <CssBaseline/>
                 <div className="filter">
                     <div style={{float: "right", display: "inline"}}>

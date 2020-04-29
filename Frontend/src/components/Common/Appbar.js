@@ -29,6 +29,7 @@ import "../../css/appbar.css";
 import {If} from "react-if";
 import Avatar from '@material-ui/core/Avatar';
 import {getEmailFromLocalStorage, getRoleFromLocalStorage} from "../Common/auth";
+import {Redirect} from "react-router";
 
 const UserRoles = require("../../utils/Constants").UserRoles;
 
@@ -146,8 +147,14 @@ export class Appbar extends Component {
     }
 
     render() {
+        let redirectVar = null;
+        if (!getEmailFromLocalStorage()) {
+            redirectVar = <Redirect to="/"/>;
+        }
+
         return (
             <React.Fragment>
+                {redirectVar}
                 <div>
                     <Navbar color="dark" expand="md" className="navbar-main">
                         <NavbarBrand href="/" className="navbar-brand">Together</NavbarBrand>

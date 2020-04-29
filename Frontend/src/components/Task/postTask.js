@@ -27,7 +27,6 @@ import NumberFormat from 'react-number-format';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import Image from 'material-ui-image';
 import {getEmailFromLocalStorage, getRoleFromLocalStorage} from "../Common/auth";
-import {Redirect} from "react-router";
 
 const UserRoles = require("../../utils/Constants").UserRoles;
 const TaskCategories = require("../../utils/Constants").TaskCategories;
@@ -153,17 +152,11 @@ class PostTask extends PostTaskFormEventHandlers {
     }
 
     render() {
-        let redirectVar = null;
-        if (!getEmailFromLocalStorage()) {
-            redirectVar = <Redirect to="/"/>;
-        }
-
         const {classes} = this.props;
 
         if (getRoleFromLocalStorage() != UserRoles.SPONSOR) {
             return (
                 <React.Fragment>
-                    {redirectVar}
                     <div className="main-post-task">
                         <p className="task-not-found">Access Denied</p>
                     </div>
@@ -172,7 +165,6 @@ class PostTask extends PostTaskFormEventHandlers {
         } else {
             return (
                 <React.Fragment>
-                    {redirectVar}
                     <div className="main-post-task">
                         <form className={classes.root}>
                             <div className="form_body_bottom">
