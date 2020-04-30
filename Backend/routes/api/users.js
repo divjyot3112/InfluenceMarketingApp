@@ -65,12 +65,12 @@ router.post("/login", (req, res) => {
                         });
                     } else {
                         console.log("Password is incorrect");
-                        res.status(401).json({message: "Password is incorrect"});
+                        res.status(200).json({message: "Password is incorrect"});
                     }
                 });
             } else {
                 console.log("User does not exist");
-                res.status(404).json({message: "User does not exist"});
+                res.status(200).json({message: user});
             }
         })
         .catch((err) => {
@@ -530,57 +530,59 @@ router.post("/signup", (req, res) => {
             //check if user exists
             if (user) {
                 console.log("User already exists");
-                res.status(400).json({msg: "User already exists"});
-            }
-
-            // else create new user
-            console.log("Creating new user");
-            const newUser = new User({
-                email: req.body.email,
-                password: req.body.password,
-                role: req.body.role,
-                isActive: true,
-            });
-            //save the user details
-            newUser
-                .save()
-                .then((user) => {
-                    let newProfile;
-
-                    //check role to create appropriate profile
-                    if (req.body.role == userRoles.INFLUENCER) {
-                        newProfile = new InfluencerProfile({
-                            name: req.body.name,
-                            image: req.body.image,
-                            phone: req.body.phone,
-                            email: req.body.email,
-                        });
-                    } else {
-                        newProfile = new SponsorProfile({
-                            name: req.body.name,
-                            image: req.body.image,
-                            phone: req.body.phone,
-                            email: req.body.email,
-                        });
-                    }
-
-                    newProfile
-                        .save()
-                        .then((profile) => {
-                            console.log("User created", profile);
-                            res.status(200).json({message: {profile, user}});
-                        })
-                        .catch((err) => {
-                            res.status(401).json({
-                                message: "Something went wrong while creating user profile",
-                            });
-                        });
-                })
-                .catch((err) => {
-                    res
-                        .status(401)
-                        .json({msg: "Something went wrong while creating user"});
+                res.status(200).json({message: "User already exists"});
+            } else {
+                // else create new user
+                console.log("Creating new user");
+                const newUser = new User({
+                    email: req.body.email,
+                    password: req.body.password,
+                    role: req.body.role,
+                    isActive: true,
                 });
+                //save the user details
+                newUser
+                    .save()
+                    .then((user) => {
+                        let newProfile;
+
+                        //check role to create appropriate profile
+                        if (req.body.role == userRoles.INFLUENCER) {
+                            newProfile = new InfluencerProfile({
+                                name: req.body.name,
+                                image: req.body.image,
+                                phone: req.body.phone,
+                                email: req.body.email,
+                                followersCount: req.body.followersCount
+                            });
+                        } else {
+                            newProfile = new SponsorProfile({
+                                name: req.body.name,
+                                image: req.body.image,
+                                phone: req.body.phone,
+                                email: req.body.email,
+                                company: req.body.company
+                            });
+                        }
+
+                        newProfile
+                            .save()
+                            .then((profile) => {
+                                console.log("User created", profile);
+                                res.status(200).json({message: {profile, user}});
+                            })
+                            .catch((err) => {
+                                res.status(401).json({
+                                    message: "Something went wrong while creating user profile",
+                                });
+                            });
+                    })
+                    .catch((err) => {
+                        res
+                            .status(401)
+                            .json({message: "Something went wrong while creating user"});
+                    });
+            }
         })
         .catch((err) => {
             console.log("Something went wrong");

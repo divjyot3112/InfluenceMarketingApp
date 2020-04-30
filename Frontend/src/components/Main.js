@@ -21,6 +21,7 @@ import Rating from "./Rating/rating";
 import Landing from "./LandingPage/LandingPage";
 import Home from "./Home/home";
 import About from "./About/About";
+import ContactUs from "./ContactUs/ContactUs";
 // Analytics
 import Analytics from "./analytics/Analytics";
 
@@ -39,6 +40,7 @@ class Main extends Component {
                 <Route path="/inbox" exact component={Messenger}/>
                 <Route path="/ratings" exact component={Rating}/>
                 <Route path="/about" exact component={About}/>
+                <Route path="/contact-us" exact component={ContactUs}/>
                 <Route path="/home" exact component={Home}/>
                 <Route path="/analytics" exact component={Analytics}/>
                 <Route path="/" exact component={Landing}/>
