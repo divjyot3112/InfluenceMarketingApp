@@ -206,8 +206,8 @@ router.get("/profile", (req, res) => {
             } else {
                 console.log("No Matching Profiles found");
                 res
-                    .status(404)
-                    .json({message: "No Matching Profiles found"});
+                    .status(200)
+                    .json({message: profiles});
             }
         })
         .catch((err) => {

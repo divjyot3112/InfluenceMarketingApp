@@ -7,6 +7,8 @@ import {
     SORT_INCOME_LOW_TO_HIGH,
     SORT_INCOME_HIGH_TO_LOW,
     MOST_RECENT_TASKS,
+    SORT_PEOPLE_RATINGS_LOW_TO_HIGH,
+    SORT_PEOPLE_RATINGS_HIGH_TO_LOW,
     ROOT_URL
 } from './types';
 
@@ -83,6 +85,14 @@ export const sortUsers = (sortBy) => dispatch => {
     } else if (sortBy === 1) {
         dispatch({
             type: SEARCH_PEOPLE_SORTED_ZA
+        })
+    } else if (sortBy === 2) {
+        dispatch({
+            type: SORT_PEOPLE_RATINGS_LOW_TO_HIGH
+        })
+    } else if (sortBy === 3) {
+        dispatch({
+            type: SORT_PEOPLE_RATINGS_HIGH_TO_LOW
         })
     }
 }
