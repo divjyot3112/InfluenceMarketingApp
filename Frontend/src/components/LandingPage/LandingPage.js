@@ -46,19 +46,29 @@ class Landing extends LandingPageFormEventHandlers {
 
     handleLogin = (e) => {
         e.preventDefault();
-        console.log("Inside Handle Login");
 
         const data = {
             email: this.state.loginEmail,
             password: this.state.loginPassword,
         };
-        console.log("Inside Handle Login data ", data);
-        this.props.LoginUser(data);
+        this.props.LoginUser(data).then(() => {
+            const response = this.props.loginResponse;
+
+            if (response && response.message === null) {
+                window.alert("Email does not exist. Please register to continue.")
+            } else if (response && response.message === "Password is incorrect") {
+                window.alert("Your password is invalid.");
+            } else if (response && response.token !== "Bearer undefined") {
+                const decodedToken = jwt_decode(response.token);
+                window.localStorage.setItem("role", decodedToken.user.role);
+                window.localStorage.setItem("email", decodedToken.user.email);
+                this.props.history.push("/home");
+            }
+        });
     };
 
     handleSignUp = (e) => {
         e.preventDefault();
-        console.log("Inside Handle Sign Up");
 
         const data = {
             email: this.state.email,
@@ -73,8 +83,18 @@ class Landing extends LandingPageFormEventHandlers {
             company: this.state.company,
             followersCount: this.state.followersCount
         };
-        console.log("Inside Handle Sign Up data ", data);
-        this.props.RegisterUser(data);
+
+        this.props.RegisterUser(data).then(() => {
+            const response = this.props.SignUpResponse;
+            console.log(response.message)
+
+            if (response && response.message === "User already exists") {
+                window.alert("Email already exists. Please login to continue.")
+            } else {
+                window.alert("Signed up Successfully! Please login to continue.");
+                window.location.reload();
+            }
+        });
     };
 
     componentDidMount() {
@@ -83,32 +103,6 @@ class Landing extends LandingPageFormEventHandlers {
     }
 
     render() {
-        if (this.props.loginSuccess) {
-
-            const token = this.props.JWTtoken;
-            console.log("TOKEN BEFORE DECODE....", token);
-
-            if (token && token !== "Bearer undefined") {
-                const decodedtoken = jwt_decode(token);
-
-                console.log("TOKEN AFTER DECODE....", decodedtoken);
-                console.log("ROLE IN TOKEN AFTER DECODE....", decodedtoken.user.role);
-
-                window.localStorage.setItem("role", decodedtoken.user.role);
-
-                window.localStorage.setItem("email", decodedtoken.user.email);
-
-                this.props.history.push("/home");
-            } else {
-                window.alert("Something went wrong! Please try loggin in again!!!!");
-            }
-        }
-
-        if (this.props.SignUpSuccess) {
-            window.alert("Signed up Successfully! Please login to continue.");
-            window.location.reload();
-        }
-
         return (
             <div>
                 <nav
@@ -125,7 +119,7 @@ class Landing extends LandingPageFormEventHandlers {
                             </strong>
                         </a>
 
-                        <div className="col-sm-3" style={{"margin-left" : "20%"}}>
+                        <div className="col-sm-3" style={{"margin-left": "20%"}}>
                             <div className="md-form">
                                 <i className="fas fa-envelope prefix grey-text"></i>
                                 <input
@@ -821,11 +815,8 @@ class Landing extends LandingPageFormEventHandlers {
 
 
 const mapStateToProps = (state) => ({
-    JWTtoken: state.user.JWTtoken,
-    loginSuccess: state.user.loginSuccess,
-    SignUpSuccess: state.user.SignUpSuccess,
-    userDetails: state.user.userDetails,
-    loading: state.user.loading,
+    loginResponse: state.user.loginResponse,
+    SignUpResponse: state.user.SignUpResponse,
 });
 
 export default connect(mapStateToProps, {LoginUser, RegisterUser})(Landing);
