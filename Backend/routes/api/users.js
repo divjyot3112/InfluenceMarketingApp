@@ -89,6 +89,7 @@ router.get("/profile", (req, res) => {
         .then((user) => {
             // check if user exists
             if (user) {
+                console.log("User Role: " + user.role)
                 if (user.role == userRoles.INFLUENCER) {
                     console.log("Getting influencer profile");
                     InfluencerProfile.findOne({email: req.query.email})
@@ -106,8 +107,10 @@ router.get("/profile", (req, res) => {
                         });
                 } else {
                     // user is sponsor
+                    console.log("Fetching Sponsor profile")
                     SponsorProfile.findOne({email: req.query.email})
                         .then((sponsorProfile) => {
+                            console.log("Profile found successfully")
                             res
                                 .status(200)
                                 .json({message: sponsorProfile, role: userRoles.SPONSOR});
