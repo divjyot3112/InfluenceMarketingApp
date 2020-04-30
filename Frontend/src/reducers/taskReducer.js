@@ -1,10 +1,25 @@
-import {SAVE_TASK, EDIT_TASK, GET_TASK, SELECTED_CANDIDATES} from "../actions/types";
+import {
+    SAVE_TASK,
+    EDIT_TASK,
+    GET_TASK,
+    SELECTED_CANDIDATES,
+    GET_SELECTED_CANDIDATES,
+    DELETE_TASK,
+    APPLY_TASK,
+    GET_SPONSOR_PROFILE,
+    MARK_COMPLETE
+} from "../actions/types";
 
 const initialState = {
     saved: false,
     edited: false,
     selected: false,
-    task: {}
+    deleted: false,
+    applied: false,
+    completed: false,
+    sponsor:{},
+    task: {},
+    profiles: []
 };
 
 export default function (state = initialState, action) {
@@ -14,6 +29,21 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 saved: true,
+            };
+        case APPLY_TASK:
+            return {
+                ...state,
+                applied: true,
+            };
+        case MARK_COMPLETE:
+            return {
+                ...state,
+                completed: true,
+            };
+        case DELETE_TASK:
+            return {
+                ...state,
+                deleted: true,
             };
         case EDIT_TASK:
             console.log("Inside task reducer")
@@ -26,12 +56,23 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 selected: true,
-            }
+            };
+        case GET_SELECTED_CANDIDATES:
+            console.log("Inside selected candidates reducer")
+            return {
+                ...state,
+                profiles: action.payload.message,
+            };
         case GET_TASK:
             return {
                 ...state,
                 task: action.payload.message,
             };
+        case GET_SPONSOR_PROFILE:
+            return {
+                ...state,
+                sponsor: action.payload.message
+            }
         default:
             return state;
     }

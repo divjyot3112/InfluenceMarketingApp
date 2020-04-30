@@ -150,15 +150,10 @@ router.put("/edit/:taskId", (req, res) => {
         {
             $set: {
                 title: req.body.title,
-                postedBy: req.body.postedBy,
-                postedOn: req.body.postedOn,
                 description: req.body.description,
                 image: req.body.image,
-                status: req.body.status,
                 salary: req.body.salary,
                 category: req.body.category,
-                appliedCandidates: req.body.appliedCandidates,
-                selectedCandidates: req.body.selectedCandidates,
                 vacancyCount: req.body.vacancyCount,
                 startDate: req.body.startDate,
                 endDate: req.body.endDate
@@ -306,12 +301,12 @@ router.get("/filter", (req, res) => {
 // @desc    Select a candidate for a task by sponsor
 // @access  Public
 router.put("/:taskId/select", (req, res) => {
-    console.log("Inside select candidate request");
+    console.log("Inside select candidate request " + req.body.email);
     Task.findOne({_id: ObjectID(req.params.taskId)})
         .then((task) => {
             // check if task exists
             if (task) {
-                if (task.postedBy === req.query.email) {
+                if (task.postedBy === req.body.email) {
 
                     // task should be in CREATED state
                     if (task.status == taskStatus.CREATED) {
@@ -801,7 +796,7 @@ router.get("/:taskId/selected", (req, res) => {
                                     result.push(influencer);
                                     console.log("result", result);
                                     if (index === selectedCandidates.length - 1) {
-                                        res.status(200).json(result);
+                                        res.status(200).json({message:result});
                                     }
                                 } else {
                                     res.status(400).json({

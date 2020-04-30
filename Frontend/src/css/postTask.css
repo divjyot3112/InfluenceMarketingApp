@@ -42,13 +42,24 @@
     margin-top: 2%;
     margin-bottom: 2%;
 }
+.buttons .btn-apply {
+    margin-left: 10%;
+}
 
 .buttons .btn-save {
     margin-left: 38%;
 }
 
+.buttons .btn-save2 {
+    margin-left: 19%;
+}
+
 .buttons .btn-cancel {
     margin-left: 10%;
+}
+
+.btn .btn-delete {
+    margin-left: 5%;
 }
 
 .error {
