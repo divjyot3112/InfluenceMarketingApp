@@ -174,7 +174,7 @@ class SponsorDashboard extends Component {
                             >
                             <CardMedia
                                 className={classes.cardMedia}
-                                image={(task.image === null || task.image === undefined) ? window.location.origin + '/no_image.jpg' : task.image}
+                                image={(task.image === null || task.image === undefined) ? window.location.origin + '/NoImageFound.jpg' : task.image}
                                 title={task.title}
                                 />
                                 </Link>
