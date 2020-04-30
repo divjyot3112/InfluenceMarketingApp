@@ -9,6 +9,8 @@ import {LoginUser, RegisterUser} from "../../actions/userActions";
 import jwt_decode from "jwt-decode";
 import LandingPageFormEventHandlers from "./LandingPageFormEventHandlers";
 import {If} from "react-if";
+import Joi from "joi-browser";
+import TextField from "@material-ui/core/TextField/TextField";
 
 const userRoles = require("../../utils/Constants").UserRoles;
 
@@ -23,12 +25,11 @@ class Landing extends LandingPageFormEventHandlers {
             password: "",
             phone: "",
             role: userRoles.INFLUENCER,
-            enabled: false,
             firstName: "",
             lastName: "",
-            isSponsor: false,
             followersCount: "",
-            company: ""
+            company: "",
+            errors: {},
         };
 
         this.handleloginEmail = this.handleloginEmail.bind(this);
@@ -40,9 +41,25 @@ class Landing extends LandingPageFormEventHandlers {
         this.handlePhone = this.handlePhone.bind(this);
         this.handleRole = this.handleRole.bind(this);
         this.handleSignUp = this.handleSignUp.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
         this.handleCompany = this.handleCompany.bind(this);
         this.handleFollowersCount = this.handleFollowersCount.bind(this);
     }
+
+    schema = {
+        firstName: Joi.string()
+            .max(20)
+            .required()
+            .regex(/^[a-zA-Z\s]*$/)
+            .label("First Name"),
+        lastName: Joi.string()
+            .max(20)
+            .required()
+            .regex(/^[a-zA-Z\s]*$/)
+            .label("Last Name"),
+        company: Joi.string().max(20).required().label("Company"),
+        password: Joi.string().max(20).required().label("Password"),
+    };
 
     handleLogin = (e) => {
         e.preventDefault();
@@ -96,6 +113,16 @@ class Landing extends LandingPageFormEventHandlers {
             }
         });
     };
+
+    checkDisable() {
+        return this.state.firstName == "" ||
+            this.state.lastName == "" ||
+            this.state.email == "" ||
+            this.state.password == "" ||
+            this.state.phone == "" ||
+            (this.state.followersCount == "" &&
+                this.state.company == "");
+    }
 
     componentDidMount() {
         const wow = new WOW();
@@ -226,8 +253,9 @@ class Landing extends LandingPageFormEventHandlers {
                                                         onChange={this.handleFirstName}
                                                         id="firstName"
                                                         class="form-control"
-                                                        placeholder="First Name"
+                                                        placeholder="First Name*"
                                                     />
+                                                    <span className="error"> {this.state.errors.firstName}</span>
                                                 </div>
 
                                                 <div class="md-form">
@@ -239,8 +267,9 @@ class Landing extends LandingPageFormEventHandlers {
                                                         onChange={this.handleLastName}
                                                         id="lastName"
                                                         class="form-control"
-                                                        placeholder="Last Name"
+                                                        placeholder="Last Name*"
                                                     />
+                                                    <span className="error"> {this.state.errors.lastName}</span>
                                                 </div>
 
                                                 <div class="md-form">
@@ -252,8 +281,9 @@ class Landing extends LandingPageFormEventHandlers {
                                                         value={this.state.email}
                                                         onChange={this.handleEmail}
                                                         class="form-control"
-                                                        placeholder="Email"
+                                                        placeholder="Email*"
                                                     />
+                                                    <span className="error"> {this.state.errors.email}</span>
                                                 </div>
 
                                                 <div class="md-form">
@@ -265,8 +295,9 @@ class Landing extends LandingPageFormEventHandlers {
                                                         value={this.state.password}
                                                         onChange={this.handlePassword}
                                                         class="form-control"
-                                                        placeholder="Password"
+                                                        placeholder="Password*"
                                                     />
+                                                    <span className="error"> {this.state.errors.password}</span>
                                                 </div>
 
                                                 <div class="md-form">
@@ -279,8 +310,9 @@ class Landing extends LandingPageFormEventHandlers {
                                                         onChange={this.handlePhone}
                                                         id="phone"
                                                         class="form-control"
-                                                        placeholder="Phone Number"
-                                                    ></input>
+                                                        placeholder="Contact Number*"
+                                                    />
+                                                    <span className="error"> {this.state.errors.phone}</span>
                                                 </div>
 
                                                 <If condition={this.state.role == userRoles.INFLUENCER}>
@@ -294,8 +326,10 @@ class Landing extends LandingPageFormEventHandlers {
                                                             onChange={this.handleFollowersCount}
                                                             id="followersCount"
                                                             className="form-control"
-                                                            placeholder="Number of Followers"
-                                                        ></input>
+                                                            placeholder="Number of Followers*"
+                                                        />
+                                                        <span
+                                                            className="error"> {this.state.errors.followersCount}</span>
                                                     </div>
                                                 </If>
 
@@ -310,8 +344,9 @@ class Landing extends LandingPageFormEventHandlers {
                                                             onChange={this.handleCompany}
                                                             id="company"
                                                             className="form-control"
-                                                            placeholder="Company"
-                                                        ></input>
+                                                            placeholder="Company*"
+                                                        />
+                                                        <span className="error"> {this.state.errors.company}</span>
                                                     </div>
                                                 </If>
 
@@ -336,11 +371,11 @@ class Landing extends LandingPageFormEventHandlers {
                                                     <button
                                                         class="btn btn-success"
                                                         onClick={this.handleSignUp}
+                                                        disabled={this.checkDisable()}
                                                     >
                                                         Create Account
                                                     </button>
                                                 </div>
-
                                             </form>
                                         </div>
                                     </div>
