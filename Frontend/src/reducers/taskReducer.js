@@ -6,7 +6,8 @@ import {
     GET_SELECTED_CANDIDATES,
     DELETE_TASK,
     APPLY_TASK,
-    GET_SPONSOR_PROFILE
+    GET_SPONSOR_PROFILE,
+    MARK_COMPLETE
 } from "../actions/types";
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
     selected: false,
     deleted: false,
     applied: false,
+    completed: false,
     sponsor:{},
     task: {},
     profiles: []
@@ -32,6 +34,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 applied: true,
+            };
+        case MARK_COMPLETE:
+            return {
+                ...state,
+                completed: true,
             };
         case DELETE_TASK:
             return {

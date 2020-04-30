@@ -1,7 +1,3 @@
-//TODOS
-// Apply api call and test
-// Display posted by photo
-// Display task status
 import React from "react";
 import {Link, Redirect} from "react-router-dom";
 import {reduxForm} from "redux-form";
@@ -18,7 +14,8 @@ import {
     getSelectedCandidateProfiles,
     deleteTask,
     getSponsorProfile,
-    apply
+    apply,
+    markAsComplete
 } from "../../actions/taskActions";
 import {makeStyles, withStyles} from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -174,15 +171,14 @@ class PostTask extends PostTaskFormEventHandlers {
                     //         sponsor: profile
                     //     })
                     console.log("Task " + task)
-                    let viewSelected = task.postedBy === localStorage.getItem('email')
+                    let viewSelected = task.postedBy===MY_USER_ID
                     if (task.selectedCandidates.length>0 && !viewSelected) {
                         task.selectedCandidates.forEach(candidate => {
-                            if (candidate === localStorage.getItem('email')) {
+                            if (candidate===MY_USER_ID) {
                                 viewSelected = true;
                             }
                         });
                     }
-                    viewSelected = task.selectedCandidates.length>0 ? true : false
                     console.log("viewSelected" + viewSelected)
                     if(viewSelected) {
                         this.props.getSelectedCandidateProfiles(task._id)
@@ -233,6 +229,13 @@ class PostTask extends PostTaskFormEventHandlers {
             !this.state.editMode;
     }
 
+    markComplete = () => {
+        this.props.markAsComplete(this.state.taskId, {email: this.postedBy})
+            .then(() => {
+
+            })
+    }
+
     onSubmit = (e) => {
         e.preventDefault();
 
@@ -269,11 +272,11 @@ class PostTask extends PostTaskFormEventHandlers {
             }
         )
             .then(() => {
-                if (this.props.selected) {
-                    window.alert("Candidates Successfully Selected")
+                if (this.props.completed) {
+                    window.alert("Task successfully marked complete")
                     window.location.reload();
                 } else {
-                    window.alert("Candidates couldn't be selected...")
+                    window.alert("Task couldn't be marked complete...")
                 }
             })
     }
@@ -316,20 +319,23 @@ class PostTask extends PostTaskFormEventHandlers {
                 <div className="main-post-task">
                     <form className={classes.root}>
                         <div className="form_body_bottom">
-                            <div style={{marginBottom: "2%"}}><b>
-                                Task Posted By:
-                                <Link
-                                    to={{
-                                        pathname: "/profile",
-                                        state: {
-                                            email: this.state.postedBy
-                                        }
-                                    }}
-                                    style={{textDecoration: 'none'}}
-                                >
-                                    {" " + this.state.postedBy}
-                                </Link>
-                            </b></div>
+                            <div style={{marginBottom: "2%"}}>
+                                <b>
+                                    Task Posted By:
+                                    <Link
+                                        to={{
+                                            pathname: "/profile",
+                                            state: {
+                                                email: this.state.postedBy
+                                            }
+                                        }}
+                                        style={{textDecoration: 'none'}}
+                                    >
+                                        {" " + this.state.postedBy}
+                                    </Link>
+                                </b><br/>
+                                <b>Task Status: </b>{this.state.status}
+                            </div>
                             <div className="input-group mb-3">
                                 <div className="input-group-prepend">
                                     <span className="input-group-text" id="inputGroupFileAddon01">Upload</span>
@@ -508,6 +514,7 @@ class PostTask extends PostTaskFormEventHandlers {
                                     this.state.appliedCandidates.includes(MY_USER_ID)
                                     : false)
                                 }
+                                style={{display:MY_ROLE===UserRoles.INFLUENCER ? "" : "none"}}
                                 variant="contained"
                                 size="large"
                                 className="classes.button btn-apply"
@@ -516,6 +523,21 @@ class PostTask extends PostTaskFormEventHandlers {
                                 startIcon={<SendIcon/>}
                             >
                                 Apply
+                            </Button>
+                            <Button
+                                disabled={
+                                    MY_ROLE===UserRoles.INFLUENCER ||
+                                    this.state.status!==TaskStatus.INPROGRESS
+                                }
+                                style={{display:MY_USER_ID===this.state.postedBy ? "" : "none"}}
+                                variant="contained"
+                                size="large"
+                                className="classes.button btn-apply"
+                                disabled={Object.keys(this.state.errors).length !== 0 || this.checkDisable()}
+                                onClick={this.markComplete}
+                                startIcon={<SendIcon/>}
+                            >
+                                Mark Task Complete
                             </Button>
                             <Button
                                 id="submitButton"
@@ -689,7 +711,8 @@ PostTask = connect(
         sponsor: state.task.sponsor,
         profiles: state.task.profiles,
         applied: state.task.applied,
-        deleted: state.task.deleted
+        deleted: state.task.deleted,
+        completed: state.task.completed
     }),
     {
         editTask,
@@ -698,7 +721,8 @@ PostTask = connect(
         getSelectedCandidateProfiles,
         deleteTask,
         getSponsorProfile,
-        apply
+        apply,
+        markAsComplete
     }
 )(PostTask);
 

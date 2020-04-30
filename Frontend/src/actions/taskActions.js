@@ -8,7 +8,8 @@ import {
     SELECTED_CANDIDATES,
     GET_SELECTED_CANDIDATES,
     DELETE_TASK,
-    GET_SPONSOR_PROFILE
+    GET_SPONSOR_PROFILE,
+    MARK_COMPLETE
 } from "./types";
 
 export const saveTask = (data) => async (dispatch) => {
@@ -67,6 +68,22 @@ export const selectCandidates = (taskId, data) => async (dispatch) => {
     } catch (e) {
         return {
             type: SELECTED_CANDIDATES,
+            payload: e,
+        };
+    }
+};
+
+export const markAsComplete = (taskId, data) => async (dispatch) => {
+    // console.log("Actions " + taskId + data)
+    try {
+        const res = await axios.put(`${ROOT_URL}/tasks/complete/${taskId}`, data);
+        dispatch({
+            type: MARK_COMPLETE,
+            payload: res.data,
+        });
+    } catch (e) {
+        return {
+            type: MARK_COMPLETE,
             payload: e,
         };
     }
