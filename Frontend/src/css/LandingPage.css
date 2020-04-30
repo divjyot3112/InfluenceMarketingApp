@@ -6,7 +6,7 @@ header,
 }
 
 .masthead {
-    height: 100vh;
+    height: 100%;
     min-height: 50vh;
     background-image: url("../../src/components/LandingPage/Images/social1.jpg");
     background-size: cover;
@@ -17,6 +17,7 @@ header,
 .welcome {
     overflow: hidden;
     width: 100%;
+    margin-top: 5%;
 }
 
 .welcome-text {
@@ -90,4 +91,9 @@ header,
 /* Footer color for sake of consistency with Navbar */
 .page-footer {
     background-color: #1c2331;
+}
+
+.app-name {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    color: black;
 }

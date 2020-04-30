@@ -1,15 +1,12 @@
-import React, {Component} from "react";
+import React from "react";
 import "../../css/LandingPage.css";
 import WOW from "wow.js";
 import smallcard from "./Images/social15.jpg";
 import {NoImageFound} from "../../utils/Constants";
 import Footer from "../Common/Footer";
-import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {LoginUser, RegisterUser} from "../../actions/userActions";
-import {Redirect} from "react-router";
 import jwt_decode from "jwt-decode";
-import {Link} from "react-router-dom";
 import LandingPageFormEventHandlers from "./LandingPageFormEventHandlers";
 import {If} from "react-if";
 
@@ -115,106 +112,64 @@ class Landing extends LandingPageFormEventHandlers {
         return (
             <div>
                 <nav
-                    class="navbar fixed-top navbar-expand-lg navbar-light scrolling-navbar"
+                    class="navbar fixed-top navbar-expand-lg navbar-light"
                     style={{backgroundColor: "aliceblue"}}
                 >
                     <div class="container">
-                        <a class="navbar-brand" href="/" target="_blank">
+                        <a class="navbar-brand" href="/">
                             <strong
-                                class="wow fadeInLeftBig"
+                                class="wow fadeInLeftBig app-name"
                                 data-wow-duration="10s"
-                                style={{color: "black"}}
                             >
                                 TOGETHER
                             </strong>
                         </a>
 
-                        <button
-                            class="navbar-toggler"
-                            type="button"
-                            data-toggle="collapse"
-                            data-target="#navbarSupportedContent"
-                            aria-controls="navbarSupportedContent"
-                            aria-expanded="false"
-                            aria-label="Toggle navigation"
-                        >
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
+                        <div className="col-sm-3" style={{"margin-left" : "20%"}}>
+                            <div className="md-form">
+                                <i className="fas fa-envelope prefix grey-text"></i>
+                                <input
+                                    type="text"
+                                    id="email"
+                                    name="email"
+                                    value={this.state.loginEmail}
+                                    onChange={this.handleloginEmail}
+                                    className="form-control"
+                                    placeholder="Email"
+                                />
+                                {/* <label for="form2"> Email</label> */}
+                            </div>
+                        </div>
 
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav mr-auto">
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="#">
-                                        Home
-                                        <span class="sr-only">(current)</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#" target="_blank">
-                                        About
-                                    </a>
-                                </li>
+                        <div className="col-sm-3">
+                            <div className="md-form">
+                                <i className="fas fa-key prefix grey-text"></i>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    value={this.state.loginPassword}
+                                    onChange={this.handleloginPassword}
+                                    className="form-control"
+                                    placeholder="Password"
+                                />
+                                {/* <label for="form2"> Password</label> */}
+                            </div>
+                        </div>
 
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#" target="_blank">
-                                        Contact Us
-                                    </a>
-                                </li>
-                            </ul>
+                        <div className="col-sm-2">
+                            <div className="md-form">
+                                <button
+                                    className="btn btn-success "
+                                    onClick={this.handleLogin}
+                                >
+                                    Login
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </nav>
                 {/*navbar ends*/}
-                <header class="">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-6 hidden-xs">
-                                <div class="row">
-                                    <div class="col-sm-5">
-                                        <div class="md-form">
-                                            <i class="fas fa-envelope prefix grey-text"></i>
-                                            <input
-                                                type="text"
-                                                id="email"
-                                                name="email"
-                                                value={this.state.loginEmail}
-                                                onChange={this.handleloginEmail}
-                                                class="form-control"
-                                                placeholder="Email"
-                                            />
-                                            {/* <label for="form2"> Email</label> */}
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-5">
-                                        <div class="md-form">
-                                            <i class="fas fa-key prefix grey-text"></i>
-                                            <input
-                                                type="password"
-                                                id="password"
-                                                name="password"
-                                                value={this.state.loginPassword}
-                                                onChange={this.handleloginPassword}
-                                                class="form-control"
-                                                placeholder="Password"
-                                            />
-                                            {/* <label for="form2"> Password</label> */}
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <div class="md-form">
-                                            <button
-                                                class="btn btn-success "
-                                                onClick={this.handleLogin}
-                                            >
-                                                Login
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </header>
                 <div class="masthead">
                     <div class="mask rgba-black-light d-flex justify-content-center align-items-center">
                         <div class="container">
