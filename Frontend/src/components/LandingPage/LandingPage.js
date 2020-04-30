@@ -24,7 +24,8 @@ class Landing extends Component {
       email: "",
       password: "",
       phone: "",
-      role: UserRoles.INFLUENCER,
+      role: "",
+      enabled: false,
       firstName: "",
       lastName: "",
     };
@@ -78,11 +79,10 @@ class Landing extends Component {
     });
   };
   handleRole = (e) => {
-    console.log("Inside Handle Role before switch toggle: ", this.state.role);
-
     this.setState({
-      role: UserRoles.SPONSOR,
+      enabled: true,
     });
+
     console.log("Inside Handle Role after switch toggle: ", this.state.role);
   };
 
@@ -394,7 +394,10 @@ class Landing extends Component {
                             </button>
                             <hr />
 
-                            <div class="custom-control custom-switch">
+                            <div
+                              class="custom-control custom-switch"
+                              style={{ "margin-left": "40%" }}
+                            >
                               <input
                                 type="checkbox"
                                 class="custom-control-input"
