@@ -551,6 +551,7 @@ router.post("/signup", (req, res) => {
                             image: req.body.image,
                             phone: req.body.phone,
                             email: req.body.email,
+                            followersCount: req.body.followersCount
                         });
                     } else {
                         newProfile = new SponsorProfile({
@@ -558,6 +559,7 @@ router.post("/signup", (req, res) => {
                             image: req.body.image,
                             phone: req.body.phone,
                             email: req.body.email,
+                            company: req.body.company
                         });
                     }
 
