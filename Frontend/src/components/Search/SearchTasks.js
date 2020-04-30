@@ -59,7 +59,8 @@ class SearchTasks extends Component {
         currentPage: 1,
         pageSize: 12,
         searchString: "",
-        status: ""
+        status: "",
+        sortBy: 0
     };
 
     handlePageChange = page => {
@@ -68,6 +69,8 @@ class SearchTasks extends Component {
 
     handleChangeSelect = (event) => {
         let sortBy = event.target.value;
+        this.setState({sortBy: sortBy});
+
         this.props.sortTasks(sortBy);
         this.forceUpdate();
     }
@@ -97,6 +100,7 @@ class SearchTasks extends Component {
         this.setState({
             status: status,
             currentPage: 1,
+            sortBy: 0,
         })
 
         this.props.searchTasks(data);
@@ -224,6 +228,7 @@ class SearchTasks extends Component {
                                 labelId="demo-controlled-open-select-label"
                                 id="demo-controlled-open-select"
                                 onChange={this.handleChangeSelect}
+                                value={this.state.sortBy}
                             >
                                 <MenuItem value={0}>Most Recent</MenuItem>
                                 <MenuItem value={1}>Salary: Low to High</MenuItem>
