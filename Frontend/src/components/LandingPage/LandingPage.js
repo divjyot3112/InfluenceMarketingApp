@@ -32,8 +32,8 @@ class Landing extends LandingPageFormEventHandlers {
             errors: {},
         };
 
-        this.handleloginEmail = this.handleloginEmail.bind(this);
-        this.handleloginPassword = this.handleloginPassword.bind(this);
+        this.handleLoginEmail = this.handleLoginEmail.bind(this);
+        this.handleLoginPassword = this.handleLoginPassword.bind(this);
         this.handleFirstName = this.handleFirstName.bind(this);
         this.handleLastName = this.handleLastName.bind(this);
         this.handleEmail = this.handleEmail.bind(this);
@@ -114,7 +114,7 @@ class Landing extends LandingPageFormEventHandlers {
         });
     };
 
-    checkDisable() {
+    checkSignUpDisable() {
         return this.state.firstName == "" ||
             this.state.lastName == "" ||
             this.state.email == "" ||
@@ -122,6 +122,11 @@ class Landing extends LandingPageFormEventHandlers {
             this.state.phone == "" ||
             (this.state.followersCount == "" &&
                 this.state.company == "");
+    }
+
+    checkLoginDisable() {
+        return this.state.loginEmail == "" ||
+            this.state.loginPassword == ""
     }
 
     componentDidMount() {
@@ -151,14 +156,14 @@ class Landing extends LandingPageFormEventHandlers {
                                 <i className="fas fa-envelope prefix grey-text"></i>
                                 <input
                                     type="text"
-                                    id="email"
-                                    name="email"
+                                    id="loginEmail"
+                                    name="loginEmail"
                                     value={this.state.loginEmail}
-                                    onChange={this.handleloginEmail}
+                                    onChange={this.handleLoginEmail}
                                     className="form-control"
                                     placeholder="Email"
                                 />
-                                {/* <label for="form2"> Email</label> */}
+                                <span className="error"> {this.state.errors.loginEmail}</span>
                             </div>
                         </div>
 
@@ -167,14 +172,14 @@ class Landing extends LandingPageFormEventHandlers {
                                 <i className="fas fa-key prefix grey-text"></i>
                                 <input
                                     type="password"
-                                    id="password"
-                                    name="password"
+                                    id="loginPassword"
+                                    name="loginPassword"
                                     value={this.state.loginPassword}
-                                    onChange={this.handleloginPassword}
+                                    onChange={this.handleLoginPassword}
                                     className="form-control"
                                     placeholder="Password"
                                 />
-                                {/* <label for="form2"> Password</label> */}
+                                <span className="error"> {this.state.errors.loginPassword}</span>
                             </div>
                         </div>
 
@@ -183,6 +188,7 @@ class Landing extends LandingPageFormEventHandlers {
                                 <button
                                     className="btn btn-success "
                                     onClick={this.handleLogin}
+                                    disabled={this.checkLoginDisable()}
                                 >
                                     Login
                                 </button>
@@ -371,7 +377,7 @@ class Landing extends LandingPageFormEventHandlers {
                                                     <button
                                                         class="btn btn-success"
                                                         onClick={this.handleSignUp}
-                                                        disabled={this.checkDisable()}
+                                                        disabled={this.checkSignUpDisable()}
                                                     >
                                                         Create Account
                                                     </button>

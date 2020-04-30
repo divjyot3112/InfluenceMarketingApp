@@ -25,16 +25,32 @@ class LandingPageFormEventHandlers extends Component {
         return error ? error.details[0].message : null;
     };
 
-    handleloginEmail = (e) => {
-        this.setState({
-            loginEmail: e.target.value,
-        });
+    handleLoginEmail = (e) => {
+        const errors = {...this.state.errors};
+
+        if (e.target.value.length == 0) {
+            errors["loginEmail"] = "Email cannot be empty";
+        } else if (!/^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(e.target.value)) {
+            errors["loginEmail"] = "Incorrect email format";
+        } else delete errors["loginEmail"];
+
+        let data = this.state.loginEmail;
+        data = e.target.value;
+        this.setState({loginEmail: data, errors});
     };
 
-    handleloginPassword = (e) => {
-        this.setState({
-            loginPassword: e.target.value,
-        });
+    handleLoginPassword = (e) => {
+        const errors = {...this.state.errors};
+
+        if (e.target.value.length == 0) {
+            errors["loginPassword"] = "\"Password\" is not allowed to be empty";
+        } else if (e.target.value.length > 20) {
+            errors["loginPassword"] = "\"Password\" length must be less than or equal to 20 characters long";
+        } else delete errors["loginPassword"];
+
+        let data = this.state.loginPassword;
+        data = e.target.value;
+        this.setState({loginPassword: data, errors});
     };
 
     handleFirstName = (e) => {
