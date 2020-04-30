@@ -218,8 +218,8 @@ class Landing extends LandingPageFormEventHandlers {
                 <div class="masthead">
                     <div class="mask rgba-black-light d-flex justify-content-center align-items-center">
                         <div class="container">
-                            <div class="row wow fadeIn">
-                                <div class="col-md-6 mb-4 white-text text-center text-md-left">
+                            <div class="row wow fadeIn welcome">
+                                <div class="col-md-6 mb-4 white-text text-center text-md-left welcome-text">
                                     <br/>
                                     <br/>
                                     <br/>
@@ -244,18 +244,9 @@ class Landing extends LandingPageFormEventHandlers {
                                             brands to find the right influencers that they can afford.
                                         </strong>
                                     </p>
-
-                                    {/* <a
-                    target="_blank"
-                    href="https://mdbootstrap.com/education/bootstrap/"
-                    class="btn btn-success btn-lg"
-                  >
-                    Already have an Account? Login!
-                    <i class="fas fa-graduation-cap ml-2"></i>
-                  </a> */}
                                 </div>
 
-                                <div class="col-md-6 col-xl-5 mb-4">
+                                <div class="col-md-6 col-xl-5 mb-4 signup-form">
                                     <div class="card">
                                         <div class="card-body">
                                             <form name="">
@@ -375,6 +366,23 @@ class Landing extends LandingPageFormEventHandlers {
                                                     </div>
                                                 </If>
 
+                                                <div
+                                                    className="custom-control custom-switch"
+                                                    style={{"margin-left": "30%"}}
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        className="custom-control-input"
+                                                        id="role"
+                                                        name="role"
+                                                        value={this.state.role}
+                                                        onChange={this.handleRole}
+                                                    />
+                                                    <label className="custom-control-label" htmlFor="role">
+                                                        <b> I am a Sponsor </b>
+                                                    </label>
+                                                </div>
+                                                <hr/>
                                                 <div class="text-center">
                                                     <button
                                                         class="btn btn-success"
@@ -382,24 +390,6 @@ class Landing extends LandingPageFormEventHandlers {
                                                     >
                                                         Create Account
                                                     </button>
-                                                    <hr/>
-
-                                                    <div
-                                                        class="custom-control custom-switch"
-                                                        style={{"margin-left": "40%"}}
-                                                    >
-                                                        <input
-                                                            type="checkbox"
-                                                            class="custom-control-input"
-                                                            id="role"
-                                                            name="role"
-                                                            value={this.state.role}
-                                                            onChange={this.handleRole}
-                                                        />
-                                                        <label class="custom-control-label" for="role">
-                                                            <b> I am a Sponsor </b>
-                                                        </label>
-                                                    </div>
                                                 </div>
 
                                             </form>
@@ -467,7 +457,7 @@ class Landing extends LandingPageFormEventHandlers {
                                         </div>
                                     </div>
 
-                                    <div style={{height: "30px"}}></div>
+                                    <br/>
 
                                     <div class="row">
                                         <div class="col-1 mr-3">
@@ -485,7 +475,7 @@ class Landing extends LandingPageFormEventHandlers {
                                         </div>
                                     </div>
 
-                                    <div style={{height: "30px"}}></div>
+                                    <br/>
 
                                     <div class="row">
                                         <div class="col-1 mr-3">
@@ -553,7 +543,7 @@ class Landing extends LandingPageFormEventHandlers {
                                                 We offer a full fledged dashboard which contains history
                                                 of tasks
                                             </p>
-                                            <div style={{height: "15px"}}></div>
+                                            <br/>
                                         </div>
                                     </div>
 
@@ -570,7 +560,7 @@ class Landing extends LandingPageFormEventHandlers {
                                                 and level of marketing expertise. Get noticed by your
                                                 favorite sponsors.
                                             </p>
-                                            <div style={{height: "15px"}}></div>
+                                            <br/>
                                         </div>
                                     </div>
 
@@ -588,7 +578,7 @@ class Landing extends LandingPageFormEventHandlers {
                                                 totam explicabo unde quibusdam nemo, alias repellat
                                                 nulla in expedita dolores quaerat magni earum debitis?
                                             </p>
-                                            <div style={{height: "15px"}}></div>
+                                            <br/>
                                         </div>
                                     </div>
 
@@ -605,7 +595,7 @@ class Landing extends LandingPageFormEventHandlers {
                                                 numquam sit exercitationem perferendis reprehenderit
                                                 consequatur nesciunt. Et molestiae alias similique iste.
                                             </p>
-                                            <div style={{height: "15px"}}></div>
+                                            <br/>
                                         </div>
                                     </div>
                                 </div>
@@ -637,7 +627,7 @@ class Landing extends LandingPageFormEventHandlers {
                                                 inventore ea, reiciendis, voluptatum laboriosam debitis
                                                 dolores!
                                             </p>
-                                            <div style={{height: "15px"}}></div>
+                                            <br/>
                                         </div>
                                     </div>
 
@@ -656,7 +646,7 @@ class Landing extends LandingPageFormEventHandlers {
                                                 ut beatae earum maxime nesciunt quibusdam soluta ratione
                                                 obcaecati?
                                             </p>
-                                            <div style={{height: "15px"}}></div>
+                                            <br/>
                                         </div>
                                     </div>
 
@@ -671,7 +661,7 @@ class Landing extends LandingPageFormEventHandlers {
                                                 progress and if the tasks are being completed
                                                 appropriately.
                                             </p>
-                                            <div style={{height: "15px"}}></div>
+                                            <br/>
                                         </div>
                                     </div>
 
@@ -685,7 +675,7 @@ class Landing extends LandingPageFormEventHandlers {
                                                 See all the applicants that have applied to the task and
                                                 select the most qualified person for the job.
                                             </p>
-                                            <div style={{height: "15px"}}></div>
+                                            <br/>
                                         </div>
                                     </div>
                                 </div>
