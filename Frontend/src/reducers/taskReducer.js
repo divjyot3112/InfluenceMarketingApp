@@ -71,7 +71,7 @@ export default function (state = initialState, action) {
         case GET_SPONSOR_PROFILE:
             return {
                 ...state,
-                sponsor: action.payload.message
+                sponsor: action.payload.data.message
             }
         default:
             return state;
