@@ -41,6 +41,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import EditIcon from '@material-ui/icons/Edit';
 import SendIcon from '@material-ui/icons/Send';
@@ -175,6 +176,7 @@ class PostTask extends PostTaskFormEventHandlers {
                             }
                         });
                     }
+                    viewSelected = task.selectedCandidates.length===0 ? false : true
                     console.log("viewSelected" + viewSelected)
                     if(viewSelected) {
                         this.props.getSelectedCandidateProfiles(task._id)
@@ -228,7 +230,12 @@ class PostTask extends PostTaskFormEventHandlers {
     markComplete = () => {
         this.props.markAsComplete(this.state.taskId, {email: this.postedBy})
             .then(() => {
-
+                if (this.props.completed) {
+                    window.alert("Task marked as complete")
+                    window.location.reload();
+                } else {
+                    window.alert("Task couldn't be marked as complete...")
+                }
             })
     }
 
@@ -268,11 +275,11 @@ class PostTask extends PostTaskFormEventHandlers {
             }
         )
             .then(() => {
-                if (this.props.completed) {
-                    window.alert("Task successfully marked complete")
+                if (this.props.selected) {
+                    window.alert("Candidates Successfully Selected")
                     window.location.reload();
                 } else {
-                    window.alert("Task couldn't be marked complete...")
+                    window.alert("Candidates couldn't be selected...")
                 }
             })
     }
@@ -529,7 +536,6 @@ class PostTask extends PostTaskFormEventHandlers {
                                 variant="contained"
                                 size="large"
                                 className="classes.button btn-apply"
-                                disabled={Object.keys(this.state.errors).length !== 0 || this.checkDisable()}
                                 onClick={this.apply}
                                 startIcon={<SendIcon/>}
                             >
@@ -539,15 +545,17 @@ class PostTask extends PostTaskFormEventHandlers {
                                 disabled={
                                     this.state.status!==TaskStatus.INPROGRESS
                                 }
-                                style={{display:MY_USER_ID!==this.state.postedBy ? "none" : ""}}
+                                style={{
+                                    display:MY_USER_ID!==this.state.postedBy ? "none" : "",
+                                    marginLeft:"15%"
+                                }}
                                 variant="contained"
                                 size="large"
-                                className="classes.button btn-apply"
-                                disabled={Object.keys(this.state.errors).length !== 0 || this.checkDisable()}
+                                className="classes.button"
                                 onClick={this.markComplete}
-                                startIcon={<SendIcon/>}
+                                startIcon={<CheckCircleIcon/>}
                             >
-                                Mark Task Complete
+                                Mark as Complete
                             </Button>
                             <Button
                                 id="submitButton"
@@ -577,7 +585,9 @@ class PostTask extends PostTaskFormEventHandlers {
                             </Button>
                             <Button
                                 disabled={this.state.status !== TaskStatus.CREATED}
-                                style={{display:MY_USER_ID!==this.state.postedBy ? "none" : ""}}
+                                style={{
+                                    display:MY_USER_ID!==this.state.postedBy ? "none" : ""
+                                }}
                                 variant="contained"
                                 color="secondary"
                                 size="large"
