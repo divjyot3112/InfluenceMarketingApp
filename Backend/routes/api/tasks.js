@@ -306,7 +306,7 @@ router.put("/:taskId/select", (req, res) => {
         .then((task) => {
             // check if task exists
             if (task) {
-                if (task.postedBy === req.body.email) {
+                if (task.postedBy === req.query.email) {
 
                     // task should be in CREATED state
                     if (task.status == taskStatus.CREATED) {
