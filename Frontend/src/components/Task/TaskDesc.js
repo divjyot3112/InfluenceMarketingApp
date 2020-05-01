@@ -176,7 +176,7 @@ class PostTask extends PostTaskFormEventHandlers {
                             }
                         });
                     }
-                    viewSelected = task.selectedCandidates && task.selectedCandidates.length===0 ? false : true
+                    if(task.selectedCandidates && task.selectedCandidates.length===0) viewSelected=false
                     console.log("viewSelected" + viewSelected)
                     if(viewSelected) {
                         this.props.getSelectedCandidateProfiles(task._id)
