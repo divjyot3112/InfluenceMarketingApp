@@ -547,7 +547,7 @@ class PostTask extends PostTaskFormEventHandlers {
                                 }
                                 style={{
                                     display:MY_USER_ID!==this.state.postedBy ? "none" : "",
-                                    marginLeft:"15%"
+                                    marginLeft:"5%"
                                 }}
                                 variant="contained"
                                 size="large"
