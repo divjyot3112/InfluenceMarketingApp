@@ -43,7 +43,7 @@ export default function (state = initialState, action) {
         case DELETE_TASK:
             return {
                 ...state,
-                deleted: true,
+                deleted: action.payload.status===200 ? true : false,
             };
         case EDIT_TASK:
             console.log("Inside task reducer")
