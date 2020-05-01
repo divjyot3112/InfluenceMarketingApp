@@ -176,7 +176,7 @@ class PostTask extends PostTaskFormEventHandlers {
                             }
                         });
                     }
-                    viewSelected = task.selectedCandidates.length===0 ? false : true
+                    viewSelected = task.selectedCandidates && task.selectedCandidates.length===0 ? false : true
                     console.log("viewSelected" + viewSelected)
                     if(viewSelected) {
                         this.props.getSelectedCandidateProfiles(task._id)
@@ -305,7 +305,7 @@ class PostTask extends PostTaskFormEventHandlers {
                         redirect: "/home"
                     })
                 } else {
-                    window.alert("Task couldn't be deleted...")
+                    window.alert("Task has selected candidates, cannot delete...")
                 }
             })
     }
