@@ -145,7 +145,7 @@ export const deleteTask = (taskId) => async (dispatch) => {
         const res = await axios.put(`${ROOT_URL}/tasks/delete/${taskId}`);
         dispatch({
             type: DELETE_TASK,
-            payload: res.data,
+            payload: res,
         });
     } catch (e) {
         return {

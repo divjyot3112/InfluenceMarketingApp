@@ -306,7 +306,7 @@ router.put("/:taskId/select", (req, res) => {
         .then((task) => {
             // check if task exists
             if (task) {
-                if (task.postedBy === req.query.email) {
+                if (task.postedBy === req.body.email) {
 
                     // task should be in CREATED state
                     if (task.status == taskStatus.CREATED) {
@@ -689,7 +689,8 @@ router.put("/delete/:taskId", (req, res) => {
                 //Cannot delete if task has any selected candidate
 
                 if (task.selectedCandidates.length > 0) {
-                    res.status(200).json({
+                  console.log("Couldn't delete")
+                    res.status(400).json({
                         message: "Cannot delete task since it has selected candidates.",
                     });
                 } else {
