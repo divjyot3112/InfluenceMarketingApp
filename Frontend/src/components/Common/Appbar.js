@@ -46,28 +46,28 @@ export class Appbar extends Component {
     }
 
     componentDidMount() {
-        // const email = getEmailFromLocalStorage();
-        // const role = getRoleFromLocalStorage();
-        // console.log("Component Did Mount")
-        // this.setState({role: role});
-        // if (email != null) {
-        //     this.props.getProfile(email).then((response) => {
-        //         if (response === undefined && this.props.profile.status === 200) {
-        //             this.setState({
-        //                 firstName: this.props.profile.data.message.name
-        //                     ? this.props.profile.data.message.name.firstName
-        //                     : "",
-        //                 address: this.props.profile.data.message.address
-        //                     ? this.props.profile.data.message.address
-        //                     : "",
-        //                 image: this.props.profile.data.message
-        //                     ? this.props.profile.data.message.image
-        //                     : "",
-        //                 userExists: true
-        //             })
-        //         }
-        //     })
-        // }
+        const email = getEmailFromLocalStorage();
+        const role = getRoleFromLocalStorage();
+        console.log("Component Did Mount")
+        this.setState({role: role});
+        if (email != null) {
+            this.props.getProfile(email).then((response) => {
+                if (response === undefined && this.props.profile.status === 200) {
+                    this.setState({
+                        firstName: this.props.profile.data.message.name
+                            ? this.props.profile.data.message.name.firstName
+                            : "",
+                        address: this.props.profile.data.message.address
+                            ? this.props.profile.data.message.address
+                            : "",
+                        image: this.props.profile.data.message
+                            ? this.props.profile.data.message.image
+                            : "",
+                        userExists: true
+                    })
+                }
+            })
+        }
     }
 
     componentWillReceiveProps(props) {
