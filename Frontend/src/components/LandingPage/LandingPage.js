@@ -79,7 +79,10 @@ class Landing extends LandingPageFormEventHandlers {
                 const decodedToken = jwt_decode(response.token);
                 window.localStorage.setItem("role", decodedToken.user.role);
                 window.localStorage.setItem("email", decodedToken.user.email);
-                this.props.history.push("/home");
+                this.props.history.push({
+                    pathname: "/home",
+                    state: {loggedIn: true}
+                });
             }
         });
     };

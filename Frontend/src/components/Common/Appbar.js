@@ -48,7 +48,7 @@ export class Appbar extends Component {
     componentDidMount() {
         const email = getEmailFromLocalStorage();
         const role = getRoleFromLocalStorage();
-
+        console.log("Component Did Mount")
         this.setState({role: role});
         if (email != null) {
             this.props.getProfile(email).then((response) => {
@@ -67,6 +67,34 @@ export class Appbar extends Component {
                     })
                 }
             })
+        }
+    }
+
+    componentWillReceiveProps(props) {
+        console.log("Component Will Receive Props")
+        if(props.location.state && props.location.state.loggedIn!==this.state.loggedIn) {
+            this.setState({loggedIn:props.location.state.loggedIn})
+            const email = getEmailFromLocalStorage();
+            const role = getRoleFromLocalStorage();
+            this.setState({role: role});
+            if (email != null) {
+                this.props.getProfile(email).then((response) => {
+                    if (response === undefined && props.profile.status === 200) {
+                        this.setState({
+                            firstName: props.profile.data.message.name
+                                ? props.profile.data.message.name.firstName
+                                : "",
+                            address: props.profile.data.message.address
+                                ? props.profile.data.message.address
+                                : "",
+                            image: props.profile.data.message
+                                ? props.profile.data.message.image
+                                : "",
+                            userExists: true
+                        })
+                    }
+                })
+            }
         }
     }
 
