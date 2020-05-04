@@ -72,8 +72,8 @@ export class Appbar extends Component {
 
     componentWillReceiveProps(props) {
         console.log("Component Will Receive Props")
-        if(props.location.state && props.location.state.loggedIn!==this.state.loggedIn) {
-            this.setState({loggedIn:props.location.state.loggedIn})
+        if (props.location.state && props.location.state.loggedIn !== this.state.loggedIn) {
+            this.setState({loggedIn: props.location.state.loggedIn})
             const email = getEmailFromLocalStorage();
             const role = getRoleFromLocalStorage();
             this.setState({role: role});
