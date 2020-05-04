@@ -218,4 +218,53 @@ router.get("/profile", (req, res) => {
         });
 });
 
+/////////////////////////////////////////////////////////////////////////////////////
+
+// ANALYTICS
+
+// @route   GET api/influencers/ratings/category?email=emailID
+// @desc    GET AVERAGE RATINGS BY CATEGORY
+// @access  Public
+router.get("/ratings/category", (req, res) => {
+    console.log("Inside get avg ratings for category request for " + req.query.email)
+    var ratingsMap = {}
+    var totalRatings = {}
+    Rating.find({influencer:req.query.email})
+        .then(ratings => {
+            if(ratings.length>0) {
+                console.log(ratings.length + " ratings found")
+                ratings.map((rating, index) => (
+                    Task.findOne({_id:ObjectID(rating.task)})
+                        .then(task => {
+                            if(task) {
+                                ratingsMap[task.category] = ratingsMap[task.category] ? 
+                                    ratingsMap[task.category] + rating.rating :
+                                    rating.rating;
+                                totalRatings[task.category] = totalRatings[task.category] ?
+                                    totalRatings[task.category]+1 : 1;
+                                if(index === ratings.length-1) {
+                                    for(var key of Object.keys(ratingsMap)) {
+                                        ratingsMap[key] = ratingsMap[key] / totalRatings[key]
+                                    }
+                                    console.log(ratingsMap)
+                                    res.status(200).json({message: ratingsMap})
+                                }
+                            } else {
+                                console.log("Task Not found")
+                            }
+                        })
+                        .catch(err => {
+                            // res.status(400).json({message:"Task not found"})
+                            console.log("Task not found")
+                        })
+                ))
+            } else {
+                res.status(404).json({message: "No ratings for this user"})
+            }
+        })
+        .catch(err => {
+            res.status(400).json({message: err})
+        })
+})
+
 module.exports = router;
