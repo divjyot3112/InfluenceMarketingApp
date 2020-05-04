@@ -71,26 +71,26 @@ export class Appbar extends Component {
     }
 
     componentWillReceiveProps(props) {
-        console.log("Component Will Receive Props")
         if (props.location.state && props.location.state.loggedIn !== this.state.loggedIn) {
+
             this.setState({loggedIn: props.location.state.loggedIn})
             const email = getEmailFromLocalStorage();
-            const role = getRoleFromLocalStorage();
-            this.setState({role: role});
+
             if (email != null) {
                 this.props.getProfile(email).then((response) => {
-                    if (response === undefined && props.profile.status === 200) {
+                    if (response === undefined && this.props.profile.status === 200) {
                         this.setState({
-                            firstName: props.profile.data.message.name
-                                ? props.profile.data.message.name.firstName
+                            firstName: this.props.profile.data.message.name
+                                ? this.props.profile.data.message.name.firstName
                                 : "",
-                            address: props.profile.data.message.address
-                                ? props.profile.data.message.address
+                            address: this.props.profile.data.message.address
+                                ? this.props.profile.data.message.address
                                 : "",
-                            image: props.profile.data.message
-                                ? props.profile.data.message.image
+                            image: this.props.profile.data.message
+                                ? this.props.profile.data.message.image
                                 : "",
-                            userExists: true
+                            userExists: true,
+                            role: this.props.profile.data.role
                         })
                     }
                 })
