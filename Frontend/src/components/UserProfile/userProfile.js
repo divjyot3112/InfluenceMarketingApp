@@ -37,7 +37,6 @@ import PeopleIcon from '@material-ui/icons/People';
 import ExampleComponent from "react-rounded-image";
 import UploadImageIcon from '../../images/uploadImageIcon.png';
 import {getEmailFromLocalStorage} from "../Common/auth";
-import { isThisSecond } from "date-fns";
 
 const userRoles = require("../../utils/Constants").UserRoles;
 const TaskCategories = require("../../utils/Constants").TaskCategories;
@@ -162,7 +161,8 @@ class UserProfile extends UserProfileFormEventHandlers {
             this.setState({isCurrentUser: false})
 
         const username = this.props.location.state ? this.props.location.state.email : getEmailFromLocalStorage();
-        this.setState({email:username})
+        this.setState({email: username})
+
         this.props.getProfile(username).then((response) => {
             if (response === undefined && this.props.profile.status === 200) {
                 this.setState({exists: true});
@@ -199,8 +199,9 @@ class UserProfile extends UserProfileFormEventHandlers {
     }
 
     componentWillReceiveProps(props) {
-        if(props.location.state.email !== this.state.email) {
+        if (props.location.state && props.location.state.email !== this.state.email) {
             this.setState({email: props.location.state.email})
+
             if (props.location.state && props.location.state.email != getEmailFromLocalStorage())
                 this.setState({isCurrentUser: false})
 

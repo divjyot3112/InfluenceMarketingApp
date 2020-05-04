@@ -18,6 +18,7 @@ export class Sidebar extends Component {
         })
         window.location.reload()
     }
+
     render() {
         const role = getRoleFromLocalStorage();
         let redirectVar = null;
@@ -33,7 +34,7 @@ export class Sidebar extends Component {
                         <a className="menu-item" href="/">
                             Home
                         </a>
-                        <a className="menu-item" onClick={this.loadMyProfile}>
+                        <a className="menu-item" onClick={this.loadMyProfile} style={{"color": "white"}}>
                             Profile
                         </a>
                         <a className="menu-item" href="/dashboard">
@@ -61,7 +62,7 @@ export class Sidebar extends Component {
                         <a className="menu-item" href="/">
                             Home
                         </a>
-                        <a className="menu-item" href="/profile">
+                        <a className="menu-item" onClick={this.loadMyProfile} style={{"color": "white"}}>
                             Profile
                         </a>
                         <a className="menu-item" href="/task/new">
