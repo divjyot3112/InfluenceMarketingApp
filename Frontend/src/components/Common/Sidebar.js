@@ -9,7 +9,15 @@ import {Redirect} from "react-router";
 const UserRoles = require("../../utils/Constants").UserRoles;
 
 export class Sidebar extends Component {
-
+    loadMyProfile = () => {
+        this.props.history.push({
+            pathname: "/profile",
+            state: {
+                email: getEmailFromLocalStorage()
+            }
+        })
+        window.location.reload()
+    }
     render() {
         const role = getRoleFromLocalStorage();
         let redirectVar = null;
@@ -25,7 +33,7 @@ export class Sidebar extends Component {
                         <a className="menu-item" href="/">
                             Home
                         </a>
-                        <a className="menu-item" href="/profile">
+                        <a className="menu-item" onClick={this.loadMyProfile}>
                             Profile
                         </a>
                         <a className="menu-item" href="/dashboard">
