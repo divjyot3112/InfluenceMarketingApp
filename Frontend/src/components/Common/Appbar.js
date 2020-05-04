@@ -174,6 +174,16 @@ export class Appbar extends Component {
         }
     }
 
+    loadMyProfile = () => {
+        this.props.history.push({
+            pathname: "/profile",
+            state: {
+                email: getEmailFromLocalStorage()
+            }
+        })
+        window.location.reload()
+    }
+
     render() {
         let redirectVar = null;
         if (!getEmailFromLocalStorage()) {
@@ -270,7 +280,7 @@ export class Appbar extends Component {
                                         </DropdownToggle>
                                         <DropdownMenu right>
                                             <DropdownItem className="drop-down-item">
-                                                <NavLink href="/profile">
+                                                <NavLink onClick={this.loadMyProfile}>
                                                     My Profile
                                                 </NavLink>
                                             </DropdownItem>
