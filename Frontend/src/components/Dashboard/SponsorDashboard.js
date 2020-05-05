@@ -152,8 +152,8 @@ class SponsorDashboard extends Component {
     renderTasks() {
         const {classes} = this.props;
         if (this.props.currentPageTasks.length > 0) {
-            return _.map(this.props.currentPageTasks, (task) => {
-                let rateButton = (task.status === TaskStatus.COMPLETED) ?
+            return _.map(this.props.currentPageTasks, (task) => { 
+                let rateButton = (task.status === TaskStatus.COMPLETED && (new Date(task.endDate).getTime() >= Date.now() - 7*3600*1000*24)) ?
                     <AddRatingModal taskData={task}></AddRatingModal> : null;
                 let deleteButton = (task.status !== TaskStatus.COMPLETED && (task.selectedCandidates === undefined || task.selectedCandidates === null || task.selectedCandidates.length <= 0)) ?
                     <DeleteModal taskData={task} deleteTask={() => this.deleteTask(task._id)}></DeleteModal> : null;

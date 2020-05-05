@@ -26,6 +26,8 @@ const tasks = require("./routes/api/tasks");
 const influencers = require("./routes/api/influencers");
 const sponsors = require("./routes/api/sponsors");
 const inbox = require("./routes/api/inbox");
+const recommendations = require("./routes/api/recommendations");
+
 const images = require("./routes/api/users");
 
 // To get POST requests for API use
@@ -69,6 +71,7 @@ app.use("/api/tasks", tasks);
 app.use("/api/influencers", influencers);
 app.use("/api/sponsors", sponsors);
 app.use("/api/inbox", inbox);
+app.use("/api/recommendations", recommendations);
 
 // Serve static assets if in production
 if (process.env.NODE_ENV === "production") {
