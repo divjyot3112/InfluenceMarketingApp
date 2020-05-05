@@ -227,45 +227,46 @@ router.get("/profile", (req, res) => {
 // @desc    GET AVERAGE RATINGS BY CATEGORY
 // @access  Public
 router.get("/ratings/category", (req, res) => {
-    console.log("Inside get avg ratings for category request for " + req.query.email)
+    console.log("Inside get avg ratings by category request for " + req.query.email)
     var ratingsMap = {}
     var totalRatings = {}
     Rating.find({influencer:req.query.email})
         .then(ratings => {
             if(ratings.length>0) {
                 console.log(ratings.length + " ratings found")
-                ratings.map((rating, index) => (
+                ratings.map((rating, index) => {
                     Task.findOne({_id:ObjectID(rating.task)})
                         .then(task => {
                             if(task) {
-                                function constructMap(){
+                                // const constructMap = () => {
                                     ratingsMap[task.category] = ratingsMap[task.category] ? 
                                         ratingsMap[task.category] + rating.rating :
                                         rating.rating;
                                     totalRatings[task.category] = totalRatings[task.category] ?
                                         totalRatings[task.category]+1 : 1;
-                                }
-                                function calcAvgAndResponse() {
-                                    constructMap();
+                                // }
+                                const calcAvg = () => {
                                     if(index === ratings.length-1) {
-                                        for(var key of Object.keys(ratingsMap)) {
-                                            console.log("Inside for " + ratingsMap[key] + " " + totalRatings[key])
-                                            ratingsMap[key] = ratingsMap[key] / totalRatings[key]
-                                        }
-                                        console.log(ratingsMap)
-                                        res.status(200).json({message: ratingsMap})
+                                        setTimeout(() => {
+                                            for(var key of Object.keys(ratingsMap)) {
+                                                console.log("Inside for " + ratingsMap[key] + " " + totalRatings[key])
+                                                ratingsMap[key] = ratingsMap[key] / totalRatings[key]
+                                            }
+                                            console.log(ratingsMap)
+                                            res.status(200).json({message: ratingsMap})
+                                        }, 10)
                                     }
                                 }
-                                calcAvgAndResponse()
+                                calcAvg()
                             } else {
                                 console.log("Task Not found")
                             }
                         })
                         .catch(err => {
                             // res.status(400).json({message:"Task not found"})
-                            console.log("Task not found")
+                            console.log(err)
                         })
-                ))
+                })
             } else {
                 res.status(404).json({message: "No ratings for this user"})
             }
