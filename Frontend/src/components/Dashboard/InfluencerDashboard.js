@@ -24,9 +24,9 @@ import Container from '@material-ui/core/Container';
 import Pagination from '@material-ui/lab/Pagination';
 import NoData from './NoData'
 import "../../css/dashboard.css";
-import {MY_USER_ID} from "../../utils/Constants";
+//import {MY_USER_ID} from "../../utils/Constants";
 import {Link} from "react-router-dom";
-
+const MY_USER_ID = localStorage.getItem("email");
 //create the Navbar Component
 
 const useStyles = (theme) => ({
@@ -111,7 +111,7 @@ class InfluencerDashboard extends Component {
     handleOnStatusChange = (event) => {
         console.log(event)
         this.props.fetchDashboardTasks(MY_USER_ID, event.target.value, () => {
-            this.props.getCurrentPageTasks(0, this.props.dashboardTasks);
+            this.props.getCurrentPageTasks(1, this.props.dashboardTasks);
             this.setState({
                 sortBy: 0
             })
@@ -136,7 +136,7 @@ class InfluencerDashboard extends Component {
                             >
                         <CardMedia
                             className={classes.cardMedia}
-                            image={(task.image === null || task.image === undefined) ? window.location.origin + '/no_image.jpg' : task.image}
+                            image={(task.image === null || task.image === undefined) ? window.location.origin + '/NoImageFound.jpg' : task.image}
                             title="Image title"
                         /></Link>
                         <CardContent className={classes.cardContent}>

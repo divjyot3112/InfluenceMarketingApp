@@ -24,6 +24,7 @@ import {paginate} from "../Common/paginate";
 import {If} from "react-if";
 import Button from "@material-ui/core/Button";
 import StarRatings from 'react-star-ratings';
+import {getEmailFromLocalStorage} from "../Common/auth";
 
 const useStyles = (theme) => ({
     cardGrid: {
@@ -77,7 +78,8 @@ class SearchPeople extends Component {
 
             this.props.searchPeople({
                 firstName: name[0],
-                lastName: name[1] ? name[1] : null
+                lastName: name[1] ? name[1] : null,
+                email: getEmailFromLocalStorage()
             })
         }
     }
@@ -91,7 +93,8 @@ class SearchPeople extends Component {
 
             props.searchPeople({
                 firstName: name[0],
-                lastName: name[1] ? name[1] : null
+                lastName: name[1] ? name[1] : null,
+                email: getEmailFromLocalStorage()
             })
         }
     }
@@ -133,15 +136,20 @@ class SearchPeople extends Component {
                                         <Typography gutterBottom variant="h6" component="h2">
                                             {user.name.firstName} {user.name.lastName}
                                         </Typography>
-                                        <div className="average-ratings">
-                                            <StarRatings
-                                                rating={Number(this.props.avgRatings[user.email])}
-                                                starRatedColor="#FAAD1C"
-                                                numberOfStars={5}
-                                                starDimension="20"
-                                                starSpacing="0"
-                                            />
-                                        </div>
+                                        <If condition={this.props.avgRatings}>
+                                            <div className="average-ratings">
+                                                <StarRatings
+                                                    rating={this.props.avgRatings ?
+                                                        Number(this.props.avgRatings[user.email] == null
+                                                            ? 0 : this.props.avgRatings[user.email])
+                                                        : 0}
+                                                    starRatedColor="#FAAD1C"
+                                                    numberOfStars={5}
+                                                    starDimension="20"
+                                                    starSpacing="0"
+                                                />
+                                            </div>
+                                        </If>
                                         <br/>
                                         <br/>
                                     </Link>
@@ -184,7 +192,7 @@ class SearchPeople extends Component {
                 )
             })
         } else {
-            return <NoData image={window.location.origin + "/no_tasks.png"} description="No Matching Profiles Found"/>
+            return <NoData image={window.location.origin + "/no_tasks.png"} description="No Profiles Found"/>
 
         }
     }
@@ -204,8 +212,10 @@ class SearchPeople extends Component {
                                 id="demo-controlled-open-select"
                                 onChange={this.handleChangeSelect}
                             >
-                                <MenuItem value={0}>Alphabetically (a-z)</MenuItem>
-                                <MenuItem value={1}>Alphabetically (z-a)</MenuItem>
+                                <MenuItem value={0}>Alphabetically: A-Z</MenuItem>
+                                <MenuItem value={1}>Alphabetically: Z-A</MenuItem>
+                                <MenuItem value={2}>Ratings: Low to High</MenuItem>
+                                <MenuItem value={3}>Ratings: High to Low</MenuItem>
                             </Select>
                         </FormControl>
                     </div>
@@ -221,7 +231,7 @@ class SearchPeople extends Component {
                     <br/>
                     <div className="general-pagination">
                         <Pagination
-                            itemsCount={this.props.tasks ? this.props.tasks.length : ""}
+                            itemsCount={this.props.people ? this.props.people.length : ""}
                             pageSize={this.state.pageSize}
                             onPageChange={this.handlePageChange}
                             currentPage={this.state.currentPage}

@@ -12,7 +12,7 @@ export function fetchConversationsReducer(state = initialState, action) {
         case FETCH_CONVERSATIONS:
             if (action.payload === undefined)
                 return state
-            return action.payload.data.message
+            return action.payload.data.message.sort(function (a, b) { return new Date(b.conversation.slice(-1)[0].timestamp).getTime() - new Date(a.conversation.slice(-1)[0].timestamp).getTime() });
         default:
             return state;
     }

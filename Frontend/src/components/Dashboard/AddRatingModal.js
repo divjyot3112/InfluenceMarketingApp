@@ -15,10 +15,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { fetchUnratedInfluencers, addRating } from "../../actions/dashboardActions";
-import { MY_USER_ID } from "../../utils/Constants"
+//import { MY_USER_ID } from "../../utils/Constants"
 import StarsIcon from '@material-ui/icons/Stars';
 import Tooltip from '@material-ui/core/Tooltip';
-
+const MY_USER_ID = localStorage.getItem("email");
 const styles = (theme) => ({
     root: {
         margin: 0,

@@ -7,6 +7,8 @@ import {
     SORT_INCOME_LOW_TO_HIGH,
     SORT_INCOME_HIGH_TO_LOW,
     MOST_RECENT_TASKS,
+    SORT_PEOPLE_RATINGS_LOW_TO_HIGH,
+    SORT_PEOPLE_RATINGS_HIGH_TO_LOW,
     ROOT_URL
 } from './types';
 
@@ -25,7 +27,13 @@ export const searchTasks = data => dispatch => {
 export const searchPeople = data => dispatch => {
     axios.defaults.withCredentials = true;
     axios
-        .get(`${ROOT_URL}/users/searchProfile`, {params: {firstName: data.firstName, lastName: data.lastName}})
+        .get(`${ROOT_URL}/influencers/profile`, {
+            params: {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email
+            }
+        })
         .then(res => {
             console.log(res);
             dispatch({
@@ -77,6 +85,14 @@ export const sortUsers = (sortBy) => dispatch => {
     } else if (sortBy === 1) {
         dispatch({
             type: SEARCH_PEOPLE_SORTED_ZA
+        })
+    } else if (sortBy === 2) {
+        dispatch({
+            type: SORT_PEOPLE_RATINGS_LOW_TO_HIGH
+        })
+    } else if (sortBy === 3) {
+        dispatch({
+            type: SORT_PEOPLE_RATINGS_HIGH_TO_LOW
         })
     }
 }
