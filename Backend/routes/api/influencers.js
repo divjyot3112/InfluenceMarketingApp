@@ -5,6 +5,7 @@ const passport = require("passport");
 const SponsorProfile = require("../../models/SponsorProfile");
 const InfluencerProfile = require("../../models/InfluencerProfile");
 const Rating = require("../../models/Rating");
+const taskStatus = require("../../utils/Constants").TaskStatus;
 var ObjectID = require("mongodb").ObjectID;
 
 // @route   POST api/influencers/rate?email
@@ -226,38 +227,46 @@ router.get("/profile", (req, res) => {
 // @desc    GET AVERAGE RATINGS BY CATEGORY
 // @access  Public
 router.get("/ratings/category", (req, res) => {
-    console.log("Inside get avg ratings for category request for " + req.query.email)
+    console.log("Inside get avg ratings by category request for " + req.query.email)
     var ratingsMap = {}
     var totalRatings = {}
     Rating.find({influencer:req.query.email})
         .then(ratings => {
             if(ratings.length>0) {
                 console.log(ratings.length + " ratings found")
-                ratings.map((rating, index) => (
+                ratings.map((rating, index) => {
                     Task.findOne({_id:ObjectID(rating.task)})
                         .then(task => {
                             if(task) {
-                                ratingsMap[task.category] = ratingsMap[task.category] ? 
-                                    ratingsMap[task.category] + rating.rating :
-                                    rating.rating;
-                                totalRatings[task.category] = totalRatings[task.category] ?
-                                    totalRatings[task.category]+1 : 1;
-                                if(index === ratings.length-1) {
-                                    for(var key of Object.keys(ratingsMap)) {
-                                        ratingsMap[key] = ratingsMap[key] / totalRatings[key]
+                                // const constructMap = () => {
+                                    ratingsMap[task.category] = ratingsMap[task.category] ? 
+                                        ratingsMap[task.category] + rating.rating :
+                                        rating.rating;
+                                    totalRatings[task.category] = totalRatings[task.category] ?
+                                        totalRatings[task.category]+1 : 1;
+                                // }
+                                const calcAvg = () => {
+                                    if(index === ratings.length-1) {
+                                        setTimeout(() => {
+                                            for(var key of Object.keys(ratingsMap)) {
+                                                console.log("Inside for " + ratingsMap[key] + " " + totalRatings[key])
+                                                ratingsMap[key] = ratingsMap[key] / totalRatings[key]
+                                            }
+                                            console.log(ratingsMap)
+                                            res.status(200).json({message: ratingsMap})
+                                        }, 10)
                                     }
-                                    console.log(ratingsMap)
-                                    res.status(200).json({message: ratingsMap})
                                 }
+                                calcAvg()
                             } else {
                                 console.log("Task Not found")
                             }
                         })
                         .catch(err => {
                             // res.status(400).json({message:"Task not found"})
-                            console.log("Task not found")
+                            console.log(err)
                         })
-                ))
+                })
             } else {
                 res.status(404).json({message: "No ratings for this user"})
             }
@@ -266,5 +275,58 @@ router.get("/ratings/category", (req, res) => {
             res.status(400).json({message: err})
         })
 })
+
+// @route   GET api/influencers/selected/category?email=emailID
+// @desc    GET SELECTED TASK COUNT BY CATEGORY
+// @access  Public
+router.get("/selected/category", (req, res) => {
+    var result = {}
+    Task.find({selectedCandidates: req.query.email})
+        .then(tasks => {
+            console.log(tasks.length)
+            if(tasks) {
+                tasks.forEach((task, index) => {
+                    result[task.category] = result[task.category] ? result[task.category] + 1 : 1
+                    if(index===tasks.length-1) {
+                        res.status(200).json({message: result})
+                    }
+                })
+            } else {
+                console.log("Tasks not found")
+            }
+        })
+        .catch(err => {
+            res.status(400).json({message: err})
+        })
+});
+
+// @route   GET api/influencers/earnings/category?email=emailID
+// @desc    GET SELECTED TOTAL EARNINGS BY CATEGORY
+// @access  Public
+router.get("/earnings/category", (req, res) => {
+    var result = {}
+    Task.find({selectedCandidates: req.query.email})
+        .then(tasks => {
+            console.log(tasks.length)
+            if(tasks) {
+                tasks.forEach((task, index) => {
+                    if(task.status===taskStatus.COMPLETED){
+                        console.log(task._id)
+                        result[task.category] = result[task.category] ? 
+                            result[task.category] + task.salary : 
+                            task.salary
+                    }
+                    if(index===tasks.length-1) {
+                        res.status(200).json({message: result})
+                    }
+                })
+            } else {
+                console.log("Tasks not found")
+            }
+        })
+        .catch(err => {
+            res.status(400).json({message: err})
+        })
+});
 
 module.exports = router;
