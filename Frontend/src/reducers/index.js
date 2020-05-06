@@ -15,9 +15,11 @@ import {
   fetchConversationsReducer,
   fetchAllUsersForInboxReducer,
 } from "./inboxReducer";
+import homeReducer from "./homeReducer";
 
 export default combineReducers({
   user: userReducer,
+  home: homeReducer,
   dashboardTasks: dashboardTasksReducer,
   dashboardNumPages: dashboardNumPageReducer,
   dashboardCurrentPageTasks: dashboardCurrentPageTasksReducer,

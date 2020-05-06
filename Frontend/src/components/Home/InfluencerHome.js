@@ -31,7 +31,7 @@ import {
   MDBCol,
 } from "mdbreact";
 
-class SponsorHome extends Component {
+class InfluencerHome extends Component {
   constructor(props) {
     super(props);
 
@@ -57,13 +57,108 @@ class SponsorHome extends Component {
 
     return (
       <div class="border">
-        {/* PENDING DIV*/}
+        {/* RECENTLY POSTED DIV*/}
         <div
           class="container-lg ml-8 mt-5 border rounded"
           style={{ padding: "2%" }}
         >
           <div>
-            <br /> <h2> PENDING TASKS </h2>{" "}
+            <br /> <h2> RECENTLY POSTED </h2>{" "}
+          </div>
+
+          <div class="row ">
+            <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+              <button type="button" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left"></i>
+              </button>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6 text-left">
+              <button type="button" class="btn btn-outline-primary text-center">
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+          <br />
+          <div class="card-deck">
+            <div class="card">
+              <img
+                class="card-img-top"
+                src="https://cmkt-image-prd.freetls.fastly.net/0.1.0/ps/68926/910/607/m1/fpnw/wm0/tshirt-realistic-screenshot-01-.jpg?1390946656&s=d73aff283d355c41eb17ea98070fce4f"
+                alt="Card image cap"
+              />
+              <div class="card-body">
+                <h5 class="card-title">HRX's Summer Collection is Out</h5>
+                <p class="card-text">
+                  We are looking for fashion bloggers who can help us share our
+                  new fabulous summer collection for both men and women.{" "}
+                </p>{" "}
+                <p class="card-text">
+                  Your job will be to daily share the pictures of our models on
+                  your instagram account.
+                </p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">Last updated 3 mins ago</small>
+              </div>
+            </div>
+            <div class="card">
+              <img
+                class="card-img-top"
+                src="https://www.thegreatcoursesplus.com/media/catalog/product/7/7/7776.jpg"
+                alt="Card image cap"
+              />
+              <div class="card-body">
+                <h5 class="card-title">EasyGuitar Online course</h5>
+                <p class="card-text">
+                  Picking up the guitar for first time? Doesn't matter! Improve
+                  any Skill on Guitar in 30 Days Guaranteed! Try it Risk-Free
+                  Now.
+                </p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">Last updated 3 mins ago</small>
+              </div>
+            </div>
+            <div class="card">
+              <img
+                class="card-img-top"
+                src="https://vader-prod.s3.amazonaws.com/1576175525-ffbeacon2mgrid-1565399625.jpg"
+                alt="Card image cap"
+              />
+              <div class="card-body">
+                <h5 class="card-title">NexxxT Running Shoes </h5>
+                <p class="card-text">
+                  Evolved with a dynamic rubber outsole, this run-inspired kick
+                  is back for another round of history. This item is only
+                  Limited Edition!
+                </p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">Last updated 3 mins ago</small>
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            {" "}
+            <div class="col-md-10 col-sm-10 col-lg-10"></div>
+            <div class="col-md-2 col-sm-2 col-lg-2">
+              <h5> See More </h5>{" "}
+            </div>
+          </div>
+        </div>
+        <div>
+          {" "}
+          <br /> <br /> <hr />{" "}
+        </div>
+        {/* MY ACTIVE DIV*/}
+        <div
+          class="container-lg ml-8 mt-5 border rounded"
+          style={{ padding: "2%" }}
+        >
+          <div>
+            <br /> <h2> MY ACTIVE TASKS </h2>{" "}
           </div>
 
           <div class="row ">
@@ -153,13 +248,12 @@ class SponsorHome extends Component {
           {" "}
           <br /> <br /> <hr />{" "}
         </div>
-        {/* IN PROGRESS DIV*/}
         <div
           class="container-lg ml-8 mt-5 border rounded"
           style={{ padding: "2%" }}
         >
           <div>
-            <br /> <h2> IN PROGRESS TASKS </h2>{" "}
+            <br /> <h2> RECOMMENDED FOR YOU </h2>{" "}
           </div>
 
           <div class="row ">
@@ -180,15 +274,16 @@ class SponsorHome extends Component {
             <div class="card">
               <img
                 class="card-img-top"
-                src="https://images.homedepot-static.com/productImages/6bf97df0-9694-4916-9d33-297252793cc1/svn/shadedeye-safety-glasses-sunglasses-85901-16-64_1000.jpg"
+                src="https://www.osprey.com/images/product/hero/daylite_f18_sideback_stonegrey_f17.jpg"
                 alt="Card image cap"
               />
               <div class="card-body">
-                <h5 class="card-title">Fossil Sun glasses</h5>
+                <h5 class="card-title">Hiking Bag</h5>
                 <p class="card-text">
-                  These Fossil sunglasses come in a sport-wrap design, providing
-                  a sleek, sporty look for your active lifestyle. In seach of
-                  influencers who can market this product.
+                  Easy to carry and easy to store, this essential, go-anywhere
+                  daypack folds into the smaller front zip pocket for stowing.
+                  Whether on the trail for weekend day hikes or on the road for
+                  spontaneous shopping trips.
                 </p>
               </div>
               <div class="card-footer">
@@ -198,14 +293,18 @@ class SponsorHome extends Component {
             <div class="card">
               <img
                 class="card-img-top"
-                src="https://static.turbosquid.com/Preview/001271/323/A5/_Z.jpg"
+                src="https://cdn.shopify.com/s/files/1/0049/4272/products/dumbbell-set-pairs-800_924307b6-11d1-4f7e-8850-27a917323a2f.jpg?v=1579198114"
                 alt="Card image cap"
               />
               <div class="card-body">
-                <h5 class="card-title">GameX Switch Console</h5>
+                <h5 class="card-title">
+                  Simply Lift 20 lbs, 30 lbs, 40 lbs Dumbbells
+                </h5>
                 <p class="card-text">
-                  Whether you're into gaming, HD movies, television, music, or
-                  all of the above, GameX offers something great for everyone.
+                  Tone muscle and build strength with a professional-grade
+                  dumbbells that bring the weight room to your home.
+                  TheSimplyLift 10 Dumbbell Set is perfect for strengthening
+                  your arms, legs, abs, and more,
                 </p>
               </div>
               <div class="card-footer">
@@ -215,14 +314,19 @@ class SponsorHome extends Component {
             <div class="card">
               <img
                 class="card-img-top"
-                src="https://img.gkbcdn.com/s3/p/2019-01-16/makibes-t3-smart-watch-black-1571984501939.jpg"
+                src="https://blog-assets.thedyrt.com/uploads/2019/11/gear-1.jpg"
                 alt="Card image cap"
               />
               <div class="card-body">
-                <h5 class="card-title">TimeX Smart Watch</h5>
+                <h5 class="card-title">Camping Gear</h5>
                 <p class="card-text">
-                  The ultimate device for a healthy life. Most advanced watch in
-                  the world! Any case, Any band, Any style you want!
+                  Columbia has recently launched a fresh range of camping gears
+                  for kids, teenagers and adults. We are looking for people who
+                  can help us promote our products.
+                </p>{" "}
+                <p class="card-text">
+                  You need to have a strong fan base and must be able to share
+                  our brand's content on your instagram handles.
                 </p>
               </div>
               <div class="card-footer">
@@ -259,4 +363,4 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   getSponsorPendingTasks,
   getSponsorInProgressTasks,
-})(SponsorHome);
+})(InfluencerHome);
