@@ -11,7 +11,7 @@ class InfluencerAnalytics extends React.Component {
       <Container className="border p-5">
         <hr />
         <Row xs="2" style={{ marginTop: "1%" }}>
-          <Col style={{ height: "300px", width: "500px" }}>
+          <Col style={{ height: "25em" }}>
             <h3 className="mt-2 " style={{ color: "red" }}>
               {" "}
               Total Earnings by category{" "}
@@ -23,14 +23,14 @@ class InfluencerAnalytics extends React.Component {
         <br />
         <hr />
         <Row xs="2" style={{ marginTop: "2%" }}>
-          <Col style={{ height: "400px" }} className="border-right">
+          <Col style={{ height: "25em" }} className="border-right">
             <h3 className="mt-2 " style={{ color: "blue" }}>
               Average ratings by category{" "}
             </h3>
             <hr />
             <RatingsByCategory />
           </Col>
-          <Col style={{ height: "400px" }}>
+          <Col style={{ height: "25em" }}>
             <h3 className="mt-2" style={{ color: "green" }}>
               Tasks completed by Category{" "}
             </h3>

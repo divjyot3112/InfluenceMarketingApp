@@ -5,10 +5,7 @@ import WOW from "wow.js";
 import $ from "jquery";
 import Alert from "react-bootstrap/Alert";
 import { connect } from "react-redux";
-import {
-  getSponsorInProgressTasks,
-  getSponsorPendingTasks,
-} from "../../actions/homeActions";
+import { getRecentlyPostedTasks } from "../../actions/homeActions";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 import { TaskStatus } from "../../utils/Constants";
@@ -44,16 +41,11 @@ class InfluencerHome extends Component {
 
     wow.init();
 
-    this.props.getSponsorPendingTasks(this.state.email, TaskStatus.PENDING);
-    this.props.getSponsorInProgressTasks(
-      this.state.email,
-      TaskStatus.INPROGRESS
-    );
+    this.props.getRecentlyPostedTasks();
   }
 
   render() {
-    console.log("All pending tasks", this.props.pendingtasks);
-    console.log("All inprogress tasks", this.props.inprogresstasks);
+    console.log("Recently posted tasks", this.props.recentlypostedtasks);
 
     return (
       <div class="border">
@@ -353,14 +345,11 @@ class InfluencerHome extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  pendingtasks: state.home.pendingtasks,
-
-  inprogresstasks: state.home.inprogresstasks,
+  recentlypostedtasks: state.home.recentlypostedtasks,
 });
 
 //function mapDispatchToProps
 
 export default connect(mapStateToProps, {
-  getSponsorPendingTasks,
-  getSponsorInProgressTasks,
+  getRecentlyPostedTasks,
 })(InfluencerHome);

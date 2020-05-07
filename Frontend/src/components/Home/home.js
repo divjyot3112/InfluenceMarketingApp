@@ -8,13 +8,13 @@ import InfluencerAnalytics from "../analytics/InfluencerAnalytics";
 class Home extends Component {
   render() {
     const role = getRoleFromLocalStorage();
-    let rating =
+    let homeComponent =
       role === UserRoles.INFLUENCER ? (
         <InfluencerHome />
       ) : (
         <SponsorHome></SponsorHome>
       );
-    return rating;
+    return homeComponent;
   }
 }
 

@@ -12,6 +12,8 @@ import {
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 import { TaskStatus } from "../../utils/Constants";
+import Pagination from "../Common/pagination";
+import { paginate } from "../../utils/paginate";
 
 import {
   MDBCard,
@@ -36,7 +38,9 @@ class SponsorHome extends Component {
     super(props);
 
     this.state = {
-      email: "sheena@gmail.com",
+      email: "testsponsor@gmail.com",
+      pageSize: 3,
+      currentPage: 1,
     };
   }
   componentDidMount() {
@@ -49,6 +53,48 @@ class SponsorHome extends Component {
       this.state.email,
       TaskStatus.INPROGRESS
     );
+  }
+
+  handlePageChange = (page) => {
+    console.log(page);
+    this.setState({
+      currentPage: page,
+    });
+  };
+
+  displayPendingTasks(currentPage, pageSize) {
+    if (this.props.pendingtasks.length > 0) {
+      const paginatedPendingTasks = paginate(
+        this.props.pendingtasks,
+        currentPage,
+        pageSize
+      );
+
+      let pendingtasks = paginatedPendingTasks.map((task) => {
+        console.log(task);
+
+        return (
+          <div class="card">
+            <img
+              class="card-img-top"
+              src="https://www.somagnews.com/wp-content/uploads/2020/01/b8-1-e1577995435435-696x382.jpg"
+              alt="Card image cap"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{task.title}</h5>
+              <p class="card-text">{task.description}</p>
+            </div>
+            <div class="card-footer">
+              <small class="text-muted">{task.category}</small>
+            </div>
+          </div>
+        );
+      });
+
+      return pendingtasks;
+    } else {
+      return <div> Nothing to show here! </div>;
+    }
   }
 
   render() {
@@ -64,6 +110,14 @@ class SponsorHome extends Component {
         >
           <div>
             <br /> <h2> PENDING TASKS </h2>{" "}
+          </div>
+          <div className="pages">
+            <Pagination
+              itemsCount={this.props.pendingtasks.length}
+              pageSize={this.state.pageSize}
+              onPageChange={this.handlePageChange}
+              currentPage={this.state.currentPage}
+            />{" "}
           </div>
 
           <div class="row ">
@@ -81,65 +135,12 @@ class SponsorHome extends Component {
           </div>
           <br />
           <div class="card-deck">
-            <div class="card">
-              <img
-                class="card-img-top"
-                src="https://www.somagnews.com/wp-content/uploads/2020/01/b8-1-e1577995435435-696x382.jpg"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Grand Theft Auto 6</h5>
-                <p class="card-text">
-                  Grand Theft Auto 6 is available in market now! This is one of
-                  the most awaited version of our game.
-                </p>
-                <p class="card-text">
-                  The candidates job will be to play the game daily and share
-                  some of their screen recordings on their Instagram account. We
-                  need a minimum of 5 videos and 7 pictures to be shared daily.
-                </p>
-              </div>
-              <div class="card-footer">
-                <small class="text-muted">Last updated 3 mins ago</small>
-              </div>
-            </div>
-            <div class="card">
-              <img
-                class="card-img-top"
-                src="https://cdn3.dpmag.com/2017/09/002a-beautyshot.jpg"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">H1 Camera Kit</h5>
-                <p class="card-text">
-                  The innovative H1 lets you switch from manual or autofocus,
-                  and accepts digital backs, like the Leaf Valeo 22, letting you
-                  switch between digital and analog recordings.
-                </p>
-              </div>
-              <div class="card-footer">
-                <small class="text-muted">Last updated 3 mins ago</small>
-              </div>
-            </div>
-            <div class="card">
-              <img
-                class="card-img-top"
-                src="https://firebasestorage.googleapis.com/v0/b/masterfinalproject-4583d.appspot.com/o/tasks%2Fhrichardson%40shaffer.com_up-energy-drink.jpg?alt=media&token=16d2aff6-a8b7-4c9e-8d5b-ed758fdbc5b1"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Up Energy Drink</h5>
-                <p class="card-text">
-                  Instagram fitness influencer with minimum 1000 followers
-                  needed to promote Christian Guzman's new Up Energy Drink. The
-                  ad must be a video and needs to be atleast 30 seconds.
-                </p>
-              </div>
-              <div class="card-footer">
-                <small class="text-muted">Last updated 3 mins ago</small>
-              </div>
-            </div>
+            {this.displayPendingTasks(
+              this.state.currentPage,
+              this.state.pageSize
+            )}
           </div>
+
           <br />
           <div class="row">
             {" "}
