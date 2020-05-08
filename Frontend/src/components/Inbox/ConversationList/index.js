@@ -6,8 +6,8 @@ import { fetchConversations, markRead } from "../../../actions/inboxActions";
 import { connect } from "react-redux";
 import './ConversationList.css';
 import SearchUsers from '../SearchUsers/SearchUsers';
-import {MY_USER_ID} from '../../../utils/Constants'
-//const MY_USER_ID = 'user2'; //TODO: add current user email
+//import {MY_USER_ID} from '../../../utils/Constants'
+const MY_USER_ID = localStorage.getItem("email"); //TODO: add current user email
 class ConversationList extends Component {
 
   constructor(props) {
@@ -41,7 +41,6 @@ class ConversationList extends Component {
           email: conversationName,
           unreadCount: unreadCount,
           name: c.name,
-
         };
       });
 
@@ -57,7 +56,8 @@ class ConversationList extends Component {
             this.addNewConversation(this.state.chatWith)
           }
         } else {
-          this.selectConversation(newConversations[0].email)
+          if(newConversations.length > 0)
+            this.selectConversation(newConversations[0].email)
         }
       })
     }
@@ -89,7 +89,8 @@ class ConversationList extends Component {
             this.addNewConversation(this.state.chatWith)
           }
         } else {
-          this.selectConversation(newConversations[0].email)
+          if(newConversations.length > 0)
+            this.selectConversation(newConversations[0].email)
         }
       }
       )
@@ -117,8 +118,7 @@ class ConversationList extends Component {
 
   selectConversation = (key) => {
     this.setState({
-      currentConverstation: key,
-      chatWith: this.state.allConversations.filter(c=>c.email === key)[0]
+      currentConverstation: key
     })
     this.props.selectConversation(key)
     if (this.state.allConversations.filter(c => c.email === key)[0].unreadCount !== 0) {

@@ -33,10 +33,10 @@ import DeleteModal from './DeleteModal'
 import MarkCompleteModal from './MarkCompleteModal'
 import NoData from './NoData'
 import "../../css/dashboard.css";
-import {MY_USER_ID} from "../../utils/Constants";
+//import {MY_USER_ID} from "../../utils/Constants";
 import {Link} from "react-router-dom";
 //create the Navbar Component
-
+const MY_USER_ID = localStorage.getItem("email");
 const useStyles = (theme) => ({
     cardGrid: {
         paddingTop: theme.spacing(8),
@@ -152,10 +152,10 @@ class SponsorDashboard extends Component {
     renderTasks() {
         const {classes} = this.props;
         if (this.props.currentPageTasks.length > 0) {
-            return _.map(this.props.currentPageTasks, (task) => {
-                let rateButton = (task.status === TaskStatus.COMPLETED) ?
+            return _.map(this.props.currentPageTasks, (task) => { 
+                let rateButton = (task.status === TaskStatus.COMPLETED && (new Date(task.endDate).getTime() >= Date.now() - 7*3600*1000*24)) ?
                     <AddRatingModal taskData={task}></AddRatingModal> : null;
-                let deleteButton = (task.status !== TaskStatus.COMPLETED && task.selectedCandidates !== undefined && task.selectedCandidates !== null && task.selectedCandidates.length <= 0) ?
+                let deleteButton = (task.status !== TaskStatus.COMPLETED && (task.selectedCandidates === undefined || task.selectedCandidates === null || task.selectedCandidates.length <= 0)) ?
                     <DeleteModal taskData={task} deleteTask={() => this.deleteTask(task._id)}></DeleteModal> : null;
                 let completeButton = (task.status === TaskStatus.INPROGRESS) ? <MarkCompleteModal taskData={task}
                                                                                                   markComplete={() => this.markComplete(task._id)}></MarkCompleteModal> : null;
@@ -174,7 +174,7 @@ class SponsorDashboard extends Component {
                             >
                             <CardMedia
                                 className={classes.cardMedia}
-                                image={(task.image === null || task.image === undefined) ? window.location.origin + '/no_image.jpg' : task.image}
+                                image={(task.image === null || task.image === undefined) ? window.location.origin + '/NoImageFound.jpg' : task.image}
                                 title={task.title}
                                 />
                                 </Link>

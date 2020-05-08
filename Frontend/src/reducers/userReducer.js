@@ -1,52 +1,24 @@
-import { LOGIN_USER, REGISTER_USER } from "../actions/types";
+import {LOGIN_USER, REGISTER_USER} from "../actions/types";
 
 const initialState = {
-  JWTtoken: {},
-  loginSuccess: false,
-  SignUpSuccess: false,
-  userDetails: {},
-  loading: false,
+    loginResponse: {},
+    SignUpResponse: {},
 };
 
 export default function userReducer(state = initialState, action) {
-  console.log("Inside user reducer");
-  console.log("dasdasas", action);
+    switch (action.type) {
+        case LOGIN_USER:
+            return {
+                ...state,
+                loginResponse: action.payload,
+            };
 
-  switch (action.type) {
-    case LOGIN_USER:
-      // console.log("Inside case LOGIN_USER");
-      return {
-        ...state,
-        JWTtoken: action.payload,
-        loginSuccess: true,
-      };
-
-    case REGISTER_USER:
-      // console.log("Inside case REGISTER_USER");
-      // console.log("action payload", action.payload.message);
-
-      return {
-        ...state,
-        userDetails: action.payload.message,
-        SignUpSuccess: true,
-      };
-    default:
-      return state;
-  }
+        case REGISTER_USER:
+            return {
+                ...state,
+                SignUpResponse: action.payload,
+            };
+        default:
+            return state;
+    }
 }
-
-// const initialState = {
-//     user: '',
-// }
-
-// export default function(state = initialState, action) {
-//     switch(action.type){
-//         case LOGIN_USER:
-//             return {
-//                 ...state,
-//                 user: action.payload,
-//             };
-//             default:
-//             return state;
-//     }
-// }

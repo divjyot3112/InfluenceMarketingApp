@@ -48,7 +48,7 @@ export class Appbar extends Component {
     componentDidMount() {
         const email = getEmailFromLocalStorage();
         const role = getRoleFromLocalStorage();
-
+        console.log("Component Did Mount")
         this.setState({role: role});
         if (email != null) {
             this.props.getProfile(email).then((response) => {
@@ -67,6 +67,34 @@ export class Appbar extends Component {
                     })
                 }
             })
+        }
+    }
+
+    componentWillReceiveProps(props) {
+        if (props.location.state && props.location.state.loggedIn !== this.state.loggedIn) {
+
+            this.setState({loggedIn: props.location.state.loggedIn})
+            const email = getEmailFromLocalStorage();
+
+            if (email != null) {
+                this.props.getProfile(email).then((response) => {
+                    if (response === undefined && this.props.profile.status === 200) {
+                        this.setState({
+                            firstName: this.props.profile.data.message.name
+                                ? this.props.profile.data.message.name.firstName
+                                : "",
+                            address: this.props.profile.data.message.address
+                                ? this.props.profile.data.message.address
+                                : "",
+                            image: this.props.profile.data.message
+                                ? this.props.profile.data.message.image
+                                : "",
+                            userExists: true,
+                            role: this.props.profile.data.role
+                        })
+                    }
+                })
+            }
         }
     }
 
@@ -146,6 +174,16 @@ export class Appbar extends Component {
         }
     }
 
+    loadMyProfile = () => {
+        this.props.history.push({
+            pathname: "/profile",
+            state: {
+                email: getEmailFromLocalStorage()
+            }
+        })
+        window.location.reload()
+    }
+
     render() {
         let redirectVar = null;
         if (!getEmailFromLocalStorage()) {
@@ -157,7 +195,7 @@ export class Appbar extends Component {
                 {redirectVar}
                 <div>
                     <Navbar color="dark" expand="md" className="navbar-main">
-                        <NavbarBrand href="/" className="navbar-brand">Together</NavbarBrand>
+                        <NavbarBrand href="/home" className="navbar-brand">Together</NavbarBrand>
                         <NavbarToggler onClick={this.toggle}/>
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="mr-auto" navbar className="navbar-search-main">
@@ -242,7 +280,7 @@ export class Appbar extends Component {
                                         </DropdownToggle>
                                         <DropdownMenu right>
                                             <DropdownItem className="drop-down-item">
-                                                <NavLink href="/profile">
+                                                <NavLink onClick={this.loadMyProfile}>
                                                     My Profile
                                                 </NavLink>
                                             </DropdownItem>
