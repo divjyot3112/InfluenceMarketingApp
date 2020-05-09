@@ -59,6 +59,8 @@ class InfluencerHome extends Component {
         });
     };
 
+    truncate = (input) => input.length > 100 ? `${input.substring(0, 100)}...` : input
+
     displayRecentlyPostedTasks(currentPage, pageSize) {
         if (this.props.recentlypostedtasks.length > 0) {
             const paginatedrecentlyPostedTasks = paginate(
@@ -88,7 +90,7 @@ class InfluencerHome extends Component {
                             </Link>
                             <div class="card-body">
                                 <h5 class="card-title">{task.title}</h5>
-                                <p class="card-text">{task.description}</p>
+                                <p class="card-text">{this.truncate(task.description)}</p>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted">{task.category}</small>
@@ -133,7 +135,7 @@ class InfluencerHome extends Component {
                             </Link>
                             <div class="card-body">
                                 <h5 class="card-title">{task.title}</h5>
-                                <p class="card-text">{task.description}</p>
+                                <p class="card-text">{this.truncate(task.description)}</p>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted">{task.category}</small>
@@ -178,7 +180,7 @@ class InfluencerHome extends Component {
                             </Link>
                             <div class="card-body">
                                 <h5 class="card-title">{task.title}</h5>
-                                <p class="card-text">{task.description}</p>
+                                <p class="card-text">{this.truncate(task.description)}</p>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted">{task.category}</small>
@@ -187,7 +189,6 @@ class InfluencerHome extends Component {
                     </div>
                 );
             });
-
             return recommendedtasks;
         } else {
             return (

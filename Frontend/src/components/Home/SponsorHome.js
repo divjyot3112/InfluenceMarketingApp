@@ -52,6 +52,8 @@ class SponsorHome extends Component {
         });
     };
 
+    truncate = (input) => input.length > 100 ? `${input.substring(0, 100)}...` : input
+    
     displayPendingTasks(currentPage, pageSize) {
         if (this.props.pendingtasks.length > 0) {
             const paginatedPendingTasks = paginate(
@@ -81,7 +83,7 @@ class SponsorHome extends Component {
                             </Link>
                             <div class="card-body">
                                 <h5 class="card-title">{task.title}</h5>
-                                <p class="card-text">{task.description}</p>
+                                <p class="card-text">{this.truncate(task.description)}</p>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted">{task.category}</small>
@@ -126,7 +128,7 @@ class SponsorHome extends Component {
                             </Link>
                             <div class="card-body">
                                 <h5 class="card-title">{task.title}</h5>
-                                <p class="card-text">{task.description}</p>
+                                <p class="card-text">{this.truncate(task.description)}</p>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted">{task.category}</small>
