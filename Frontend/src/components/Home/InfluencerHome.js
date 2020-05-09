@@ -138,59 +138,22 @@ class InfluencerHome extends Component {
 
             let recommendedtasks = paginatedrecommendedtasks.map((task) => {
                 return (
-                    <React.Fragment>
-                        <div className="pages">
-                            <Pagination
-                                itemsCount={this.props.recommendedtasks.length}
-                                pageSize={this.state.Recommended_pageSize}
-                                onPageChange={this.handleRecommendedPageChange}
-                                currentPage={this.state.Recommended_currentPage}
-                            />{" "}
-                        </div>
-                        <If condition={this.props.recommendedtasks.length > this.state.Recommended_pageSize}>
-                            <div
-                                className="row ">
-                                < div
-                                    className="col-lg-6 col-md-6 col-sm-6 text-right">
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline-primary">
-                                        <i className="fas fa-arrow-left"/>
-                                    </button>
-                                </div>
-
-                                <div className="col-lg-6 col-md-6 col-sm-6 text-left">
-                                    <button type="button" className="btn btn-outline-primary text-center">
-                                        <i className="fas fa-arrow-right"></i>
-                                    </button>
-                                </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <div class="card ">
+                            <img
+                                class="card-img-top"
+                                src={task.image ? task.image : NoImageFound}
+                                alt="Card image cap"
+                            />
+                            <div class="card-body">
+                                <h5 class="card-title">{task.title}</h5>
+                                <p class="card-text">{task.description}</p>
                             </div>
-                        </If>
-                        <br/>
-                        <div className="row">
-                            <div className="card-deck">
-
-                                <div className="col-lg-4 col-md-4 col-sm-4">
-                                    <div className="card ">
-                                        <img
-                                            className="card-img-top"
-                                            src={task.image ? task.image : NoImageFound}
-                                            alt="Card image cap"
-                                        />
-                                        <div className="card-body">
-                                            <h5 className="card-title">{task.title}</h5>
-                                            <p className="card-text">{task.description}</p>
-                                        </div>
-                                        <div className="card-footer">
-                                            <small className="text-muted">{task.category}</small>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="card-footer">
+                                <small class="text-muted">{task.category}</small>
                             </div>
                         </div>
-
-                    </React.Fragment>
-
+                    </div>
                 );
             });
 
@@ -198,6 +161,7 @@ class InfluencerHome extends Component {
         } else {
             return (
                 <div>
+                    {" "}
                     No Recommendations! Complete a few tasks to get similar
                     recommendations!{" "}
                 </div>
@@ -327,10 +291,38 @@ class InfluencerHome extends Component {
                         <br/> <h2> RECOMMENDED FOR YOU </h2>{" "}
                     </div>
 
-                    {this.displayRecommendedTasks(
-                        this.state.Recommended_currentPage,
-                        this.state.Recommended_pageSize
-                    )}
+                    <div className="pages">
+                        <Pagination
+                            itemsCount={this.props.recommendedtasks.length}
+                            pageSize={this.state.Recommended_pageSize}
+                            onPageChange={this.handleRecommendedPageChange}
+                            currentPage={this.state.Recommended_currentPage}
+                        />{" "}
+                    </div>
+                    <If condition={this.props.recommendedtasks.length > this.state.Recommended_pageSize}>
+                        <div class="row ">
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+                                <button type="button" class="btn btn-outline-primary">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-left">
+                                <button type="button" class="btn btn-outline-primary text-center">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </If>
+                    <br/>
+                    <div class="row">
+                        <div class="card-deck">
+                            {this.displayRecommendedTasks(
+                                this.state.Recommended_currentPage,
+                                this.state.Recommended_pageSize
+                            )}
+                        </div>
+                    </div>
                     <br/>
                     <div class="row">
                         {" "}
@@ -357,7 +349,6 @@ const mapStateToProps = (state) => ({
 });
 
 //function mapDispatchToProps
-
 export default connect(mapStateToProps, {
     getRecentlyPostedTasks,
     getMyActiveTasks,

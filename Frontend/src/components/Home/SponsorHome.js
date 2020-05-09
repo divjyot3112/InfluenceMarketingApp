@@ -242,12 +242,10 @@ class SponsorHome extends Component {
 
 const mapStateToProps = (state) => ({
     pendingtasks: state.home.pendingtasks,
-
     inprogresstasks: state.home.inprogresstasks,
 });
 
 //function mapDispatchToProps
-
 export default connect(mapStateToProps, {
     getSponsorPendingTasks,
     getSponsorInProgressTasks,
