@@ -2,10 +2,10 @@ import React from "react";
 import { Bubble } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 
-import { getSponsorAllTasksbyCategory } from "../../actions/analyticsActions";
+import { getSponsorCompletedTasksbyCategory } from "../../actions/analyticsActions";
 import { connect } from "react-redux";
 
-class TasksByCategory extends React.Component {
+class CompletedTasksByCategory extends React.Component {
   state = {
     email: "testsponsor@gmail.com",
 
@@ -28,7 +28,7 @@ class TasksByCategory extends React.Component {
       ],
       datasets: [
         {
-          label: "Tasks By Category",
+          label: "Completed Tasks By Category",
           fill: false,
           lineTension: 0.1,
           backgroundColor: "rgba(75,192,192,0.4)",
@@ -64,13 +64,13 @@ class TasksByCategory extends React.Component {
     },
   };
   componentDidMount() {
-    this.props.getSponsorAllTasksbyCategory(this.state.email);
+    this.props.getSponsorCompletedTasksbyCategory(this.state.email);
   }
 
   render() {
     console.log(
-      "All tasks by category: ",
-      this.props.sponsor_allTasksbycategory
+      "Completed tasks by category: ",
+      this.props.sponsor_CompletedTasksbycategory
     );
     return (
       <MDBContainer style={{ height: "100%", width: "100%" }}>
@@ -81,9 +81,10 @@ class TasksByCategory extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  sponsor_allTasksbycategory: state.analytics.sponsor_allTasksbycategory,
+  sponsor_CompletedTasksbycategory:
+    state.analytics.sponsor_CompletedTasksbycategory,
 });
 
 export default connect(mapStateToProps, {
-  getSponsorAllTasksbyCategory,
-})(TasksByCategory);
+  getSponsorCompletedTasksbyCategory,
+})(CompletedTasksByCategory);

@@ -16,6 +16,7 @@ import {
   fetchAllUsersForInboxReducer,
 } from "./inboxReducer";
 import homeReducer from "./homeReducer";
+import analyticsReducer from "./analyticsReducer";
 
 export default combineReducers({
   user: userReducer,
@@ -31,4 +32,5 @@ export default combineReducers({
   unratedInfluencers: unratedInfluencersReducer,
   form: formReducer,
   searchItems: searchReducer,
+  analytics: analyticsReducer,
 });

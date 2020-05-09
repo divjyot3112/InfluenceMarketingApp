@@ -5,7 +5,11 @@ import WOW from "wow.js";
 import $ from "jquery";
 import Alert from "react-bootstrap/Alert";
 import { connect } from "react-redux";
-import { getRecentlyPostedTasks } from "../../actions/homeActions";
+import {
+  getRecentlyPostedTasks,
+  getMyActiveTasks,
+  getRecommendations,
+} from "../../actions/homeActions";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 import { TaskStatus } from "../../utils/Constants";
@@ -33,7 +37,7 @@ class InfluencerHome extends Component {
     super(props);
 
     this.state = {
-      email: "sheena@gmail.com",
+      email: "testinfluencer@gmail.com",
     };
   }
   componentDidMount() {
@@ -42,10 +46,14 @@ class InfluencerHome extends Component {
     wow.init();
 
     this.props.getRecentlyPostedTasks();
+    this.props.getMyActiveTasks(this.state.email, TaskStatus.INPROGRESS);
+    this.props.getRecommendations(this.state.email);
   }
 
   render() {
     console.log("Recently posted tasks", this.props.recentlypostedtasks);
+    console.log("My active tasks", this.props.activetasks);
+    console.log("Recommended tasks", this.props.recommendedtasks);
 
     return (
       <div class="border">
@@ -346,10 +354,14 @@ class InfluencerHome extends Component {
 
 const mapStateToProps = (state) => ({
   recentlypostedtasks: state.home.recentlypostedtasks,
+  activetasks: state.home.activetasks,
+  recommendedtasks: state.home.recommendedtasks,
 });
 
 //function mapDispatchToProps
 
 export default connect(mapStateToProps, {
   getRecentlyPostedTasks,
+  getMyActiveTasks,
+  getRecommendations,
 })(InfluencerHome);

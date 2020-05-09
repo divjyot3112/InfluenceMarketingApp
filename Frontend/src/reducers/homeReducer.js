@@ -12,6 +12,8 @@ const initialState = {
   pendingtasks: {},
   inprogresstasks: {},
   recentlypostedtasks: {},
+  activetasks: {},
+  recommendedtasks: {},
 };
 
 export default function homeReducer(state = initialState, action) {
@@ -38,6 +40,22 @@ export default function homeReducer(state = initialState, action) {
       return {
         ...state,
         recentlypostedtasks: action.payload.message,
+      };
+
+    case MY_ACTIVE_TASKS:
+      console.log("Inside my active tasks reducer");
+
+      return {
+        ...state,
+        activetasks: action.payload.message,
+      };
+
+    case RECOMMENDED_TASKS:
+      console.log("Inside recommended tasks reducer");
+
+      return {
+        ...state,
+        recommendedtasks: action.payload.message,
       };
 
     default:

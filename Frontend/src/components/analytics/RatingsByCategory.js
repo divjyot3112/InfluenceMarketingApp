@@ -1,9 +1,12 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
+import { getInfluencerRatingsByCategory } from "../../actions/analyticsActions";
+import { connect } from "react-redux";
 
 class RatingsByCategory extends React.Component {
   state = {
+    email: "testinfluencer@gmail.com",
     data: {
       labels: [
         "Apparels",
@@ -47,7 +50,16 @@ class RatingsByCategory extends React.Component {
     },
   };
 
+  componentDidMount() {
+    this.props.getInfluencerRatingsByCategory(this.state.email);
+  }
+
   render() {
+    console.log(
+      "Influencer Ratings by category:",
+      this.props.influencer_ratingsbycategory
+    );
+
     return (
       <MDBContainer style={{ height: "100%", width: "100%" }}>
         <Line data={this.state.data} />
@@ -56,4 +68,10 @@ class RatingsByCategory extends React.Component {
   }
 }
 
-export default RatingsByCategory;
+const mapStateToProps = (state) => ({
+  influencer_ratingsbycategory: state.analytics.influencer_ratingsbycategory,
+});
+
+export default connect(mapStateToProps, {
+  getInfluencerRatingsByCategory,
+})(RatingsByCategory);

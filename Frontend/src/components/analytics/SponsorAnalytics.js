@@ -7,6 +7,7 @@ import RatingsByCategory from "./RatingsByCategory";
 import TasksByCategory from "./TasksByCategory";
 import TaskCountbyCategory from "./TaskCountbyCategory";
 import PaymentByCategory from "./PaymentByCategory";
+import CompletedTasksByCategory from "./CompletedTasksByCategory";
 class SponsorAnalytics extends React.Component {
   render() {
     return (
@@ -39,7 +40,7 @@ class SponsorAnalytics extends React.Component {
           <Col style={{ height: "25em" }}>
             <h3 className="mt-2">Completed Tasks by Category </h3>
             <hr />
-            <TasksByCategory />
+            <CompletedTasksByCategory />
           </Col>
         </Row>
       </Container>

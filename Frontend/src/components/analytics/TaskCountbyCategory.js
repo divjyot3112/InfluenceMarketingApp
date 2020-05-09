@@ -1,9 +1,13 @@
 import React from "react";
 import { Doughnut } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
+import { getInfluencerTasksCountByCategory } from "../../actions/analyticsActions";
+import { connect } from "react-redux";
 
 class TaskCountbyCategory extends React.Component {
   state = {
+    email: "testinfluencer@gmail.com",
+
     data: {
       labels: [
         "Apparels", //pink
@@ -46,7 +50,15 @@ class TaskCountbyCategory extends React.Component {
     },
   };
 
+  componentDidMount() {
+    this.props.getInfluencerTasksCountByCategory(this.state.email);
+  }
+
   render() {
+    console.log(
+      "Influencer Task Count by category:",
+      this.props.influencer_tasksbycategory
+    );
     return (
       <MDBContainer style={{ height: "100%", width: "100%" }}>
         <Doughnut data={this.state.data} />
@@ -55,4 +67,10 @@ class TaskCountbyCategory extends React.Component {
   }
 }
 
-export default TaskCountbyCategory;
+const mapStateToProps = (state) => ({
+  influencer_tasksbycategory: state.analytics.influencer_tasksbycategory,
+});
+
+export default connect(mapStateToProps, {
+  getInfluencerTasksCountByCategory,
+})(TaskCountbyCategory);

@@ -1,9 +1,13 @@
 import React from "react";
 import { HorizontalBar } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
+import { getInfluencerEarningsbyCategory } from "../../actions/analyticsActions";
+import { connect } from "react-redux";
 
 class EarningsPerCategory extends React.Component {
   state = {
+    email: "testinfluencer@gmail.com",
+
     dataHorizontal: {
       labels: [
         "Apparels",
@@ -79,7 +83,15 @@ class EarningsPerCategory extends React.Component {
     },
   };
 
+  componentDidMount() {
+    this.props.getInfluencerEarningsbyCategory(this.state.email);
+  }
+
   render() {
+    console.log(
+      "Influencer Earnings by category:",
+      this.props.influencer_earningsbycategory
+    );
     return (
       <MDBContainer style={{ height: "100%", width: "100%" }}>
         <HorizontalBar
@@ -91,4 +103,10 @@ class EarningsPerCategory extends React.Component {
   }
 }
 
-export default EarningsPerCategory;
+const mapStateToProps = (state) => ({
+  influencer_earningsbycategory: state.analytics.influencer_earningsbycategory,
+});
+
+export default connect(mapStateToProps, {
+  getInfluencerEarningsbyCategory,
+})(EarningsPerCategory);

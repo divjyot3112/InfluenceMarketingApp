@@ -2,8 +2,12 @@ import React from "react";
 import { Bar } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 
+import { getSponsorPaymentbyCategory } from "../../actions/analyticsActions";
+import { connect } from "react-redux";
+
 class PaymentByCategory extends React.Component {
   state = {
+    email: "testsponsor@gmail.com",
     dataBar: {
       labels: [
         "Apparels",
@@ -102,7 +106,12 @@ class PaymentByCategory extends React.Component {
     },
   };
 
+  componentDidMount() {
+    this.props.getSponsorPaymentbyCategory(this.state.email);
+  }
+
   render() {
+    console.log("Payment by category:", this.props.sponsor_paymentbycategory);
     return (
       <MDBContainer style={{ height: "100%", width: "100%" }}>
         <Bar data={this.state.dataBar} options={this.state.barChartOptions} />
@@ -111,4 +120,10 @@ class PaymentByCategory extends React.Component {
   }
 }
 
-export default PaymentByCategory;
+const mapStateToProps = (state) => ({
+  sponsor_paymentbycategory: state.analytics.sponsor_paymentbycategory,
+});
+
+export default connect(mapStateToProps, {
+  getSponsorPaymentbyCategory,
+})(PaymentByCategory);
