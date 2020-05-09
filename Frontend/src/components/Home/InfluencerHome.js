@@ -11,6 +11,7 @@ import {TaskStatus} from "../../utils/Constants";
 import Pagination from "../Common/pagination";
 import {paginate} from "../Common/paginate";
 import {getEmailFromLocalStorage} from "../Common/auth";
+import {If} from "react-if";
 
 const NoImageFound = require("../../utils/Constants").NoImageFound;
 
@@ -137,22 +138,59 @@ class InfluencerHome extends Component {
 
             let recommendedtasks = paginatedrecommendedtasks.map((task) => {
                 return (
-                    <div class="col-lg-4 col-md-4 col-sm-4">
-                        <div class="card ">
-                            <img
-                                class="card-img-top"
-                                src={task.image ? task.image : NoImageFound}
-                                alt="Card image cap"
-                            />
-                            <div class="card-body">
-                                <h5 class="card-title">{task.title}</h5>
-                                <p class="card-text">{task.description}</p>
+                    <React.Fragment>
+                        <div className="pages">
+                            <Pagination
+                                itemsCount={this.props.recommendedtasks.length}
+                                pageSize={this.state.Recommended_pageSize}
+                                onPageChange={this.handleRecommendedPageChange}
+                                currentPage={this.state.Recommended_currentPage}
+                            />{" "}
+                        </div>
+                        <If condition={this.props.recommendedtasks.length > this.state.Recommended_pageSize}>
+                            <div
+                                className="row ">
+                                < div
+                                    className="col-lg-6 col-md-6 col-sm-6 text-right">
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline-primary">
+                                        <i className="fas fa-arrow-left"/>
+                                    </button>
+                                </div>
+
+                                <div className="col-lg-6 col-md-6 col-sm-6 text-left">
+                                    <button type="button" className="btn btn-outline-primary text-center">
+                                        <i className="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="card-footer">
-                                <small class="text-muted">{task.category}</small>
+                        </If>
+                        <br/>
+                        <div className="row">
+                            <div className="card-deck">
+
+                                <div className="col-lg-4 col-md-4 col-sm-4">
+                                    <div className="card ">
+                                        <img
+                                            className="card-img-top"
+                                            src={task.image ? task.image : NoImageFound}
+                                            alt="Card image cap"
+                                        />
+                                        <div className="card-body">
+                                            <h5 className="card-title">{task.title}</h5>
+                                            <p className="card-text">{task.description}</p>
+                                        </div>
+                                        <div className="card-footer">
+                                            <small className="text-muted">{task.category}</small>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+
+                    </React.Fragment>
+
                 );
             });
 
@@ -160,7 +198,6 @@ class InfluencerHome extends Component {
         } else {
             return (
                 <div>
-                    {" "}
                     No Recommendations! Complete a few tasks to get similar
                     recommendations!{" "}
                 </div>
@@ -189,21 +226,23 @@ class InfluencerHome extends Component {
                             pageSize={this.state.pageSize}
                             onPageChange={this.handlePageChange}
                             currentPage={this.state.currentPage}
-                        />{" "}
+                        />
                     </div>
-                    <div class="row ">
-                        <div class="col-lg-6 col-md-6 col-sm-6 text-right">
-                            <button type="button" class="btn btn-outline-primary">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                        </div>
+                    <If condition={this.props.recentlypostedtasks.length > this.state.pageSize}>
+                        <div class="row ">
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+                                <button type="button" class="btn btn-outline-primary">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                            </div>
 
-                        <div class="col-lg-6 col-md-6 col-sm-6 text-left">
-                            <button type="button" class="btn btn-outline-primary text-center">
-                                <i class="fas fa-arrow-right"></i>
-                            </button>
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-left">
+                                <button type="button" class="btn btn-outline-primary text-center">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </If>
                     <br/>
                     <div class="row">
                         <div class="card-deck">
@@ -243,19 +282,21 @@ class InfluencerHome extends Component {
                             currentPage={this.state.ActiveTasks_currentPage}
                         />{" "}
                     </div>
-                    <div class="row ">
-                        <div class="col-lg-6 col-md-6 col-sm-6 text-right">
-                            <button type="button" class="btn btn-outline-primary">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                        </div>
+                    <If condition={this.props.activetasks.length > this.state.ActiveTasks_pageSize}>
+                        <div class="row ">
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+                                <button type="button" class="btn btn-outline-primary">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                            </div>
 
-                        <div class="col-lg-6 col-md-6 col-sm-6 text-left">
-                            <button type="button" class="btn btn-outline-primary text-center">
-                                <i class="fas fa-arrow-right"></i>
-                            </button>
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-left">
+                                <button type="button" class="btn btn-outline-primary text-center">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </If>
                     <br/>
                     <div class="card-deck">
                         {this.displayMyActiveTasks(
@@ -286,37 +327,10 @@ class InfluencerHome extends Component {
                         <br/> <h2> RECOMMENDED FOR YOU </h2>{" "}
                     </div>
 
-                    <div className="pages">
-                        <Pagination
-                            itemsCount={this.props.recommendedtasks.length}
-                            pageSize={this.state.Recommended_pageSize}
-                            onPageChange={this.handleRecommendedPageChange}
-                            currentPage={this.state.Recommended_currentPage}
-                        />{" "}
-                    </div>
-
-                    <div class="row ">
-                        <div class="col-lg-6 col-md-6 col-sm-6 text-right">
-                            <button type="button" class="btn btn-outline-primary">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                        </div>
-
-                        <div class="col-lg-6 col-md-6 col-sm-6 text-left">
-                            <button type="button" class="btn btn-outline-primary text-center">
-                                <i class="fas fa-arrow-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <br/>
-                    <div class="row">
-                        <div class="card-deck">
-                            {this.displayRecommendedTasks(
-                                this.state.Recommended_currentPage,
-                                this.state.Recommended_pageSize
-                            )}
-                        </div>
-                    </div>
+                    {this.displayRecommendedTasks(
+                        this.state.Recommended_currentPage,
+                        this.state.Recommended_pageSize
+                    )}
                     <br/>
                     <div class="row">
                         {" "}

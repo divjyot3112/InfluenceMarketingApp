@@ -10,6 +10,7 @@ import {TaskStatus} from "../../utils/Constants";
 import Pagination from "../Common/pagination";
 import {paginate} from "../Common/paginate";
 import {getEmailFromLocalStorage} from "../Common/auth";
+import {If} from "react-if";
 
 const NoImageFound = require("../../utils/Constants").NoImageFound;
 
@@ -143,20 +144,21 @@ class SponsorHome extends Component {
                             currentPage={this.state.currentPage}
                         />{" "}
                     </div>
+                    <If condition={this.props.pendingtasks.length > this.state.pageSize}>
+                        <div class="row ">
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+                                <button type="button" class="btn btn-outline-primary">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                            </div>
 
-                    <div class="row ">
-                        <div class="col-lg-6 col-md-6 col-sm-6 text-right">
-                            <button type="button" class="btn btn-outline-primary">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-left">
+                                <button type="button" class="btn btn-outline-primary text-center">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
                         </div>
-
-                        <div class="col-lg-6 col-md-6 col-sm-6 text-left">
-                            <button type="button" class="btn btn-outline-primary text-center">
-                                <i class="fas fa-arrow-right"></i>
-                            </button>
-                        </div>
-                    </div>
+                    </If>
                     <br/>
                     <div class="row">
                         <div class="card-deck">
@@ -194,21 +196,23 @@ class SponsorHome extends Component {
                             pageSize={this.state.progressPageSize}
                             onPageChange={this.handleProgressPageChange}
                             currentPage={this.state.progressCurrentPage}
-                        />{" "}
+                        />
                     </div>
-                    <div class="row ">
-                        <div class="col-lg-6 col-md-6 col-sm-6 text-right">
-                            <button type="button" class="btn btn-outline-primary">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                        </div>
+                    <If condition={this.props.pendingtasks.length > this.state.progressPageSize}>
+                        <div class="row ">
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+                                <button type="button" class="btn btn-outline-primary">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                            </div>
 
-                        <div class="col-lg-6 col-md-6 col-sm-6 text-left">
-                            <button type="button" class="btn btn-outline-primary text-center">
-                                <i class="fas fa-arrow-right"></i>
-                            </button>
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-left">
+                                <button type="button" class="btn btn-outline-primary text-center">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </If>
                     <br/>
 
                     <div class="card-deck">
