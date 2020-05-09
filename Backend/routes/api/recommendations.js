@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
     Recommendations.find({
         email:req.query.email
     }).then(async (recommendation) => {
-        if (recommendation && recommendation.length >= 0) {
+        if (recommendation && recommendation.length > 0) {
             let final_docs = await Promise.all(recommendation[0].tasks.map(async task => {
                 return await fetchTaskDetails(task).then((result) => result)
             }))
