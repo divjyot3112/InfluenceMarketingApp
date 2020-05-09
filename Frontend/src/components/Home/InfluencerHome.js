@@ -6,8 +6,9 @@ import $ from "jquery";
 import Alert from "react-bootstrap/Alert";
 import { connect } from "react-redux";
 import {
-  getSponsorInProgressTasks,
-  getSponsorPendingTasks,
+  getRecentlyPostedTasks,
+  getMyActiveTasks,
+  getRecommendations,
 } from "../../actions/homeActions";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
@@ -33,8 +34,9 @@ import {
   MDBRow,
   MDBCol,
 } from "mdbreact";
+import { MARK_DASHBOARD_TASK_COMPLETE } from "../../actions/types";
 
-class SponsorHome extends Component {
+class InfluencerHome extends Component {
   constructor(props) {
     super(props);
 
@@ -42,8 +44,10 @@ class SponsorHome extends Component {
       email: getEmailFromLocalStorage(),
       pageSize: 3,
       currentPage: 1,
-      progressPageSize: 3,
-      progressCurrentPage: 1,
+      ActiveTasks_pageSize: 3,
+      ActiveTasks_currentPage: 1,
+      Recommended_pageSize: 3,
+      Recommended_currentPage: 1,
     };
   }
   componentDidMount() {
@@ -51,11 +55,9 @@ class SponsorHome extends Component {
 
     wow.init();
 
-    this.props.getSponsorPendingTasks(this.state.email, TaskStatus.PENDING);
-    this.props.getSponsorInProgressTasks(
-      this.state.email,
-      TaskStatus.INPROGRESS
-    );
+    this.props.getRecentlyPostedTasks();
+    this.props.getMyActiveTasks(this.state.email, TaskStatus.INPROGRESS);
+    this.props.getRecommendations(this.state.email);
   }
 
   handlePageChange = (page) => {
@@ -65,22 +67,29 @@ class SponsorHome extends Component {
     });
   };
 
-  handleProgressPageChange = (page) => {
+  handleActiveTasksPageChange = (page) => {
     console.log(page);
     this.setState({
-      progressCurrentPage: page,
+      ActiveTasks_currentPage: page,
     });
   };
 
-  displayPendingTasks(currentPage, pageSize) {
-    if (this.props.pendingtasks.length > 0) {
-      const paginatedPendingTasks = paginate(
-        this.props.pendingtasks,
+  handleRecommendedPageChange = (page) => {
+    console.log(page);
+    this.setState({
+      Recommended_currentPage: page,
+    });
+  };
+
+  displayRecentlyPostedTasks(currentPage, pageSize) {
+    if (this.props.recentlypostedtasks.length > 0) {
+      const paginatedrecentlyPostedTasks = paginate(
+        this.props.recentlypostedtasks,
         currentPage,
         pageSize
       );
 
-      let pendingtasks = paginatedPendingTasks.map((task) => {
+      let recentlypostedtasks = paginatedrecentlyPostedTasks.map((task) => {
         console.log(task);
 
         return (
@@ -103,26 +112,26 @@ class SponsorHome extends Component {
         );
       });
 
-      return pendingtasks;
+      return recentlypostedtasks;
     } else {
-      return <div> No Tasks Pending! </div>;
+      return <div> No Tasks Present! </div>;
     }
   }
 
-  displayInProgressTasks(currentPage, pageSize) {
-    if (this.props.inprogresstasks.length > 0) {
-      const paginatedInProgressTasks = paginate(
-        this.props.inprogresstasks,
-        currentPage,
-        pageSize
+  displayMyActiveTasks(ActiveTasks_currentPage, ActiveTasks_pageSize) {
+    if (this.props.activetasks.length > 0) {
+      const paginatedactivetasks = paginate(
+        this.props.activetasks,
+        ActiveTasks_currentPage,
+        ActiveTasks_pageSize
       );
 
-      let inprogresstasks = paginatedInProgressTasks.map((task) => {
+      let activetasks = paginatedactivetasks.map((task) => {
         console.log(task);
 
         return (
           <div class="col-lg-4 col-md-4 col-sm-4">
-            <div class="card">
+            <div class="card ">
               <img
                 class="card-img-top"
                 src="https://www.somagnews.com/wp-content/uploads/2020/01/b8-1-e1577995435435-696x382.jpg"
@@ -140,33 +149,177 @@ class SponsorHome extends Component {
         );
       });
 
-      return inprogresstasks;
+      return activetasks;
     } else {
-      return <div> No Tasks Currently in Progress! </div>;
+      return <div> No Currently Active tasks Found! </div>;
+    }
+  }
+
+  displayRecommendedTasks(Recommended_currentPage, Recommended_pageSize) {
+    if (this.props.recommendedtasks.length > 0) {
+      const paginatedrecommendedtasks = paginate(
+        this.props.recommendedtasks,
+        Recommended_currentPage,
+        Recommended_pageSize
+      );
+
+      let recommendedtasks = paginatedrecommendedtasks.map((task) => {
+        console.log(task);
+
+        return (
+          <div class="col-lg-4 col-md-4 col-sm-4">
+            <div class="card ">
+              <img
+                class="card-img-top"
+                src="https://www.somagnews.com/wp-content/uploads/2020/01/b8-1-e1577995435435-696x382.jpg"
+                alt="Card image cap"
+              />
+              <div class="card-body">
+                <h5 class="card-title">{task.title}</h5>
+                <p class="card-text">{task.description}</p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">{task.category}</small>
+              </div>
+            </div>
+          </div>
+        );
+      });
+
+      return recommendedtasks;
+    } else {
+      return (
+        <div>
+          {" "}
+          No Recommendations! Complete a few tasks to get similar
+          recommendations!{" "}
+        </div>
+      );
     }
   }
 
   render() {
-    console.log("All pending tasks", this.props.pendingtasks);
-    console.log("All inprogress tasks", this.props.inprogresstasks);
+    console.log("Recently posted tasks", this.props.recentlypostedtasks);
+    console.log("My active tasks", this.props.activetasks);
+    console.log("Recommended tasks", this.props.recommendedtasks);
 
     return (
       <div class="border">
-        {/* PENDING DIV*/}
+        {/* RECENTLY POSTED DIV*/}
         <div
           class="container-lg ml-8 mt-5 border rounded"
           style={{ padding: "2%" }}
         >
           <div>
-            <br /> <h2> PENDING TASKS </h2>{" "}
+            <br /> <h2> RECENTLY POSTED </h2>{" "}
+          </div>
+          <div className="pages">
+            <Pagination
+              itemsCount={this.props.recentlypostedtasks.length}
+              pageSize={this.state.pageSize}
+              onPageChange={this.handlePageChange}
+              currentPage={this.state.currentPage}
+            />{" "}
+          </div>
+          <div class="row ">
+            <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+              <button type="button" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left"></i>
+              </button>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6 text-left">
+              <button type="button" class="btn btn-outline-primary text-center">
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            <div class="card-deck">
+              {this.displayRecentlyPostedTasks(
+                this.state.currentPage,
+                this.state.pageSize
+              )}
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            {" "}
+            <div class="col-md-10 col-sm-10 col-lg-10"></div>
+            <div class="col-md-2 col-sm-2 col-lg-2">
+              <h5> See More </h5>{" "}
+            </div>
+          </div>
+        </div>
+        <div>
+          {" "}
+          <br /> <br /> <hr />{" "}
+        </div>
+        {/* MY ACTIVE DIV*/}
+        <div
+          class="container-lg ml-8 mt-5 border rounded"
+          style={{ padding: "2%" }}
+        >
+          <div>
+            <br /> <h2> MY ACTIVE TASKS </h2>{" "}
+          </div>
+          <div className="pages">
+            <Pagination
+              itemsCount={this.props.activetasks.length}
+              pageSize={this.state.ActiveTasks_pageSize}
+              onPageChange={this.handleActiveTasksPageChange}
+              currentPage={this.state.ActiveTasks_currentPage}
+            />{" "}
+          </div>
+          <div class="row ">
+            <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+              <button type="button" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left"></i>
+              </button>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6 text-left">
+              <button type="button" class="btn btn-outline-primary text-center">
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+          <br />
+          <div class="card-deck">
+            {this.displayMyActiveTasks(
+              this.state.ActiveTasks_currentPage,
+              this.state.ActiveTasks_pageSize
+            )}
+          </div>
+
+          <br />
+          <div class="row">
+            {" "}
+            <div class="col-md-10 col-sm-10 col-lg-10"></div>
+            <div class="col-md-2 col-sm-2 col-lg-2">
+              <h5> See More </h5>{" "}
+            </div>
+          </div>
+        </div>
+        <div>
+          {" "}
+          <br /> <br /> <hr />{" "}
+        </div>
+        <div
+          class="container-lg ml-8 mt-5 border rounded"
+          style={{ padding: "2%" }}
+        >
+          <div>
+            <br /> <h2> RECOMMENDED FOR YOU </h2>{" "}
           </div>
 
           <div className="pages">
             <Pagination
-              itemsCount={this.props.pendingtasks.length}
-              pageSize={this.state.pageSize}
-              onPageChange={this.handlePageChange}
-              currentPage={this.state.currentPage}
+              itemsCount={this.props.recommendedtasks.length}
+              pageSize={this.state.Recommended_pageSize}
+              onPageChange={this.handleRecommendedPageChange}
+              currentPage={this.state.Recommended_currentPage}
             />{" "}
           </div>
 
@@ -186,61 +339,11 @@ class SponsorHome extends Component {
           <br />
           <div class="row">
             <div class="card-deck">
-              {this.displayPendingTasks(
-                this.state.currentPage,
-                this.state.pageSize
+              {this.displayRecommendedTasks(
+                this.state.Recommended_currentPage,
+                this.state.Recommended_pageSize
               )}
             </div>
-          </div>
-          <br />
-          <div class="row">
-            {" "}
-            <div class="col-md-10 col-sm-10 col-lg-10"></div>
-            <div class="col-md-2 col-sm-2 col-lg-2">
-              <h5> See More </h5>{" "}
-            </div>
-          </div>
-        </div>
-        <div>
-          {" "}
-          <br /> <br /> <hr />{" "}
-        </div>
-        {/* IN PROGRESS DIV*/}
-        <div
-          class="container-lg ml-8 mt-5 border rounded"
-          style={{ padding: "2%" }}
-        >
-          <div>
-            <br /> <h2> IN PROGRESS TASKS </h2>{" "}
-          </div>
-          <div className="pages">
-            <Pagination
-              itemsCount={this.props.pendingtasks.length}
-              pageSize={this.state.progressPageSize}
-              onPageChange={this.handleProgressPageChange}
-              currentPage={this.state.progressCurrentPage}
-            />{" "}
-          </div>
-          <div class="row ">
-            <div class="col-lg-6 col-md-6 col-sm-6 text-right">
-              <button type="button" class="btn btn-outline-primary">
-                <i class="fas fa-arrow-left"></i>
-              </button>
-            </div>
-
-            <div class="col-lg-6 col-md-6 col-sm-6 text-left">
-              <button type="button" class="btn btn-outline-primary text-center">
-                <i class="fas fa-arrow-right"></i>
-              </button>
-            </div>
-          </div>
-          <br />
-
-          <div class="card-deck">
-            {this.displayInProgressTasks(
-              this.state.progressCurrentPage,
-              this.state.progressPageSize
-            )}
           </div>
           <br />
           <div class="row">
@@ -261,14 +364,15 @@ class SponsorHome extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  pendingtasks: state.home.pendingtasks,
-
-  inprogresstasks: state.home.inprogresstasks,
+  recentlypostedtasks: state.home.recentlypostedtasks,
+  activetasks: state.home.activetasks,
+  recommendedtasks: state.home.recommendedtasks,
 });
 
 //function mapDispatchToProps
 
 export default connect(mapStateToProps, {
-  getSponsorPendingTasks,
-  getSponsorInProgressTasks,
-})(SponsorHome);
+  getRecentlyPostedTasks,
+  getMyActiveTasks,
+  getRecommendations,
+})(InfluencerHome);

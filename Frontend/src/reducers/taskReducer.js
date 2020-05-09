@@ -1,3 +1,4 @@
+
 import {
     SAVE_TASK,
     EDIT_TASK,
@@ -6,6 +7,7 @@ import {
     GET_SELECTED_CANDIDATES,
     DELETE_TASK,
     APPLY_TASK,
+  GET_ALL_TASKS,
     GET_SPONSOR_PROFILE,
     MARK_COMPLETE
 } from "../actions/types";
@@ -19,11 +21,29 @@ const initialState = {
     completed: false,
     sponsor:{},
     task: {},
-    profiles: []
+    profiles: [],
+  tasks: {},
+
 };
 
 export default function (state = initialState, action) {
-    switch (action.type) {
+  switch (action.type) {
+    case SAVE_TASK:
+      return {
+        ...state,
+        saved: true,
+      };
+    case GET_TASK:
+      return {
+        ...state,
+        task: action.payload.message,
+      };
+    case GET_ALL_TASKS:
+      console.log(
+        "Inside getallTasks reducer task data:",
+        action.payload.message
+      );
+
 
         case SAVE_TASK:
             return {
@@ -68,6 +88,13 @@ export default function (state = initialState, action) {
                 ...state,
                 task: action.payload.message,
             };
+  
+    case GET_ALL_TASKS:
+       return {
+        ...state,
+        tasks: action.payload.message,
+      };
+  
         case GET_SPONSOR_PROFILE:
             return {
                 ...state,
@@ -76,4 +103,5 @@ export default function (state = initialState, action) {
         default:
             return state;
     }
+
 }
