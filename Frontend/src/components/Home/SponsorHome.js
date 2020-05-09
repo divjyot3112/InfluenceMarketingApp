@@ -11,6 +11,7 @@ import Pagination from "../Common/pagination";
 import {paginate} from "../Common/paginate";
 import {getEmailFromLocalStorage} from "../Common/auth";
 import {If} from "react-if";
+import {Link} from "react-router-dom";
 
 const NoImageFound = require("../../utils/Constants").NoImageFound;
 
@@ -51,6 +52,8 @@ class SponsorHome extends Component {
         });
     };
 
+    truncate = (input, length) => input.length > length ? `${input.substring(0, length)}...` : input
+
     displayPendingTasks(currentPage, pageSize) {
         if (this.props.pendingtasks.length > 0) {
             const paginatedPendingTasks = paginate(
@@ -63,14 +66,24 @@ class SponsorHome extends Component {
                 return (
                     <div class="col-lg-4 col-md-4 col-sm-4">
                         <div class="card ">
-                            <img
-                                class="card-img-top"
-                                src={task.image ? task.image : NoImageFound}
-                                alt="Card image cap"
-                            />
+                            <Link
+                                to={{
+                                    pathname: "/task",
+                                    state: {
+                                        taskId: task._id
+                                    }
+                                }}
+                                style={{textDecoration: "none"}}
+                            >
+                                <img
+                                    class="card-img-top"
+                                    src={task.image ? task.image : NoImageFound}
+                                    height="250"
+                                />
+                            </Link>
                             <div class="card-body">
-                                <h5 class="card-title">{task.title}</h5>
-                                <p class="card-text">{task.description}</p>
+                                <h5 className="card-title">{this.truncate(task.title, 20)}</h5>
+                                <p class="card-text">{this.truncate(task.description, 100)}</p>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted">{task.category}</small>
@@ -98,14 +111,24 @@ class SponsorHome extends Component {
                 return (
                     <div class="col-lg-4 col-md-4 col-sm-4">
                         <div class="card">
-                            <img
-                                class="card-img-top"
-                                src={task.image ? task.image : NoImageFound}
-                                alt="Card image cap"
-                            />
+                            <Link
+                                to={{
+                                    pathname: "/task",
+                                    state: {
+                                        taskId: task._id
+                                    }
+                                }}
+                                style={{textDecoration: "none"}}
+                            >
+                                <img
+                                    class="card-img-top"
+                                    src={task.image ? task.image : NoImageFound}
+                                    height="250"
+                                />
+                            </Link>
                             <div class="card-body">
-                                <h5 class="card-title">{task.title}</h5>
-                                <p class="card-text">{task.description}</p>
+                                <h5 className="card-title">{this.truncate(task.title, 20)}</h5>
+                                <p class="card-text">{this.truncate(task.description, 100)}</p>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted">{task.category}</small>
