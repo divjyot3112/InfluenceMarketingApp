@@ -59,7 +59,7 @@ class InfluencerHome extends Component {
         });
     };
 
-    truncate = (input) => input.length > 100 ? `${input.substring(0, 100)}...` : input
+    truncate = (input, length) => input.length > length ? `${input.substring(0, length)}...` : input
 
     displayRecentlyPostedTasks(currentPage, pageSize) {
         if (this.props.recentlypostedtasks.length > 0) {
@@ -85,12 +85,12 @@ class InfluencerHome extends Component {
                                 <img
                                     class="card-img-top"
                                     src={task.image ? task.image : NoImageFound}
-                                    alt="Card image cap"
+                                    height="250"
                                 />
                             </Link>
                             <div class="card-body">
-                                <h5 class="card-title">{task.title}</h5>
-                                <p class="card-text">{this.truncate(task.description)}</p>
+                                <h5 className="card-title">{this.truncate(task.title, 20)}</h5>
+                                <p class="card-text">{this.truncate(task.description, 100)}</p>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted">{task.category}</small>
@@ -130,12 +130,12 @@ class InfluencerHome extends Component {
                                 <img
                                     class="card-img-top"
                                     src={task.image ? task.image : NoImageFound}
-                                    alt="Card image cap"
+                                    height="250"
                                 />
                             </Link>
                             <div class="card-body">
-                                <h5 class="card-title">{task.title}</h5>
-                                <p class="card-text">{this.truncate(task.description)}</p>
+                                <h5 className="card-title">{this.truncate(task.title, 20)}</h5>
+                                <p class="card-text">{this.truncate(task.description, 100)}</p>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted">{task.category}</small>
@@ -175,12 +175,12 @@ class InfluencerHome extends Component {
                                 <img
                                     class="card-img-top"
                                     src={task.image ? task.image : NoImageFound}
-                                    alt="Card image cap"
+                                    height="250"
                                 />
                             </Link>
                             <div class="card-body">
-                                <h5 class="card-title">{task.title}</h5>
-                                <p class="card-text">{this.truncate(task.description)}</p>
+                                <h5 class="card-title">{this.truncate(task.title, 20)}</h5>
+                                <p class="card-text">{this.truncate(task.description, 100)}</p>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted">{task.category}</small>
