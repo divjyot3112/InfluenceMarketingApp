@@ -148,7 +148,7 @@ class PostTask extends PostTaskFormEventHandlers {
             status: "",
             open: false,
             selected: [],
-            sponsor:{}
+            sponsor: {}
         };
 
         this.handleTitle = this.handleTitle.bind(this);
@@ -168,17 +168,17 @@ class PostTask extends PostTaskFormEventHandlers {
                     const task = this.props.task
                     this.props.getSponsorProfile(task.postedBy)
                     console.log("Task " + task)
-                    let viewSelected = task.postedBy===MY_USER_ID
-                    if (task.selectedCandidates && task.selectedCandidates.length>0 && !viewSelected) {
+                    let viewSelected = task.postedBy === MY_USER_ID
+                    if (task.selectedCandidates && task.selectedCandidates.length > 0 && !viewSelected) {
                         task.selectedCandidates.forEach(candidate => {
-                            if (candidate===MY_USER_ID) {
+                            if (candidate === MY_USER_ID) {
                                 viewSelected = true;
                             }
                         });
                     }
-                    if(task.selectedCandidates && task.selectedCandidates.length===0) viewSelected=false
+                    if (task.selectedCandidates && task.selectedCandidates.length === 0) viewSelected = false
                     console.log("viewSelected" + viewSelected)
-                    if(viewSelected) {
+                    if (viewSelected) {
                         this.props.getSelectedCandidateProfiles(task._id)
                     }
                     this.setState({
@@ -285,8 +285,8 @@ class PostTask extends PostTaskFormEventHandlers {
     }
 
     apply = () => {
-        this.props.apply(this.state.taskId, {email:MY_USER_ID}).then(() => {
-            if(this.props.applied) {
+        this.props.apply(this.state.taskId, {email: MY_USER_ID}).then(() => {
+            if (this.props.applied) {
                 window.alert("Successfully applied")
                 window.location.reload();
             } else {
@@ -299,7 +299,7 @@ class PostTask extends PostTaskFormEventHandlers {
         this.props.deleteTask(this.state.taskId)
             .then(() => {
                 this.toggle()
-                if(this.props.deleted) {
+                if (this.props.deleted) {
                     window.alert("Task has been deleted")
                     this.setState({
                         redirect: "/home"
@@ -315,16 +315,16 @@ class PostTask extends PostTaskFormEventHandlers {
         console.log(this.state)
         const profiles = this.props.profiles
         const sponsor = this.props.sponsor
-        if(this.state.redirect) {
-            return <Redirect to={this.state.redirect} />
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect}/>
         }
         return (
             <React.Fragment>
                 <div className="main-post-task">
                     <form className={classes.root}>
                         <div className="form_body_bottom">
-                            <div style={{display:"inline"}}>
-                                <b style={{float:"left",marginRight:"1%", padding:"1.5%"}}>Posted By:</b>
+                            <div style={{display: "inline"}}>
+                                <b style={{float: "left", marginRight: "1%", padding: "1.5%"}}>Posted By:</b>
                                 <Link
                                     to={{
                                         pathname: "/profile",
@@ -332,26 +332,26 @@ class PostTask extends PostTaskFormEventHandlers {
                                             email: this.state.postedBy
                                         }
                                     }}
-                                    style={{textDecoration: 'none', width:"100%"}}
+                                    style={{textDecoration: 'none', width: "100%"}}
                                 >
                                     <Avatar
                                         src={sponsor.image}
-                                        style={{ marginRight:"1%",float:"left"}}
+                                        style={{marginRight: "1%", float: "left"}}
                                         className={classes.small}
                                     />
-                                    <div style={{padding:"1.5%"}}>
+                                    <div style={{padding: "1.5%"}}>
                                         {" "} {sponsor.name ?
                                         sponsor.name.firstName + " " + sponsor.name.lastName : ""}
                                     </div>
                                 </Link>
                                 <br/>
-                                <div style={{padding:"1.5%"}}>
+                                <div style={{padding: "1.5%"}}>
                                     <b>Status: </b>{this.state.status}
                                 </div>
                             </div>
                             <div
                                 className="input-group mb-3"
-                                style={{display:MY_USER_ID!==this.state.postedBy?"none":""}}
+                                style={{display: MY_USER_ID !== this.state.postedBy ? "none" : ""}}
                             >
                                 <div className="input-group-prepend">
                                     <span className="input-group-text" id="inputGroupFileAddon01">Upload</span>
@@ -526,13 +526,13 @@ class PostTask extends PostTaskFormEventHandlers {
                         <div className="buttons">
                             <Button
                                 disabled={
-                                    MY_ROLE===UserRoles.SPONSOR ||
-                                    this.state.status!==TaskStatus.CREATED ||
-                                    (this.state.appliedCandidates.length>0 ?
-                                    this.state.appliedCandidates.includes(MY_USER_ID)
-                                    : false)
+                                    MY_ROLE === UserRoles.SPONSOR ||
+                                    this.state.status !== TaskStatus.CREATED ||
+                                    (this.state.appliedCandidates.length > 0 ?
+                                        this.state.appliedCandidates.includes(MY_USER_ID)
+                                        : false)
                                 }
-                                style={{display:MY_ROLE===UserRoles.SPONSOR ? "none" : ""}}
+                                style={{display: MY_ROLE === UserRoles.SPONSOR ? "none" : ""}}
                                 variant="contained"
                                 size="large"
                                 className="classes.button btn-apply"
@@ -543,11 +543,11 @@ class PostTask extends PostTaskFormEventHandlers {
                             </Button>
                             <Button
                                 disabled={
-                                    this.state.status!==TaskStatus.INPROGRESS
+                                    this.state.status !== TaskStatus.INPROGRESS
                                 }
                                 style={{
-                                    display:MY_USER_ID!==this.state.postedBy ? "none" : "",
-                                    marginLeft:"5%"
+                                    display: MY_USER_ID !== this.state.postedBy ? "none" : "",
+                                    marginLeft: "5%"
                                 }}
                                 variant="contained"
                                 size="large"
@@ -559,7 +559,7 @@ class PostTask extends PostTaskFormEventHandlers {
                             </Button>
                             <Button
                                 id="submitButton"
-                                style={{display:MY_USER_ID!==this.state.postedBy ? "none" : ""}}
+                                style={{display: MY_USER_ID !== this.state.postedBy ? "none" : ""}}
                                 variant="contained"
                                 color="primary"
                                 size="large"
@@ -572,8 +572,8 @@ class PostTask extends PostTaskFormEventHandlers {
                             </Button>
 
                             <Button
-                                disabled={this.state.status!==TaskStatus.CREATED}
-                                style={{display:MY_USER_ID!==this.state.postedBy ? "none" : ""}}
+                                disabled={this.state.status !== TaskStatus.CREATED}
+                                style={{display: MY_USER_ID !== this.state.postedBy ? "none" : ""}}
                                 variant="contained"
                                 color="secondary"
                                 size="large"
@@ -586,7 +586,7 @@ class PostTask extends PostTaskFormEventHandlers {
                             <Button
                                 disabled={this.state.status !== TaskStatus.CREATED}
                                 style={{
-                                    display:MY_USER_ID!==this.state.postedBy ? "none" : ""
+                                    display: MY_USER_ID !== this.state.postedBy ? "none" : ""
                                 }}
                                 variant="contained"
                                 color="secondary"
@@ -636,9 +636,9 @@ class PostTask extends PostTaskFormEventHandlers {
                                 className="form_body_left"
                                 style={{
                                     paddingBottom: "2%",
-                                    display: this.state.postedBy===localStorage.getItem('email')
-                                        && this.state.status===TaskStatus.CREATED 
-                                        && this.state.appliedCandidates.length>0 ?
+                                    display: this.state.postedBy === localStorage.getItem('email')
+                                    && this.state.status === TaskStatus.CREATED
+                                    && this.state.appliedCandidates.length > 0 ?
                                         "block" : "none"
                                 }}
                             >
@@ -647,7 +647,7 @@ class PostTask extends PostTaskFormEventHandlers {
                                 <FormControl className="classes.formControl input-field">
                                     <InputLabel id="demo-mutiple-name-label">Select</InputLabel>
                                     <Select
-                                        disabled={this.state.appliedCandidates.length===0}
+                                        disabled={this.state.appliedCandidates.length === 0}
                                         labelId="demo-mutiple-name-label"
                                         id="demo-mutiple-name"
                                         multiple
@@ -656,7 +656,7 @@ class PostTask extends PostTaskFormEventHandlers {
                                         input={<Input/>}
                                         MenuProps={MenuProps}
                                     >
-                                        {this.state.appliedCandidates.length>0 ? this.state.appliedCandidates.map((email) => (
+                                        {this.state.appliedCandidates.length > 0 ? this.state.appliedCandidates.map((email) => (
                                             <MenuItem key={email} value={email}>
                                                 {email}
                                             </MenuItem>
@@ -683,24 +683,25 @@ class PostTask extends PostTaskFormEventHandlers {
                                 }}
                             >
                                 <h4>Selected Candidates</h4>
-                                {this.state.viewSelected ? 
-                                    typeof(profiles)==="string" ? "" : profiles.map(profile => (
-                                        <Link 
+                                {this.state.viewSelected ?
+                                    typeof (profiles) === "string" ? "" : profiles.map(profile => (
+                                        <Link
                                             to={{
-                                                pathname:"/profile",
-                                                state:{
+                                                pathname: "/profile",
+                                                state: {
                                                     email: profile.email
                                                 }
                                             }}
                                             textDecoration="none"
                                         >
-                                            <Avatar src={profile.image} style={{float:"left", marginRight:"1%"}} className={classes.small}/>
-                                            <div  style={{padding:"1.5%"}}>
-                                                {" " + profile.name.firstName + " " + profile.name.lastName}
+                                            <Avatar src={profile.image} style={{float: "left", marginRight: "1%"}}
+                                                    className={classes.small}/>
+                                            <div style={{padding: "1.5%"}}>
+                                                {" " + profile ? profile.name ? profile.name.firstName : "" : "" + " " + profile ? profile.name.lastName : ""}
                                             </div>
                                             <br/>
                                         </Link>
-                                    )) 
+                                    ))
                                     : " "
                                 }
                             </div>

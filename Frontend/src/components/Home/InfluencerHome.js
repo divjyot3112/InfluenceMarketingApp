@@ -12,6 +12,7 @@ import Pagination from "../Common/pagination";
 import {paginate} from "../Common/paginate";
 import {getEmailFromLocalStorage} from "../Common/auth";
 import {If} from "react-if";
+import {Link} from "react-router-dom";
 
 const NoImageFound = require("../../utils/Constants").NoImageFound;
 
@@ -70,11 +71,21 @@ class InfluencerHome extends Component {
                 return (
                     <div class="col-lg-4 col-md-4 col-sm-4">
                         <div class="card ">
-                            <img
-                                class="card-img-top"
-                                src={task.image ? task.image : NoImageFound}
-                                alt="Card image cap"
-                            />
+                            <Link
+                                to={{
+                                    pathname: "/task",
+                                    state: {
+                                        taskId: task._id
+                                    }
+                                }}
+                                style={{textDecoration: "none"}}
+                            >
+                                <img
+                                    class="card-img-top"
+                                    src={task.image ? task.image : NoImageFound}
+                                    alt="Card image cap"
+                                />
+                            </Link>
                             <div class="card-body">
                                 <h5 class="card-title">{task.title}</h5>
                                 <p class="card-text">{task.description}</p>
@@ -105,11 +116,21 @@ class InfluencerHome extends Component {
                 return (
                     <div class="col-lg-4 col-md-4 col-sm-4">
                         <div class="card ">
-                            <img
-                                class="card-img-top"
-                                src={task.image ? task.image : NoImageFound}
-                                alt="Card image cap"
-                            />
+                            <Link
+                                to={{
+                                    pathname: "/task",
+                                    state: {
+                                        taskId: task._id
+                                    }
+                                }}
+                                style={{textDecoration: "none"}}
+                            >
+                                <img
+                                    class="card-img-top"
+                                    src={task.image ? task.image : NoImageFound}
+                                    alt="Card image cap"
+                                />
+                            </Link>
                             <div class="card-body">
                                 <h5 class="card-title">{task.title}</h5>
                                 <p class="card-text">{task.description}</p>
@@ -140,11 +161,21 @@ class InfluencerHome extends Component {
                 return (
                     <div class="col-lg-4 col-md-4 col-sm-4">
                         <div class="card ">
-                            <img
-                                class="card-img-top"
-                                src={task.image ? task.image : NoImageFound}
-                                alt="Card image cap"
-                            />
+                            <Link
+                                to={{
+                                    pathname: "/task",
+                                    state: {
+                                        taskId: task._id
+                                    }
+                                }}
+                                style={{textDecoration: "none"}}
+                            >
+                                <img
+                                    class="card-img-top"
+                                    src={task.image ? task.image : NoImageFound}
+                                    alt="Card image cap"
+                                />
+                            </Link>
                             <div class="card-body">
                                 <h5 class="card-title">{task.title}</h5>
                                 <p class="card-text">{task.description}</p>
