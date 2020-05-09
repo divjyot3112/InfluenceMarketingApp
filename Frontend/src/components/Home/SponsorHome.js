@@ -135,15 +135,16 @@ class SponsorHome extends Component {
                     <div>
                         <br/> <h2> PENDING TASKS </h2>{" "}
                     </div>
-
-                    <div className="pages">
-                        <Pagination
-                            itemsCount={this.props.pendingtasks.length}
-                            pageSize={this.state.pageSize}
-                            onPageChange={this.handlePageChange}
-                            currentPage={this.state.currentPage}
-                        />{" "}
-                    </div>
+                    <If condition={Object.keys(this.props.pendingtasks).length != 0}>
+                        <div className="pages">
+                            <Pagination
+                                itemsCount={this.props.pendingtasks.length}
+                                pageSize={this.state.pageSize}
+                                onPageChange={this.handlePageChange}
+                                currentPage={this.state.currentPage}
+                            />
+                        </div>
+                    </If>
                     <If condition={this.props.pendingtasks.length > this.state.pageSize}>
                         <div class="row ">
                             <div class="col-lg-6 col-md-6 col-sm-6 text-right">
@@ -190,15 +191,19 @@ class SponsorHome extends Component {
                     <div>
                         <br/> <h2> IN PROGRESS TASKS </h2>{" "}
                     </div>
-                    <div className="pages">
-                        <Pagination
-                            itemsCount={this.props.pendingtasks.length}
-                            pageSize={this.state.progressPageSize}
-                            onPageChange={this.handleProgressPageChange}
-                            currentPage={this.state.progressCurrentPage}
-                        />
-                    </div>
-                    <If condition={this.props.pendingtasks.length > this.state.progressPageSize}>
+
+                    <If condition={Object.keys(this.props.inprogresstasks).length != 0}>
+                        <div className="pages">
+                            <Pagination
+                                itemsCount={this.props.inprogresstasks.length}
+                                pageSize={this.state.progressPageSize}
+                                onPageChange={this.handleProgressPageChange}
+                                currentPage={this.state.progressCurrentPage}
+                            />
+                        </div>
+                    </If>
+
+                    <If condition={this.props.inprogresstasks.length > this.state.progressPageSize}>
                         <div class="row ">
                             <div class="col-lg-6 col-md-6 col-sm-6 text-right">
                                 <button type="button" class="btn btn-outline-primary">

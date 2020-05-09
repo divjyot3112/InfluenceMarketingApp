@@ -184,14 +184,16 @@ class InfluencerHome extends Component {
                     <div>
                         <br/> <h2> RECENTLY POSTED </h2>{" "}
                     </div>
-                    <div className="pages">
-                        <Pagination
-                            itemsCount={this.props.recentlypostedtasks.length}
-                            pageSize={this.state.pageSize}
-                            onPageChange={this.handlePageChange}
-                            currentPage={this.state.currentPage}
-                        />
-                    </div>
+                    <If condition={Object.keys(this.props.recentlypostedtasks).length != 0}>
+                        <div className="pages">
+                            <Pagination
+                                itemsCount={this.props.recentlypostedtasks.length}
+                                pageSize={this.state.pageSize}
+                                onPageChange={this.handlePageChange}
+                                currentPage={this.state.currentPage}
+                            />
+                        </div>
+                    </If>
                     <If condition={this.props.recentlypostedtasks.length > this.state.pageSize}>
                         <div class="row ">
                             <div class="col-lg-6 col-md-6 col-sm-6 text-right">
@@ -238,14 +240,16 @@ class InfluencerHome extends Component {
                     <div>
                         <br/> <h2> MY ACTIVE TASKS </h2>{" "}
                     </div>
-                    <div className="pages">
-                        <Pagination
-                            itemsCount={this.props.activetasks.length}
-                            pageSize={this.state.ActiveTasks_pageSize}
-                            onPageChange={this.handleActiveTasksPageChange}
-                            currentPage={this.state.ActiveTasks_currentPage}
-                        />{" "}
-                    </div>
+                    <If condition={Object.keys(this.props.activetasks).length != 0}>
+                        <div className="pages">
+                            <Pagination
+                                itemsCount={this.props.activetasks.length}
+                                pageSize={this.state.ActiveTasks_pageSize}
+                                onPageChange={this.handleActiveTasksPageChange}
+                                currentPage={this.state.ActiveTasks_currentPage}
+                            />{" "}
+                        </div>
+                    </If>
                     <If condition={this.props.activetasks.length > this.state.ActiveTasks_pageSize}>
                         <div class="row ">
                             <div class="col-lg-6 col-md-6 col-sm-6 text-right">
@@ -291,14 +295,16 @@ class InfluencerHome extends Component {
                         <br/> <h2> RECOMMENDED FOR YOU </h2>{" "}
                     </div>
 
-                    <div className="pages">
-                        <Pagination
-                            itemsCount={this.props.recommendedtasks.length}
-                            pageSize={this.state.Recommended_pageSize}
-                            onPageChange={this.handleRecommendedPageChange}
-                            currentPage={this.state.Recommended_currentPage}
-                        />{" "}
-                    </div>
+                    <If condition={Object.keys(this.props.recommendedtasks).length != 0}>
+                        <div className="pages">
+                            <Pagination
+                                itemsCount={this.props.recommendedtasks.length}
+                                pageSize={this.state.Recommended_pageSize}
+                                onPageChange={this.handleRecommendedPageChange}
+                                currentPage={this.state.Recommended_currentPage}
+                            />{" "}
+                        </div>
+                    </If>
                     <If condition={this.props.recommendedtasks.length > this.state.Recommended_pageSize}>
                         <div class="row ">
                             <div class="col-lg-6 col-md-6 col-sm-6 text-right">
