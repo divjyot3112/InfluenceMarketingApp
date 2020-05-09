@@ -14,12 +14,12 @@ class SponsorAnalytics extends React.Component {
       <Container className="border p-5">
         <hr />
         <Row xs="2" style={{ marginTop: "1%" }}>
-          <Col style={{ height: "25em" }} className="border-right">
+          <Col style={{ height: "50%", width: "40%" }} className="border-right">
             <h3 className="mt-2 "> Average Payment by category </h3>
             <hr />
             <PaymentByCategory />
           </Col>
-          <Col style={{ height: "25em", width: "500px" }}>
+          <Col>
             <h3 className="mt-2 ">Applicants count per category</h3>
 
             <hr />
@@ -32,12 +32,12 @@ class SponsorAnalytics extends React.Component {
         <br />
         <hr />
         <Row xs="2" style={{ marginTop: "4%" }}>
-          <Col style={{ height: "25em" }} className="border-right">
+          <Col className="border-right">
             <h3 className="mt-2 "> All Tasks by Category </h3>
             <hr />
             <TasksByCategory />
           </Col>
-          <Col style={{ height: "25em" }}>
+          <Col>
             <h3 className="mt-2">Completed Tasks by Category </h3>
             <hr />
             <CompletedTasksByCategory />

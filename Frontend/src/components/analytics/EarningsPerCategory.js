@@ -3,10 +3,11 @@ import { HorizontalBar } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 import { getInfluencerEarningsbyCategory } from "../../actions/analyticsActions";
 import { connect } from "react-redux";
+import { getEmailFromLocalStorage } from "../Common/auth";
 
 class EarningsPerCategory extends React.Component {
   state = {
-    email: "testinfluencer@gmail.com",
+    email: getEmailFromLocalStorage(),
 
     dataHorizontal: {
       labels: [

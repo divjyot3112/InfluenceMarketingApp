@@ -13,7 +13,8 @@ import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 import { TaskStatus } from "../../utils/Constants";
 import Pagination from "../Common/pagination";
-import { paginate } from "../../utils/paginate";
+import { paginate } from "../Common/paginate";
+import { getEmailFromLocalStorage } from "../Common/auth";
 
 import {
   MDBCard,
@@ -38,9 +39,11 @@ class SponsorHome extends Component {
     super(props);
 
     this.state = {
-      email: "testsponsor@gmail.com",
+      email: getEmailFromLocalStorage(),
       pageSize: 3,
       currentPage: 1,
+      progressPageSize: 3,
+      progressCurrentPage: 1,
     };
   }
   componentDidMount() {
@@ -62,6 +65,13 @@ class SponsorHome extends Component {
     });
   };
 
+  handleProgressPageChange = (page) => {
+    console.log(page);
+    this.setState({
+      progressCurrentPage: page,
+    });
+  };
+
   displayPendingTasks(currentPage, pageSize) {
     if (this.props.pendingtasks.length > 0) {
       const paginatedPendingTasks = paginate(
@@ -74,18 +84,20 @@ class SponsorHome extends Component {
         console.log(task);
 
         return (
-          <div class="card">
-            <img
-              class="card-img-top"
-              src="https://www.somagnews.com/wp-content/uploads/2020/01/b8-1-e1577995435435-696x382.jpg"
-              alt="Card image cap"
-            />
-            <div class="card-body">
-              <h5 class="card-title">{task.title}</h5>
-              <p class="card-text">{task.description}</p>
-            </div>
-            <div class="card-footer">
-              <small class="text-muted">{task.category}</small>
+          <div class="col-lg-4 col-md-4 col-sm-4">
+            <div class="card ">
+              <img
+                class="card-img-top"
+                src="https://www.somagnews.com/wp-content/uploads/2020/01/b8-1-e1577995435435-696x382.jpg"
+                alt="Card image cap"
+              />
+              <div class="card-body">
+                <h5 class="card-title">{task.title}</h5>
+                <p class="card-text">{task.description}</p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">{task.category}</small>
+              </div>
             </div>
           </div>
         );
@@ -93,7 +105,44 @@ class SponsorHome extends Component {
 
       return pendingtasks;
     } else {
-      return <div> Nothing to show here! </div>;
+      return <div> No Tasks Pending! </div>;
+    }
+  }
+
+  displayInProgressTasks(currentPage, pageSize) {
+    if (this.props.inprogresstasks.length > 0) {
+      const paginatedInProgressTasks = paginate(
+        this.props.inprogresstasks,
+        currentPage,
+        pageSize
+      );
+
+      let inprogresstasks = paginatedInProgressTasks.map((task) => {
+        console.log(task);
+
+        return (
+          <div class="col-lg-4 col-md-4 col-sm-4">
+            <div class="card">
+              <img
+                class="card-img-top"
+                src="https://www.somagnews.com/wp-content/uploads/2020/01/b8-1-e1577995435435-696x382.jpg"
+                alt="Card image cap"
+              />
+              <div class="card-body">
+                <h5 class="card-title">{task.title}</h5>
+                <p class="card-text">{task.description}</p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">{task.category}</small>
+              </div>
+            </div>
+          </div>
+        );
+      });
+
+      return inprogresstasks;
+    } else {
+      return <div> No Tasks Currently in Progress! </div>;
     }
   }
 
@@ -111,6 +160,7 @@ class SponsorHome extends Component {
           <div>
             <br /> <h2> PENDING TASKS </h2>{" "}
           </div>
+
           <div className="pages">
             <Pagination
               itemsCount={this.props.pendingtasks.length}
@@ -134,13 +184,14 @@ class SponsorHome extends Component {
             </div>
           </div>
           <br />
-          <div class="card-deck">
-            {this.displayPendingTasks(
-              this.state.currentPage,
-              this.state.pageSize
-            )}
+          <div class="row">
+            <div class="card-deck">
+              {this.displayPendingTasks(
+                this.state.currentPage,
+                this.state.pageSize
+              )}
+            </div>
           </div>
-
           <br />
           <div class="row">
             {" "}
@@ -162,7 +213,14 @@ class SponsorHome extends Component {
           <div>
             <br /> <h2> IN PROGRESS TASKS </h2>{" "}
           </div>
-
+          <div className="pages">
+            <Pagination
+              itemsCount={this.props.pendingtasks.length}
+              pageSize={this.state.progressPageSize}
+              onPageChange={this.handleProgressPageChange}
+              currentPage={this.state.progressCurrentPage}
+            />{" "}
+          </div>
           <div class="row ">
             <div class="col-lg-6 col-md-6 col-sm-6 text-right">
               <button type="button" class="btn btn-outline-primary">
@@ -177,59 +235,12 @@ class SponsorHome extends Component {
             </div>
           </div>
           <br />
+
           <div class="card-deck">
-            <div class="card">
-              <img
-                class="card-img-top"
-                src="https://images.homedepot-static.com/productImages/6bf97df0-9694-4916-9d33-297252793cc1/svn/shadedeye-safety-glasses-sunglasses-85901-16-64_1000.jpg"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">Fossil Sun glasses</h5>
-                <p class="card-text">
-                  These Fossil sunglasses come in a sport-wrap design, providing
-                  a sleek, sporty look for your active lifestyle. In seach of
-                  influencers who can market this product.
-                </p>
-              </div>
-              <div class="card-footer">
-                <small class="text-muted">Last updated 3 mins ago</small>
-              </div>
-            </div>
-            <div class="card">
-              <img
-                class="card-img-top"
-                src="https://static.turbosquid.com/Preview/001271/323/A5/_Z.jpg"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">GameX Switch Console</h5>
-                <p class="card-text">
-                  Whether you're into gaming, HD movies, television, music, or
-                  all of the above, GameX offers something great for everyone.
-                </p>
-              </div>
-              <div class="card-footer">
-                <small class="text-muted">Last updated 3 mins ago</small>
-              </div>
-            </div>
-            <div class="card">
-              <img
-                class="card-img-top"
-                src="https://img.gkbcdn.com/s3/p/2019-01-16/makibes-t3-smart-watch-black-1571984501939.jpg"
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <h5 class="card-title">TimeX Smart Watch</h5>
-                <p class="card-text">
-                  The ultimate device for a healthy life. Most advanced watch in
-                  the world! Any case, Any band, Any style you want!
-                </p>
-              </div>
-              <div class="card-footer">
-                <small class="text-muted">Last updated 3 mins ago</small>
-              </div>
-            </div>
+            {this.displayInProgressTasks(
+              this.state.progressCurrentPage,
+              this.state.progressPageSize
+            )}
           </div>
           <br />
           <div class="row">

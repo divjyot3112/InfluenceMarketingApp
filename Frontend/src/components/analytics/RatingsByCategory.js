@@ -3,10 +3,11 @@ import { Line } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 import { getInfluencerRatingsByCategory } from "../../actions/analyticsActions";
 import { connect } from "react-redux";
+import { getEmailFromLocalStorage } from "../Common/auth";
 
 class RatingsByCategory extends React.Component {
   state = {
-    email: "testinfluencer@gmail.com",
+    email: getEmailFromLocalStorage(),
     data: {
       labels: [
         "Apparels",

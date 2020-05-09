@@ -4,10 +4,11 @@ import { MDBContainer } from "mdbreact";
 
 import { getSponsorAllTasksbyCategory } from "../../actions/analyticsActions";
 import { connect } from "react-redux";
+import { getEmailFromLocalStorage } from "../Common/auth";
 
 class TasksByCategory extends React.Component {
   state = {
-    email: "testsponsor@gmail.com",
+    email: getEmailFromLocalStorage(),
 
     data: {
       labels: [

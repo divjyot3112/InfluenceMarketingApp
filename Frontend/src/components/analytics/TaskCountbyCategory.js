@@ -3,10 +3,11 @@ import { Doughnut } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 import { getInfluencerTasksCountByCategory } from "../../actions/analyticsActions";
 import { connect } from "react-redux";
+import { getEmailFromLocalStorage } from "../Common/auth";
 
 class TaskCountbyCategory extends React.Component {
   state = {
-    email: "testinfluencer@gmail.com",
+    email: getEmailFromLocalStorage(),
 
     data: {
       labels: [
