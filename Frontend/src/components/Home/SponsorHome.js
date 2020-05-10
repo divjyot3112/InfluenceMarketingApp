@@ -1,426 +1,280 @@
-import React, { Component } from "react";
-import axios from "axios";
+import React, {Component} from "react";
 import "../../css/sponsorHome.css";
 import WOW from "wow.js";
+import {connect} from "react-redux";
+import {
+    getSponsorInProgressTasks,
+    getSponsorPendingTasks,
+} from "../../actions/homeActions";
+import {TaskStatus} from "../../utils/Constants";
+import Pagination from "../Common/pagination";
+import {paginate} from "../Common/paginate";
+import {getEmailFromLocalStorage} from "../Common/auth";
+import {If} from "react-if";
+import {Link} from "react-router-dom";
+
+const NoImageFound = require("../../utils/Constants").NoImageFound;
 
 class SponsorHome extends Component {
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.state = {};
-  }
-  componentDidMount() {
-    const wow = new WOW();
+        this.state = {
+            email: getEmailFromLocalStorage(),
+            pageSize: 3,
+            currentPage: 1,
+            progressPageSize: 3,
+            progressCurrentPage: 1,
+        };
+    }
 
-    wow.init();
-  }
+    componentDidMount() {
+        const wow = new WOW();
 
-  render() {
-    return (
-      <div>
-        <p>
-          {" "}
-          <b style={{ "margin-left": "25%", "margin-top": "15%" }}>
-            Pending Jobs{" "}
-          </b>
-        </p>
-        {/* <!--Carousel Wrapper--> */}
-        <div
-          id="multi-item-example"
-          class="carousel slide carousel-multi-item cardsstyle"
-          data-ride="carousel"
-        >
-          {/* <!--Controls--> */}
-          <div class="controls-top">
-            <a
-              class="btn-floating"
-              href="#multi-item-example"
-              data-slide="prev"
-            >
-              <i class="fas fa-chevron-left"></i>
-            </a>
-            <a
-              class="btn-floating"
-              href="#multi-item-example"
-              data-slide="next"
-            >
-              <i class="fas fa-chevron-right"></i>
-            </a>
-          </div>
-          {/* <!--/.Controls--> */}
+        wow.init();
 
-          {/* <!--Indicators--> */}
-          <ol class="carousel-indicators">
-            <li
-              data-target="#multi-item-example"
-              data-slide-to="0"
-              class="active"
-            ></li>
-            <li data-target="#multi-item-example" data-slide-to="1"></li>
-          </ol>
-          {/* <!--/.Indicators--> */}
+        this.props.getSponsorPendingTasks(this.state.email, TaskStatus.PENDING);
+        this.props.getSponsorInProgressTasks(
+            this.state.email,
+            TaskStatus.INPROGRESS
+        );
+    }
 
-          {/* <!--Slides--> */}
-          <div class="carousel-inner" role="listbox">
-            {/* <!--First slide--> */}
-            <div class="carousel-item active">
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(60).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
+    handlePageChange = (page) => {
+        this.setState({
+            currentPage: page,
+        });
+    };
+
+    handleProgressPageChange = (page) => {
+        this.setState({
+            progressCurrentPage: page,
+        });
+    };
+
+    truncate = (input, length) => input.length > length ? `${input.substring(0, length)}...` : input
+
+    displayPendingTasks(currentPage, pageSize) {
+        if (this.props.pendingtasks.length > 0) {
+            const paginatedPendingTasks = paginate(
+                this.props.pendingtasks,
+                currentPage,
+                pageSize
+            );
+
+            let pendingtasks = paginatedPendingTasks.map((task) => {
+                return (
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <div class="card ">
+                            <Link
+                                to={{
+                                    pathname: "/task",
+                                    state: {
+                                        taskId: task._id
+                                    }
+                                }}
+                                style={{textDecoration: "none"}}
+                            >
+                                <img
+                                    class="card-img-top"
+                                    src={task.image ? task.image : NoImageFound}
+                                    height="250"
+                                />
+                            </Link>
+                            <div class="card-body">
+                                <h5 className="card-title">{this.truncate(task.title, 20)}</h5>
+                                <p class="card-text">{this.truncate(task.description, 100)}</p>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">{task.category}</small>
+                            </div>
+                        </div>
+                    </div>
+                );
+            });
+
+            return pendingtasks;
+        } else {
+            return <div> No Tasks Pending! </div>;
+        }
+    }
+
+    displayInProgressTasks(currentPage, pageSize) {
+        if (this.props.inprogresstasks.length > 0) {
+            const paginatedInProgressTasks = paginate(
+                this.props.inprogresstasks,
+                currentPage,
+                pageSize
+            );
+
+            let inprogresstasks = paginatedInProgressTasks.map((task) => {
+                return (
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <div class="card">
+                            <Link
+                                to={{
+                                    pathname: "/task",
+                                    state: {
+                                        taskId: task._id
+                                    }
+                                }}
+                                style={{textDecoration: "none"}}
+                            >
+                                <img
+                                    class="card-img-top"
+                                    src={task.image ? task.image : NoImageFound}
+                                    height="250"
+                                />
+                            </Link>
+                            <div class="card-body">
+                                <h5 className="card-title">{this.truncate(task.title, 20)}</h5>
+                                <p class="card-text">{this.truncate(task.description, 100)}</p>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">{task.category}</small>
+                            </div>
+                        </div>
+                    </div>
+                );
+            });
+
+            return inprogresstasks;
+        } else {
+            return <div> No Tasks Currently in Progress! </div>;
+        }
+    }
+
+    render() {
+        console.log("All pending tasks", this.props.pendingtasks);
+        console.log("All inprogress tasks", this.props.inprogresstasks);
+
+        return (
+            <div class="border">
+                {/* PENDING DIV*/}
+                <div
+                    class="container-lg ml-8 mt-5 border rounded"
+                    style={{padding: "2%"}}
+                >
+                    <div>
+                        <br/> <h2> PENDING TASKS </h2>{" "}
+                    </div>
+                    <If condition={Object.keys(this.props.pendingtasks).length != 0}>
+                        <div className="pages">
+                            <Pagination
+                                itemsCount={this.props.pendingtasks.length}
+                                pageSize={this.state.pageSize}
+                                onPageChange={this.handlePageChange}
+                                currentPage={this.state.currentPage}
+                            />
+                        </div>
+                    </If>
+                    <If condition={this.props.pendingtasks.length > this.state.pageSize}>
+                        <div class="row ">
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+                                <button type="button" class="btn btn-outline-primary">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-left">
+                                <button type="button" class="btn btn-outline-primary text-center">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </If>
+                    <br/>
+                    <div class="row">
+                        <div class="card-deck">
+                            {this.displayPendingTasks(
+                                this.state.currentPage,
+                                this.state.pageSize
+                            )}
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        {" "}
+                        <div class="col-md-10 col-sm-10 col-lg-10"></div>
+                        <div class="col-md-2 col-sm-2 col-lg-2">
+                        </div>
+                    </div>
                 </div>
-              </div>
-
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(60).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
+                <div>
+                    {" "}
+                    <br/> <br/>
+                    <hr/>
+                    {" "}
                 </div>
-              </div>
+                {/* IN PROGRESS DIV*/}
+                <div
+                    class="container-lg ml-8 mt-5 border rounded"
+                    style={{padding: "2%"}}
+                >
+                    <div>
+                        <br/> <h2> IN PROGRESS TASKS </h2>{" "}
+                    </div>
 
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(60).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
-                </div>
-              </div>
+                    <If condition={Object.keys(this.props.inprogresstasks).length != 0}>
+                        <div className="pages">
+                            <Pagination
+                                itemsCount={this.props.inprogresstasks.length}
+                                pageSize={this.state.progressPageSize}
+                                onPageChange={this.handleProgressPageChange}
+                                currentPage={this.state.progressCurrentPage}
+                            />
+                        </div>
+                    </If>
 
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(60).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
+                    <If condition={this.props.inprogresstasks.length > this.state.progressPageSize}>
+                        <div class="row ">
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+                                <button type="button" class="btn btn-outline-primary">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-left">
+                                <button type="button" class="btn btn-outline-primary text-center">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </If>
+                    <br/>
+
+                    <div class="card-deck">
+                        {this.displayInProgressTasks(
+                            this.state.progressCurrentPage,
+                            this.state.progressPageSize
+                        )}
+                    </div>
+                    <br/>
+                    <div class="row">
+                        {" "}
+                        <div class="col-md-10 col-sm-10 col-lg-10"></div>
+                        <div class="col-md-2 col-sm-2 col-lg-2">
+                        </div>
+                    </div>
                 </div>
-              </div>
+                <div>
+                    {" "}
+                    <br/> <br/>
+                    <hr/>
+                    {" "}
+                </div>
             </div>
-            {/* <!--/.First slide--> */}
-
-            {/* <!--Second slide--> */}
-            <div class="carousel-item">
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(60).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(47).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(48).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(47).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* <!--/.Second slide--> */}
-          </div>
-          {/* <!--/.Slides--> */}
-        </div>
-        {/* <!--/.Carousel Wrapper--> */}
-
-        <hr />
-        {/* New carousal */}
-        <p>
-          {" "}
-          <b style={{ "margin-left": "25%", "margin-top": "15%" }}>
-            In Progress Jobs{" "}
-          </b>
-        </p>
-        {/* <!--Carousel Wrapper--> */}
-        <div
-          id="multi-item-example2"
-          class="carousel slide carousel-multi-item cardsstyle"
-          data-ride="carousel"
-        >
-          {/* <!--Controls--> */}
-          <div class="controls-top">
-            <a
-              class="btn-floating"
-              href="#multi-item-example2"
-              data-slide="prev"
-            >
-              <i class="fas fa-chevron-left"></i>
-            </a>
-            <a
-              class="btn-floating"
-              href="#multi-item-example2"
-              data-slide="next"
-            >
-              <i class="fas fa-chevron-right"></i>
-            </a>
-          </div>
-          {/* <!--/.Controls--> */}
-
-          {/* <!--Indicators--> */}
-          <ol class="carousel-indicators">
-            <li
-              data-target="#multi-item-example2"
-              data-slide-to="0"
-              class="active"
-            ></li>
-            <li data-target="#multi-item-example2" data-slide-to="1"></li>
-          </ol>
-          {/* <!--/.Indicators--> */}
-
-          {/* <!--Slides--> */}
-          <div class="carousel-inner" role="listbox">
-            {/* <!--First slide--> */}
-            <div class="carousel-item active">
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(60).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(60).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(60).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(60).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* <!--/.First slide--> */}
-
-            {/* <!--Second slide--> */}
-            <div class="carousel-item">
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(60).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(47).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(48).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-3" style={{ float: "left" }}>
-                <div class="card mb-2">
-                  <img
-                    class="card-img-top"
-                    src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(47).jpg"
-                    alt="Card image cap"
-                  />
-                  <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <a class="btn btn-primary">Button</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* <!--/.Second slide--> */}
-          </div>
-          {/* <!--/.Slides--> */}
-        </div>
-        {/* <!--/.Carousel Wrapper--> */}
-      </div>
-    );
-  }
+        );
+    }
 }
-export default SponsorHome;
+
+const mapStateToProps = (state) => ({
+    pendingtasks: state.home.pendingtasks,
+    inprogresstasks: state.home.inprogresstasks,
+});
+
+//function mapDispatchToProps
+export default connect(mapStateToProps, {
+    getSponsorPendingTasks,
+    getSponsorInProgressTasks,
+})(SponsorHome);

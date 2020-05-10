@@ -15,9 +15,12 @@ import {
   fetchConversationsReducer,
   fetchAllUsersForInboxReducer,
 } from "./inboxReducer";
+import homeReducer from "./homeReducer";
+import analyticsReducer from "./analyticsReducer";
 
 export default combineReducers({
   user: userReducer,
+  home: homeReducer,
   dashboardTasks: dashboardTasksReducer,
   dashboardNumPages: dashboardNumPageReducer,
   dashboardCurrentPageTasks: dashboardCurrentPageTasksReducer,
@@ -29,4 +32,5 @@ export default combineReducers({
   unratedInfluencers: unratedInfluencersReducer,
   form: formReducer,
   searchItems: searchReducer,
+  analytics: analyticsReducer,
 });

@@ -31,7 +31,7 @@ export class Sidebar extends Component {
                 <div>
                     {redirectVar}
                     <Menu>
-                        <a className="menu-item" href="/">
+                        <a className="menu-item" href="/home">
                             Home
                         </a>
                         <a className="menu-item" onClick={this.loadMyProfile} style={{"color": "white"}}>
@@ -59,7 +59,7 @@ export class Sidebar extends Component {
                 <div>
                     {redirectVar}
                     <Menu>
-                        <a className="menu-item" href="/">
+                        <a className="menu-item" href="/home">
                             Home
                         </a>
                         <a className="menu-item" onClick={this.loadMyProfile} style={{"color": "white"}}>
@@ -71,7 +71,7 @@ export class Sidebar extends Component {
                         <a className="menu-item" href="/dashboard">
                             Dashboard
                         </a>
-                        <a className="menu-item" href="/">
+                        <a className="menu-item" href="/analytics">
                             Analytics
                         </a>
                         <a className="menu-item" href="/inbox">

@@ -168,10 +168,10 @@ class UserProfile extends UserProfileFormEventHandlers {
                 this.setState({exists: true});
                 this.setState({
                     firstName: this.props.profile.data.message
-                        ? this.props.profile.data.message.name.firstName
+                        ? this.props.profile.data.message.name ? this.props.profile.data.message.name.firstName : ""
                         : "",
                     lastName: this.props.profile.data.message
-                        ? this.props.profile.data.message.name.lastName
+                        ? this.props.profile.data.message.name ? this.props.profile.data.message.name.lastName : ""
                         : "",
                     aboutMe: this.props.profile.data.message.aboutMe,
                     address: this.props.profile.data.message.address,
