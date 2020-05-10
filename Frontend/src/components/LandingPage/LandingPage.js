@@ -10,7 +10,8 @@ import jwt_decode from "jwt-decode";
 import LandingPageFormEventHandlers from "./LandingPageFormEventHandlers";
 import {If} from "react-if";
 import Joi from "joi-browser";
-import TextField from "@material-ui/core/TextField/TextField";
+import {getEmailFromLocalStorage, getRoleFromLocalStorage} from "../Common/auth";
+import {Redirect} from "react-router";
 
 const userRoles = require("../../utils/Constants").UserRoles;
 
@@ -138,8 +139,14 @@ class Landing extends LandingPageFormEventHandlers {
     }
 
     render() {
+        let redirectVar = null;
+        if (getEmailFromLocalStorage()) {
+            redirectVar = <Redirect to="/home"/>;
+        }
+
         return (
             <div>
+                {redirectVar}
                 <nav
                     class="navbar fixed-top navbar-expand-lg navbar-light"
                     style={{backgroundColor: "aliceblue"}}
