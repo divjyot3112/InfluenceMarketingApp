@@ -15,15 +15,12 @@ class SponsorAnalytics extends React.Component {
         <hr />
         <Row xs="2" style={{ marginTop: "1%" }}>
           <Col style={{ height: "50%", width: "40%" }} className="border-right">
-            <h3 className="mt-2 "> Average Payment by category </h3>
+            <h3 className="mt-2 " style={{ color: "red" }}>
+              {" "}
+              Average Payment by category{" "}
+            </h3>
             <hr />
             <PaymentByCategory />
-          </Col>
-          <Col>
-            <h3 className="mt-2 ">Applicants count per category</h3>
-
-            <hr />
-            <ApplicantsCountPerCategory />
           </Col>
         </Row>
         <br />
@@ -33,12 +30,17 @@ class SponsorAnalytics extends React.Component {
         <hr />
         <Row xs="2" style={{ marginTop: "4%" }}>
           <Col className="border-right">
-            <h3 className="mt-2 "> All Tasks by Category </h3>
+            <h3 className="mt-2 " style={{ color: "blue" }}>
+              {" "}
+              All Tasks by Category{" "}
+            </h3>
             <hr />
             <TasksByCategory />
           </Col>
           <Col>
-            <h3 className="mt-2">Completed Tasks by Category </h3>
+            <h3 className="mt-2" style={{ color: "green" }}>
+              Completed Tasks by Category{" "}
+            </h3>
             <hr />
             <CompletedTasksByCategory />
           </Col>
