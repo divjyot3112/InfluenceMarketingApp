@@ -13,22 +13,7 @@ class RatingsByCategory extends React.Component {
     email: getEmailFromLocalStorage(),
 
     data: {
-      labels: [
-        // "Apparels", //pink
-        // "Automobile", //purple
-        // "Beauty and Personal Care", //orange
-        // "Education", //mildgreen
-        // "Electronics", //darkpurple
-        // "Entertainment", //charcoalgrey
-        // "Fitness & Gym", //skyblue
-        // "Food", //leafgreen
-        // "Health", //yellow
-        // "Kids", //lightgreen
-        // "Photography", //cyan
-        // "Sports & Outdoors", //darkgreen
-        // "Travel", // purple
-        // "Video Games", //grey
-      ],
+      labels: [],
 
       datasets: [
         {
@@ -67,22 +52,7 @@ class RatingsByCategory extends React.Component {
             "rgb(201, 203, 207)",
           ],
           borderWidth: 1,
-          data: [
-            // 0,
-            // 0.5,
-            // 1.0,
-            // 1.5,
-            // 2.0,
-            // 2.5,
-            // 3.0,
-            // 3.5,
-            // 4.0,
-            // 4.5,
-            // 5.0,
-            // 2.3,
-            // 4.5,
-            // 3,
-          ],
+          data: [],
         },
       ],
     },
