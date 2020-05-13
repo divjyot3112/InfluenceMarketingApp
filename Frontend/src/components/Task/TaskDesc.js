@@ -49,7 +49,9 @@ import NumberFormat from 'react-number-format';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import Image from 'material-ui-image';
 import {getEmailFromLocalStorage, getRoleFromLocalStorage} from "../Common/auth";
-import {TaskStatus, MY_USER_ID, MY_ROLE} from "../../utils/Constants";
+import {TaskStatus} from "../../utils/Constants";
+const MY_USER_ID = getEmailFromLocalStorage();
+const MY_ROLE = getRoleFromLocalStorage();
 
 const TaskCategories = require("../../utils/Constants").TaskCategories;
 const NoImageFound = require("../../utils/Constants").NoImageFound;
@@ -285,7 +287,7 @@ class PostTask extends PostTaskFormEventHandlers {
     }
 
     apply = () => {
-        this.props.apply(this.state.taskId, {email: MY_USER_ID}).then(() => {
+        this.props.apply(this.state.taskId, {email: getEmailFromLocalStorage()}).then(() => {
             if (this.props.applied) {
                 window.alert("Successfully applied")
                 window.location.reload();
