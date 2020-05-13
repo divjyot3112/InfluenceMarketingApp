@@ -20,7 +20,7 @@ const shell = require("shelljs");
 const Task = require("./models/Task");
 const taskStatus = require("./utils/Constants").TaskStatus;
 
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: "http://54.67.94.219:3000" }));
 
 const users = require("./routes/api/users");
 const tasks = require("./routes/api/tasks");
@@ -42,7 +42,7 @@ app.use(morgan("dev"));
 app.use(passport.initialize());
 
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "http://54.67.94.219:3000");
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Methods",
