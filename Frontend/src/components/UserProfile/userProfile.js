@@ -276,12 +276,12 @@ class UserProfile extends UserProfileFormEventHandlers {
         return this.state.firstName == "" ||
             this.state.lastName == "" ||
             // this.state.address === undefined ||
-            this.state.gender === undefined ||
-            this.state.phone == "" ||
+            // this.state.gender === undefined ||
+            // this.state.phone == "" ||
             new Date(this.state.dateOfBirth).setHours(0, 0, 0, 0)
-            === new Date().setHours(0, 0, 0, 0) ||
-            this.state.aboutMe === undefined ||
-            ((this.state.taskCategories == "" || this.state.followersCount === undefined) && this.state.company === "");
+            === new Date().setHours(0, 0, 0, 0);
+        // this.state.aboutMe === undefined ||
+        // ((this.state.taskCategories == "" || this.state.followersCount === undefined) && this.state.company === "");
     }
 
     render() {
@@ -408,7 +408,6 @@ class UserProfile extends UserProfileFormEventHandlers {
                                                     onChange={this.handleFollowersCount}
                                                     name="followersCount"
                                                     value={this.state.followersCount}
-                                                    required
                                                     error={this.state.errors.followersCount}
                                                     disabled={this.state.isCurrentUser === false}
                                                     helperText={this.state.errors.followersCount}
@@ -426,7 +425,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                             </div>
                                         </If>
 
-                                        <FormControl className="classes.formControl input-field" required>
+                                        <FormControl className="classes.formControl input-field">
                                             <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                                             <Select
                                                 labelId="demo-simple-select-label"
@@ -436,7 +435,6 @@ class UserProfile extends UserProfileFormEventHandlers {
                                                 name="gender"
                                                 error={this.state.errors.gender}
                                                 disabled={this.state.isCurrentUser === false}
-                                                required
                                             >
 
                                                 {Gender.map(value => (
@@ -455,7 +453,6 @@ class UserProfile extends UserProfileFormEventHandlers {
                                             onChange={this.handleAboutMe}
                                             name="aboutMe"
                                             value={this.state.aboutMe}
-                                            required
                                             error={this.state.errors.aboutMe}
                                             disabled={this.state.isCurrentUser === false}
                                             helperText={this.state.errors.aboutMe}
@@ -489,7 +486,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                                 <DatePicker
                                                     variant="inline"
                                                     className="input-date"
-                                                    label="Date of Birth*"
+                                                    label="Date of Birth"
                                                     format="dd MMMM yyyy"
                                                     value={new Date(this.state.dateOfBirth)}
                                                     onChange={this.handleDateOfBirth}
@@ -510,7 +507,6 @@ class UserProfile extends UserProfileFormEventHandlers {
                                                     onChange={this.handleCompany}
                                                     name="company"
                                                     value={this.state.company}
-                                                    required
                                                     error={this.state.errors.company}
                                                     disabled={this.state.isCurrentUser === false}
                                                     helperText={this.state.errors.company}
@@ -531,7 +527,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                             <div className="form-group">
 
                                                 <label className="small-label">
-                                                    <small>Task Categories*</small>
+                                                    <small>Task Categories</small>
                                                 </label>
 
                                                 <div className="form-check">
