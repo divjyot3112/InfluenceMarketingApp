@@ -1,174 +1,175 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import "../../css/sponsorHome.css";
 import WOW from "wow.js";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import {
-    getSponsorInProgressTasks,
-    getSponsorPendingTasks,
+  getSponsorInProgressTasks,
+  getSponsorPendingTasks,
 } from "../../actions/homeActions";
-import {TaskStatus} from "../../utils/Constants";
+import { TaskStatus } from "../../utils/Constants";
 import Pagination from "../Common/pagination";
-import {paginate} from "../Common/paginate";
-import {getEmailFromLocalStorage} from "../Common/auth";
-import {If} from "react-if";
-import {Link} from "react-router-dom";
+import { paginate } from "../Common/paginate";
+import { getEmailFromLocalStorage } from "../Common/auth";
+import { If } from "react-if";
+import { Link } from "react-router-dom";
 
 const NoImageFound = require("../../utils/Constants").NoImageFound;
 
 class SponsorHome extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            email: getEmailFromLocalStorage(),
-            pageSize: 3,
-            currentPage: 1,
-            progressPageSize: 3,
-            progressCurrentPage: 1,
-        };
-    }
-
-    componentDidMount() {
-        const wow = new WOW();
-
-        wow.init();
-
-        this.props.getSponsorPendingTasks(this.state.email, TaskStatus.PENDING);
-        this.props.getSponsorInProgressTasks(
-            this.state.email,
-            TaskStatus.INPROGRESS
-        );
-    }
-
-    handlePageChange = (page) => {
-        this.setState({
-            currentPage: page,
-        });
+    this.state = {
+      email: getEmailFromLocalStorage(),
+      pageSize: 3,
+      currentPage: 1,
+      progressPageSize: 3,
+      progressCurrentPage: 1,
     };
+  }
 
-    handleProgressPageChange = (page) => {
-        this.setState({
-            progressCurrentPage: page,
-        });
-    };
+  componentDidMount() {
+    const wow = new WOW();
 
-    truncate = (input, length) => input.length > length ? `${input.substring(0, length)}...` : input
+    wow.init();
 
-    displayPendingTasks(currentPage, pageSize) {
-        if (this.props.pendingtasks.length > 0) {
-            const paginatedPendingTasks = paginate(
-                this.props.pendingtasks,
-                currentPage,
-                pageSize
-            );
+    this.props.getSponsorPendingTasks(this.state.email, TaskStatus.PENDING);
+    this.props.getSponsorInProgressTasks(
+      this.state.email,
+      TaskStatus.INPROGRESS
+    );
+  }
 
-            let pendingtasks = paginatedPendingTasks.map((task) => {
-                return (
-                    <div class="col-lg-4 col-md-4 col-sm-4">
-                        <div class="card ">
-                            <Link
-                                to={{
-                                    pathname: "/task",
-                                    state: {
-                                        taskId: task._id
-                                    }
-                                }}
-                                style={{textDecoration: "none"}}
-                            >
-                                <img
-                                    class="card-img-top"
-                                    src={task.image ? task.image : NoImageFound}
-                                    height="250"
-                                />
-                            </Link>
-                            <div class="card-body">
-                                <h5 className="card-title">{this.truncate(task.title, 20)}</h5>
-                                <p class="card-text">{this.truncate(task.description, 100)}</p>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-muted">{task.category}</small>
-                            </div>
-                        </div>
-                    </div>
-                );
-            });
+  handlePageChange = (page) => {
+    this.setState({
+      currentPage: page,
+    });
+  };
 
-            return pendingtasks;
-        } else {
-            return <div> No Tasks Pending! </div>;
-        }
-    }
+  handleProgressPageChange = (page) => {
+    this.setState({
+      progressCurrentPage: page,
+    });
+  };
 
-    displayInProgressTasks(currentPage, pageSize) {
-        if (this.props.inprogresstasks.length > 0) {
-            const paginatedInProgressTasks = paginate(
-                this.props.inprogresstasks,
-                currentPage,
-                pageSize
-            );
+  truncate = (input, length) =>
+    input.length > length ? `${input.substring(0, length)}...` : input;
 
-            let inprogresstasks = paginatedInProgressTasks.map((task) => {
-                return (
-                    <div class="col-lg-4 col-md-4 col-sm-4">
-                        <div class="card">
-                            <Link
-                                to={{
-                                    pathname: "/task",
-                                    state: {
-                                        taskId: task._id
-                                    }
-                                }}
-                                style={{textDecoration: "none"}}
-                            >
-                                <img
-                                    class="card-img-top"
-                                    src={task.image ? task.image : NoImageFound}
-                                    height="250"
-                                />
-                            </Link>
-                            <div class="card-body">
-                                <h5 className="card-title">{this.truncate(task.title, 20)}</h5>
-                                <p class="card-text">{this.truncate(task.description, 100)}</p>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-muted">{task.category}</small>
-                            </div>
-                        </div>
-                    </div>
-                );
-            });
+  displayPendingTasks(currentPage, pageSize) {
+    if (this.props.pendingtasks.length > 0) {
+      const paginatedPendingTasks = paginate(
+        this.props.pendingtasks,
+        currentPage,
+        pageSize
+      );
 
-            return inprogresstasks;
-        } else {
-            return <div> No Tasks Currently in Progress! </div>;
-        }
-    }
-
-    render() {
-        console.log("All pending tasks", this.props.pendingtasks);
-        console.log("All inprogress tasks", this.props.inprogresstasks);
-
+      let pendingtasks = paginatedPendingTasks.map((task) => {
         return (
-            <div class="border">
-                {/* PENDING DIV*/}
-                <div
-                    class="container-lg ml-8 mt-5 border rounded"
-                    style={{padding: "2%"}}
-                >
-                    <div>
-                        <br/> <h2> PENDING TASKS </h2>{" "}
-                    </div>
-                    <If condition={Object.keys(this.props.pendingtasks).length != 0}>
-                        <div className="pages">
-                            <Pagination
-                                itemsCount={this.props.pendingtasks.length}
-                                pageSize={this.state.pageSize}
-                                onPageChange={this.handlePageChange}
-                                currentPage={this.state.currentPage}
-                            />
-                        </div>
-                    </If>
-                    <If condition={this.props.pendingtasks.length > this.state.pageSize}>
+          <div class="col-lg-4 col-md-4 col-sm-4">
+            <div class="card ">
+              <Link
+                to={{
+                  pathname: "/task",
+                  state: {
+                    taskId: task._id,
+                  },
+                }}
+                style={{ textDecoration: "none" }}
+              >
+                <img
+                  class="card-img-top"
+                  src={task.image ? task.image : NoImageFound}
+                  height="250"
+                />
+              </Link>
+              <div class="card-body">
+                <h5 className="card-title">{this.truncate(task.title, 20)}</h5>
+                <p class="card-text">{this.truncate(task.description, 100)}</p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">{task.category}</small>
+              </div>
+            </div>
+          </div>
+        );
+      });
+
+      return pendingtasks;
+    } else {
+      return <div> No Tasks Pending! </div>;
+    }
+  }
+
+  displayInProgressTasks(currentPage, pageSize) {
+    if (this.props.inprogresstasks.length > 0) {
+      const paginatedInProgressTasks = paginate(
+        this.props.inprogresstasks,
+        currentPage,
+        pageSize
+      );
+
+      let inprogresstasks = paginatedInProgressTasks.map((task) => {
+        return (
+          <div class="col-lg-4 col-md-4 col-sm-4">
+            <div class="card">
+              <Link
+                to={{
+                  pathname: "/task",
+                  state: {
+                    taskId: task._id,
+                  },
+                }}
+                style={{ textDecoration: "none" }}
+              >
+                <img
+                  class="card-img-top"
+                  src={task.image ? task.image : NoImageFound}
+                  height="250"
+                />
+              </Link>
+              <div class="card-body">
+                <h5 className="card-title">{this.truncate(task.title, 20)}</h5>
+                <p class="card-text">{this.truncate(task.description, 100)}</p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">{task.category}</small>
+              </div>
+            </div>
+          </div>
+        );
+      });
+
+      return inprogresstasks;
+    } else {
+      return <div> No Tasks Currently in Progress! </div>;
+    }
+  }
+
+  render() {
+    console.log("All pending tasks", this.props.pendingtasks);
+    console.log("All inprogress tasks", this.props.inprogresstasks);
+
+    return (
+      <div class="border">
+        {/* PENDING DIV*/}
+        <div
+          class="container-lg ml-8 mt-5 border rounded"
+          style={{ padding: "2%" }}
+        >
+          <div>
+            <br /> <h2> PENDING TASKS </h2>{" "}
+          </div>
+          <If condition={Object.keys(this.props.pendingtasks).length != 0}>
+            <div className="pages">
+              <Pagination
+                itemsCount={this.props.pendingtasks.length}
+                pageSize={this.state.pageSize}
+                onPageChange={this.handlePageChange}
+                currentPage={this.state.currentPage}
+              />
+            </div>
+          </If>
+          {/* <If condition={this.props.pendingtasks.length > this.state.pageSize}>
                         <div class="row ">
                             <div class="col-lg-6 col-md-6 col-sm-6 text-right">
                                 <button type="button" class="btn btn-outline-primary">
@@ -182,50 +183,48 @@ class SponsorHome extends Component {
                                 </button>
                             </div>
                         </div>
-                    </If>
-                    <br/>
-                    <div class="row">
-                        <div class="card-deck">
-                            {this.displayPendingTasks(
-                                this.state.currentPage,
-                                this.state.pageSize
-                            )}
-                        </div>
-                    </div>
-                    <br/>
-                    <div class="row">
-                        {" "}
-                        <div class="col-md-10 col-sm-10 col-lg-10"></div>
-                        <div class="col-md-2 col-sm-2 col-lg-2">
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    {" "}
-                    <br/> <br/>
-                    <hr/>
-                    {" "}
-                </div>
-                {/* IN PROGRESS DIV*/}
-                <div
-                    class="container-lg ml-8 mt-5 border rounded"
-                    style={{padding: "2%"}}
-                >
-                    <div>
-                        <br/> <h2> IN PROGRESS TASKS </h2>{" "}
-                    </div>
+                    </If> */}
+          <br />
+          <div class="row">
+            <div class="card-deck">
+              {this.displayPendingTasks(
+                this.state.currentPage,
+                this.state.pageSize
+              )}
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            {" "}
+            <div class="col-md-10 col-sm-10 col-lg-10"></div>
+            <div class="col-md-2 col-sm-2 col-lg-2"></div>
+          </div>
+        </div>
+        <div>
+          {" "}
+          <br /> <br />
+          <hr />{" "}
+        </div>
+        {/* IN PROGRESS DIV*/}
+        <div
+          class="container-lg ml-8 mt-5 border rounded"
+          style={{ padding: "2%" }}
+        >
+          <div>
+            <br /> <h2> IN PROGRESS TASKS </h2>{" "}
+          </div>
 
-                    <If condition={Object.keys(this.props.inprogresstasks).length != 0}>
-                        <div className="pages">
-                            <Pagination
-                                itemsCount={this.props.inprogresstasks.length}
-                                pageSize={this.state.progressPageSize}
-                                onPageChange={this.handleProgressPageChange}
-                                currentPage={this.state.progressCurrentPage}
-                            />
-                        </div>
-                    </If>
-
+          <If condition={Object.keys(this.props.inprogresstasks).length != 0}>
+            <div className="pages">
+              <Pagination
+                itemsCount={this.props.inprogresstasks.length}
+                pageSize={this.state.progressPageSize}
+                onPageChange={this.handleProgressPageChange}
+                currentPage={this.state.progressCurrentPage}
+              />
+            </div>
+          </If>
+          {/* 
                     <If condition={this.props.inprogresstasks.length > this.state.progressPageSize}>
                         <div class="row ">
                             <div class="col-lg-6 col-md-6 col-sm-6 text-right">
@@ -240,41 +239,39 @@ class SponsorHome extends Component {
                                 </button>
                             </div>
                         </div>
-                    </If>
-                    <br/>
+                    </If> */}
+          <br />
 
-                    <div class="card-deck">
-                        {this.displayInProgressTasks(
-                            this.state.progressCurrentPage,
-                            this.state.progressPageSize
-                        )}
-                    </div>
-                    <br/>
-                    <div class="row">
-                        {" "}
-                        <div class="col-md-10 col-sm-10 col-lg-10"></div>
-                        <div class="col-md-2 col-sm-2 col-lg-2">
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    {" "}
-                    <br/> <br/>
-                    <hr/>
-                    {" "}
-                </div>
-            </div>
-        );
-    }
+          <div class="card-deck">
+            {this.displayInProgressTasks(
+              this.state.progressCurrentPage,
+              this.state.progressPageSize
+            )}
+          </div>
+          <br />
+          <div class="row">
+            {" "}
+            <div class="col-md-10 col-sm-10 col-lg-10"></div>
+            <div class="col-md-2 col-sm-2 col-lg-2"></div>
+          </div>
+        </div>
+        <div>
+          {" "}
+          <br /> <br />
+          <hr />{" "}
+        </div>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state) => ({
-    pendingtasks: state.home.pendingtasks,
-    inprogresstasks: state.home.inprogresstasks,
+  pendingtasks: state.home.pendingtasks,
+  inprogresstasks: state.home.inprogresstasks,
 });
 
 //function mapDispatchToProps
 export default connect(mapStateToProps, {
-    getSponsorPendingTasks,
-    getSponsorInProgressTasks,
+  getSponsorPendingTasks,
+  getSponsorInProgressTasks,
 })(SponsorHome);
