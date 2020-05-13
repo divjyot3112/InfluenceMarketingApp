@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import Compose from "../Compose";
-import Toolbar from "../Toolbar";
-import ToolbarButton from "../ToolbarButton";
-import Message from "../Message";
-import moment from "moment";
-import { sendMessage, fetchConversations } from "../../../actions/inboxActions";
+import React, { Component } from 'react';
+import Compose from '../Compose';
+import Toolbar from '../Toolbar';
+import ToolbarButton from '../ToolbarButton';
+import Message from '../Message';
+import moment from 'moment';
+import { sendMessage , fetchConversations, markRead} from "../../../actions/inboxActions";
 import { connect } from "react-redux";
 import "./MessageList.css";
 //import {MY_USER_ID} from '../../../utils/Constants'
@@ -211,6 +211,5 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { sendMessage, fetchConversations })(
-  MessageList
-);
+export default connect(mapStateToProps, { sendMessage, fetchConversations, markRead })(MessageList);
+
