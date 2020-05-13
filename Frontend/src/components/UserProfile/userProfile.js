@@ -385,7 +385,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                         <br/>
                                         <br/>
 
-                                        <small className="small-label address-label">Address*</small>
+                                        <small className="small-label address-label">Address</small>
                                         <div className="address-autocomplete">
                                             <GooglePlacesAutocomplete
                                                 onSelect={this.handleAddress}
@@ -394,7 +394,6 @@ class UserProfile extends UserProfileFormEventHandlers {
                                                 placeholder={false}
                                                 name="address"
                                                 value={this.state.address}
-                                                // required={true}
                                                 disabled={this.state.isCurrentUser === false}
                                                 initialValue={this.state.address}
                                             />
