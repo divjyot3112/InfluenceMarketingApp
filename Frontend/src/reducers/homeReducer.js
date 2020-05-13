@@ -39,7 +39,7 @@ export default function homeReducer(state = initialState, action) {
       );
       return {
         ...state,
-        recentlypostedtasks: action.payload.message,
+        recentlypostedtasks: action.payload.message.slice(0, 15).reverse(),
       };
 
     case MY_ACTIVE_TASKS:

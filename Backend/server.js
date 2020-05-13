@@ -15,12 +15,12 @@ const passport = require("passport");
 // const tasks = require('./routes/api/tasks');
 const WebSocket = require("ws");
 const cron = require("node-cron");
-const shell = require("shelljs")
+const shell = require("shelljs");
 
 const Task = require("./models/Task");
 const taskStatus = require("./utils/Constants").TaskStatus;
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin: "*" }));
 
 const users = require("./routes/api/users");
 const tasks = require("./routes/api/tasks");
@@ -42,7 +42,7 @@ app.use(morgan("dev"));
 app.use(passport.initialize());
 
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -161,15 +161,15 @@ cron.schedule("0 1 * * *", function () {
   );
 
   console.log("--------------------------------------------------");
-  console.log("Generating Recommendations")
-  if (shell.exec("python recommendation_script/recommendations.py").code !== 0) {
+  console.log("Generating Recommendations");
+  if (
+    shell.exec("python recommendation_script/recommendations.py").code !== 0
+  ) {
     shell.exit(1);
-  }
-  else{
+  } else {
     shell.echo("Generation of Recommendations Complete");
   }
 });
-
 
 const wss = new WebSocket.Server({ port: 3030 });
 wss.on("connection", function connection(ws) {
