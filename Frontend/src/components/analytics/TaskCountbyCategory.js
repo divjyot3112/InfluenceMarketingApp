@@ -54,43 +54,44 @@ class TaskCountbyCategory extends React.Component {
   };
 
   componentDidMount() {
-    this.props.getInfluencerTasksCountByCategory(this.state.email)
-      .then(() => {
-        console.log("Component did Mount" + this.props.influencer_tasksbycategory)
-        const obj = this.props.influencer_tasksbycategory;
-        const labels = Object.keys(obj)
-        const data = Object.values(obj)
-        var backgroundColor = [
-          "#F5A9A9",
-          "#E3CEF6",
-          "#FF8000",
-          "#088A68",
-          "#0A0A2A",
-          "#424242",
-          "#81BEF7",
-          "#4B610B",
-          "#F3F781",
-          "#82FA58",
-          "#01DFD7",
-          "#0B4C5F",
-          "#D0A9F5",
-          "#2E2E2E",
-        ]
-        backgroundColor = backgroundColor.slice(0, data.length)
-        const hoverBackgroundColor = ["#FF6384", "#36A2EB", "#FFCE56"]
-        this.setState({
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                data: data,
-                backgroundColor: backgroundColor,
-                hoverBackgroundColor: hoverBackgroundColor
-              }
-            ]
-          }
-        })
-      })
+    this.props.getInfluencerTasksCountByCategory(this.state.email).then(() => {
+      console.log(
+        "Component did Mount" + this.props.influencer_tasksbycategory
+      );
+      const obj = this.props.influencer_tasksbycategory;
+      const labels = Object.keys(obj);
+      const data = Object.values(obj);
+      var backgroundColor = [
+        "#F5A9A9",
+        "#E3CEF6",
+        "#FF8000",
+        "#088A68",
+        "#0A0A2A",
+        "#424242",
+        "#81BEF7",
+        "#4B610B",
+        "#F3F781",
+        "#82FA58",
+        "#01DFD7",
+        "#0B4C5F",
+        "#D0A9F5",
+        "#2E2E2E",
+      ];
+      backgroundColor = backgroundColor.slice(0, data.length);
+      const hoverBackgroundColor = ["#FF6384", "#36A2EB", "#FFCE56"];
+      this.setState({
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              data: data,
+              backgroundColor: backgroundColor,
+              hoverBackgroundColor: hoverBackgroundColor,
+            },
+          ],
+        },
+      });
+    });
   }
 
   render() {
