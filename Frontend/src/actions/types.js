@@ -1,4 +1,4 @@
-export const ROOT_URL = "http://localhost:5000/api";
+export const ROOT_URL = "http://54.67.94.219:5000/api";
 
 export const LOGIN_USER = "LOGIN_USER";
 export const REGISTER_USER = "REGISTER_USER";

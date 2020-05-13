@@ -275,7 +275,7 @@ class UserProfile extends UserProfileFormEventHandlers {
     checkDisable() {
         return this.state.firstName == "" ||
             this.state.lastName == "" ||
-            this.state.address === undefined ||
+            // this.state.address === undefined ||
             this.state.gender === undefined ||
             this.state.phone == "" ||
             new Date(this.state.dateOfBirth).setHours(0, 0, 0, 0)
@@ -394,7 +394,7 @@ class UserProfile extends UserProfileFormEventHandlers {
                                                 placeholder={false}
                                                 name="address"
                                                 value={this.state.address}
-                                                required={true}
+                                                // required={true}
                                                 disabled={this.state.isCurrentUser === false}
                                                 initialValue={this.state.address}
                                             />
