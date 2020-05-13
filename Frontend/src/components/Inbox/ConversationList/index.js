@@ -129,7 +129,7 @@ class ConversationList extends Component {
   addNewConversation = (userData) => {
     if (this.state.allConversations.filter(c => c.email === userData.email).length <= 0) {
         let newConversation = {
-          photo: window.location.origin + '/dummy.png', //TODO: add profile image
+          photo: userData.photo, //TODO: add profile image
           name: userData.name,
           unreadCount: 0,
           email: userData.email
